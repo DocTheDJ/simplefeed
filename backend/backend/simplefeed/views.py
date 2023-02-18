@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from django.shortcuts import render
 from .serializers import UserSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .utils.db_access import create_user_access
-from multiprocessing import Process
+from .utils.db_access import create_user_access, create_dbconnect
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -24,4 +24,13 @@ def register(request):
     else:
         print(serializer.errors)
         response = 'User is not registered'
+    return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def index(request):
+    if DB := create_dbconnect(request.user.username):
+        response = "OK"
+    else:
+        response = "NOT OK"
     return Response(response)

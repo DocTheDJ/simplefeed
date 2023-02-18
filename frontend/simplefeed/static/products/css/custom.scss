@@ -1,0 +1,134 @@
+div.cat_functions{
+    display:none;
+    position: absolute;
+    right: 10px;
+    margin: 0 !important;
+}
+
+div.cat_functions:hover{
+    display:block;
+}
+
+div.cat_name{
+    width: 100%;
+    height: 50px;
+    margin: 0 !important;
+}
+
+div.cat_name:hover + div.cat_functions {
+    display: block;
+}
+div.alert-mess{
+    position: fixed;
+    z-index: 100;
+    right: 36px;
+    width: 300px;
+    height: 85px;
+    border-radius: 8px;
+    -webkit-box-shadow: 10px 10px 5px -1px rgba(0,0,0,0.22);
+    -moz-box-shadow: 10px 10px 5px -1px rgba(0,0,0,0.22);
+    box-shadow: 10px 10px 5px -1px rgba(0,0,0,0.22);
+    display: none;
+    .alert-header{
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 10px;
+        padding-top: 10px;
+        opacity: 0.5;
+    }
+    .alert-content{
+        display: flex;
+        align-items: center;
+        p{
+            margin: 0;
+            color: white;
+        }
+        span{
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    }
+}
+.alert-true{
+    background-color: green;
+}
+.alert-false{
+    background-color: red;
+}
+.category-nav{
+    h3{
+        margin-top: 20px;
+    }
+    ul{
+        list-style: none;
+        padding-left: 0;
+        li{
+            padding-left: 0;
+            display: block;
+                span{
+                    margin-bottom: 0;
+                    margin-right:5px;
+                    position: relative;
+                    top: 3px;
+                }
+        }
+    }
+}
+.toolbar-edit{
+    position: fixed;
+    bottom:0;
+    height: 50px;
+    background-color: #FFC100;
+    border-radius: 8px;
+    ul{
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        list-style: none;
+        li{
+            padding-top: 2px;
+        }
+    }
+}
+.category-paring{
+    ul{
+        li{
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            display:flex;
+            gap: 1rem;
+            .left{
+                background-color: white;
+                padding-right: 100px;
+            }
+            .value{
+                
+                background-color: green;
+                color: white;
+                border-radius: 8px;
+                width: 150px;
+            }
+            .right{
+                background-color: white;
+                padding-left: 100px;
+                width: 50%;
+            }
+        }
+    }
+}
+.cat-paring-value{
+    padding: 5px 15px 5px 15px;
+    border-radius: 8px;
+    background-color: green;
+    color: white;
+}
+.input-formated{
+    background-color:transparent !important;
+    border:none;
+}
+.input-stronger{
+    background-color:transparent !important;
+    border:none;
+    font-weight: 800 !important;
+    color: red !important;
+}
