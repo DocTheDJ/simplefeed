@@ -47,3 +47,7 @@ class ImageSerializer(serializers.ModelSerializer):
         model = models.Image
         fields = '__all__'
 
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Common
+        fields = '__all__'

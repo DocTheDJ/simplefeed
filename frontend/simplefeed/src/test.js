@@ -10,14 +10,14 @@ function Test(){
     let runGet = async(e) => {
         e.preventDefault();
         console.log('boobs');
-        axios.get(ipAddress + 'overview/', getJsonHeader(authTokens)).then((response) => {
-            alert(response.data);
+        axios.get(ipAddress + 'product-list/', getJsonHeader(authTokens)).then((response) => {
+            console.log(response.data)
         });
     }
 
     return (
         <div>
-            <Button onSubmit={(e) => runGet(e)}>Test</Button>
+            <Button onClick={(e) => runGet(e)}>Test</Button>
         </div>
     );
 }
