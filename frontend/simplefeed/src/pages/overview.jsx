@@ -3,6 +3,8 @@ import AuthContext from '../context/AuthContext';
 import Panels from '../components/overviewPanels';
 import { ipAddress, getJsonHeader } from '../constants';
 import axios from 'axios';
+import FeedList from '../components/overviewfeeds';
+import UpdatedProductList from '../components/overviewUpdatedCreated';
 
 function Overview(){
     const [data, setData] = useState(null);
@@ -36,13 +38,23 @@ function Overview(){
                 </div>
             </div>
 
-            <Panels total_products={data.total_products}
-                    total_variants={data.total_variants}
-                    active_products={data.active_products}
-                    active_variants={data.active_variants}
-                    inactive_products={data.inactive_products}
-                    inactive_variants={data.inactive_variants}
-                    faulty_variants={data.faulty_variants}></Panels>
+            <Panels total_products={data?.total_products}
+                    total_variants={data?.total_variants} 
+                    active_products={data?.active_products}
+                    active_variants={data?.active_variants}
+                    inactive_products={data?.inactive_products}
+                    inactive_variants={data?.inactive_variants}
+                    faulty_variants={data?.faulty_variants}></Panels>
+        
+            <FeedList suppliers={data?.suppliers}></FeedList>
+
+            <div className="col-lg-12">
+                <div className="row">
+                    <UpdatedProductList name={'Nové produkty'} data={data?.last_created}></UpdatedProductList>
+                    <UpdatedProductList name={'Seznam aktualizací'} data={data?.last_updated}></UpdatedProductList>
+                </div>
+            </div>
+        
         </>
     );
 }

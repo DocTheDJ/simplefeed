@@ -1,8 +1,5 @@
 import React, { useContext, useState } from 'react';
 import AuthContext from './context/AuthContext';
-// import Form from 'react-bootstrap/Form';
-// import Button from 'react-bootstrap/Button';
-// import {Test} from './test';
 import "./cssModules";
 import Header from './header';
 import Navigation from './navigation';
@@ -13,12 +10,12 @@ function NavBar(){
     // const [password, setPassword] = useState("");
     // let {loginUser} = useContext(AuthContext);
     return (
-        <div class="container-scroller">
+        <div className="container-scroller">
             <Header></Header>
-            <div class="container-fluid page-body-wrapper">
+            <div className="container-fluid page-body-wrapper">
                 <Navigation></Navigation>
-                <div class="main-panel">
-                    <div class="content-wrapper">
+                <div className="main-panel">
+                    <div className="content-wrapper">
                         <Overview></Overview>
                     </div>
                 </div>
