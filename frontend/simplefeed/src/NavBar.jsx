@@ -2,8 +2,9 @@ import React, { useContext, useState } from 'react';
 import AuthContext from './context/AuthContext';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Test from './test';
-// import styles from '../static/products/css/custom.module.css';
+import {Test} from './test';
+import "./cssModules";
+import Header from './header';
 
 function NavBar(){
     const [username, setUsername] = useState("");
@@ -11,6 +12,7 @@ function NavBar(){
     let {loginUser} = useContext(AuthContext);
     return (
         <>
+            <Header></Header>
             <div>
                 <Form onSubmit={event => loginUser(event, username, password)} id='loginForm'>
                     <Form.Group>

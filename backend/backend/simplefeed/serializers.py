@@ -9,7 +9,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 	def get_token(cls, user):
 		token = super().get_token(user)
 
-		# token['username'] = user.username
+		token['username'] = user.username
 
 		return token
 
@@ -50,4 +50,14 @@ class ImageSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Common
+        fields = '__all__'
+
+class VariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Variant
+        fields = '__all__'
+
+class VariantUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Variant_Update
         fields = '__all__'

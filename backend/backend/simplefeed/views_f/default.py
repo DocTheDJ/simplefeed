@@ -1,12 +1,13 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from ..serializers import UserSerializer, MyTokenObtainPairSerializer
+from ..serializers import UserSerializer, MyTokenObtainPairSerializer, VariantSerializer, VariantUpdateSerializer, FeedSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from ..utils.db_access import create_user_access, create_dbconnect
 from rest_framework.permissions import IsAuthenticated
 from ..utils.create_default import CreateUtil
 from ..modelDBUsage import crossroads
 from multiprocessing import Process
+from ..models import Variant, Variant_Update, Common, Feeds
 
 # Create your views here.
 
@@ -32,8 +33,25 @@ def register(request):
 @permission_classes([IsAuthenticated])
 def index(request):
     if DB := create_dbconnect(request.user.username):
-        CreateUtil.add_all_feeds(DB)
-        response = "OK"
+        updated = Variant_Update.objects.using(DB).all()[:10]
+        last_created = Variant.objects.using(DB).all().order_by('-id')[:10:-1]
+        if updated.count() == 0:
+            updated = VariantSerializer(last_created, many=True)
+        else:
+            updated = VariantUpdateSerializer(updated, many=True)
+        response = {
+            'suppliers': FeedSerializer(Feeds.objects.using(DB).filter(usage='m'), many=True).data,
+            'total_products': Common.objects.using(DB).count(),
+            'total_variants': Variant.objects.using(DB).count(),
+            'active_products': Common.objects.using(DB).filter(approved=True).count(),
+            'active_variants': Variant.objects.using(DB).filter(visible='1').count(),
+            'inactive_products': Common.objects.using(DB).filter(approved=False).count(),
+            'inactive_variants': Variant.objects.using(DB).filter(visible='0').count(),
+            'faulty_variants': Variant.objects.using(DB).filter(visible='2').count(),
+            'last_updated': updated.data,
+            'last_created': VariantSerializer(last_created, many=True).data,
+        }
+        # response = "OK"
     else:
         response = "NOT OK"
     return Response(response)
