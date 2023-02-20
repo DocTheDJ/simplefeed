@@ -30,3 +30,4 @@ def approve_product(request, id, approve):
     else:
         response = 'no DB'
     return Response(response)
+

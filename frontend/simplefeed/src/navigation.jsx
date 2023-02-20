@@ -50,10 +50,12 @@ function Navigation(){
                     </div>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="">
+                    <NavLink className='nav-link' to={'test/'}>
+                    {/* <a className="nav-link" href=""> */}
                         <i className="ti-ruler-pencil menu-icon"></i>
                         <span className="menu-title">Pravidla</span>
-                    </a>
+                    {/* </a> */}
+                    </NavLink>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link" data-toggle="collapse" href="#nastaveni" aria-expanded="false" aria-controls="ui-basic">

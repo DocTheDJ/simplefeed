@@ -3,6 +3,7 @@ import { ipAddress, getJsonHeader } from '../constants';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import Button from 'react-bootstrap/esm/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function ProductList(){
     const [data, setData] = useState(null);
@@ -84,7 +85,6 @@ function ProductList(){
 }
 
 function Product(props){
-    const sum = props.data.variants.reduce((a,v) => a += v.amount, 0);
 
     const [approved, setApprove] = useState(props.data.approved);
 
@@ -114,15 +114,13 @@ function Product(props){
                         </h4>
                     </a>
                     <div className="d-flex justify-content-between">
-                        <a href="" data-bs-toggle="modal" data-bs-target="#variant_show{{x.id}}">
-                            <p className="card-description">Počet variant: <strong>{props.data.variants.length}</strong></p>
-                        </a>
+                        <VariantModal id={props.data.id} length={props.data.variants.length} authTokens={props.context}></VariantModal>
                         <p className="card-description">
                             {
-                                sum === 0 ? 
+                                props.data.total_amount === 0 ? 
                                     <strong style={{color:'red'}}>Vyprodáno</strong>
                                 :
-                                    <><strong style={{color:'green'}}>Skladem </strong><strong>({sum})</strong></>
+                                    <><strong style={{color:'green'}}>Skladem </strong><strong>({props.data.total_amount})</strong></>
                             }
 
                         </p>
@@ -153,71 +151,101 @@ function Product(props){
 
 export default ProductList;
 
+function VariantModal(props){
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
-{/* <div className="modal fade" id="variant_show{{x.id}}" tabindex="-1" aria-labelledby="label_variant_show{{x.id}}" aria-hidden="true">
-    <div className="modal-dialog modal-xl modal-dialog-scrollable">
-    <div className="modal-content">
-        <div className="modal-header">
-        <h5 className="modal-title" id="label_variant_show{{x.id}}">Seznam variant</h5>
-        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Zavřít přehled</button>
-        {% comment %} <form id="uncouple-form" method="POST">
-            {% csrf_token %}
-            <button type="submit" className="btn btn-info" formaction="multiple_action/uncouple/">Uncouple</button>
-            <input type="hidden" value="{{x.id}}" name="product_id">
-        </form> {% endcomment %}
-        </div>
-        <div className="modal-body">
-        <table className="table">
-            {% for v in x.get_variants %}
-                <tr>
-                {% comment %} <td><input className="form-check-input form-control-lg" type="checkbox" value="{{v.id}}" name="uncouple_vars" form="uncouple-form"></td> {% endcomment %}
-                <td><img src="{{v.image_ref.image}}" style="width: 100px; height: 100px;"></td>
-                <td>
-                    {% if v.get_useable_count > 0%}
-                    {% for p in v.get_useable %}
-                        <p><strong>{{p.name.name}}:</strong> {{p.value.value}}</p>
-                    {% endfor %}
-                    {% else %}
-                    {% for p in v.get_params %}
+    const [data, setData] = useState();
+
+    console.log(data);
+
+    let getData = async(e) => {
+        e.preventDefault();
+        handleShow();
+        axios.get(ipAddress + `get-variants/${props.id}`, getJsonHeader(props.authTokens)).then((response) => {setData(response.data);});
+    }
+
+    return (
+        <>
+            <a onClick={(e) => getData(e)}>
+                <p className="card-description">Počet variant: <strong>{props.length}</strong></p>
+            </a>
+            <Modal show={show} dialogClassName='modal-xl modal-dialog-scrollable'>
+                <Modal.Header>
+                    <Modal.Title>Seznam variant</Modal.Title>
+                    {/* <h5 className="modal-title" id="label_variant_show{{x.id}}">Seznam variant</h5> */}
+                    <button type="button" className="btn btn-secondary" onClick={handleClose}>Zavřít přehled</button>
+                </Modal.Header>
+                <Modal.Body>
+                    <table className="table">
+                        <tbody>
+                            {
+                                data?.map((value, key) => {
+                                    return (<VariantModalItem data={value} key={key}/>)
+                                })
+                            }
+                        </tbody>
+                    </table>
+                </Modal.Body>
+                <Modal.Footer></Modal.Footer>
+            </Modal>
+        </>
+    );
+}
+
+function VariantModalItem(props){
+    return (
+        <tr>
+            {/* <td><input className="form-check-input form-control-lg" type="checkbox" value="{{v.id}}" name="uncouple_vars" form="uncouple-form"></td> */}
+            <td><img src={props.data.image_ref.image} style={{width: '100px', height: '100px'}}/></td>
+            <td>
+                {/* {% if v.get_useable_count > 0%}
+                {% for p in v.get_useable %}
                     <p><strong>{{p.name.name}}:</strong> {{p.value.value}}</p>
-                    {% endfor %}
-                    {% endif %}
-                </td>
-                <td><strong>Kód:</strong>{{v.code}}  V</td>
-                <td><strong>Skladem</strong><br>{{v.amount}} Ks</td>
-                <td>{{v.price}} {{v.currency}}</td>
-                <td>
-                    <button type="button" className="btn btn-warning btn-rounded btn-icon" data-bs-toggle="modal" data-bs-target="#variant_edit{{v.id}}" data-bs-dismiss="modal">
-                        <i className="ti-pencil"></i>
-                    </button>
-                    <a href="/var_detail/{{v.id}}"><button type="button" className="btn btn-info btn-rounded btn-icon">
-                    <i className="ti-eye"></i>
-                    </button>
-                    
-                    {% if v.visible == "1" %}
-                    <a href="approve_var/{{v.id}}/1"><button type="button" className="btn btn-inverse-success btn-icon">
-                        <i className="ti-arrow-circle-down"></i>
-                    </button></a>
-                    {% elif v.visible == "0" %}
-                    <a href="approve_var/{{v.id}}/0"><button type="button" className="btn btn-inverse-danger btn-icon">
-                        <i className="ti-na"></i>
-                    </button></a>
-                    {% else %}
-                    <a href="approve_var/{{v.id}}/0"><button type="button" className="btn btn-info btn-icon">
-                        <i className="ti-na"></i>
-                    </button></a>
-                    {% endif %}
-                </td>
-                </tr>
-            {% endfor %}
-        </table>
-        </div>
-        <div className="modal-footer">
-        </div>
-    </div>
-    </div>
-</div> */}
-
+                {% endfor %}
+                {% else %}
+                {% for p in v.get_params %}
+                <p><strong>{{p.name.name}}:</strong> {{p.value.value}}</p>
+                {% endfor %}
+                {% endif %} */}
+            </td>
+            <td><strong>Kód:</strong>
+                {props.data.code} V
+            </td>
+            <td><strong>Skladem</strong><br/>
+                {props.data.amount} Ks
+            </td>
+            <td>
+                {props.data.price} {props.data.currency}
+            </td>
+            <td>
+                <button type="button" className="btn btn-warning btn-rounded btn-icon" data-bs-toggle="modal" data-bs-target="#variant_edit{{v.id}}" data-bs-dismiss="modal">
+                    <i className="ti-pencil"></i>
+                </button>
+                <a href="/var_detail/{{v.id}}"><button type="button" className="btn btn-info btn-rounded btn-icon">
+                <i className="ti-eye"></i></button>
+                </a>
+                
+                {
+                    props.data.visible === 1 ? 
+                        <a href="approve_var/{{v.id}}/1"><button type="button" className="btn btn-inverse-success btn-icon">
+                            <i className="ti-arrow-circle-down"></i>
+                        </button></a>
+                    : 
+                        props.data.visible === 0 ? 
+                            <a href="approve_var/{{v.id}}/0"><button type="button" className="btn btn-inverse-danger btn-icon">
+                                <i className="ti-na"></i>
+                            </button></a>
+                        :
+                            <a href="approve_var/{{v.id}}/0"><button type="button" className="btn btn-info btn-icon">
+                                <i className="ti-na"></i>
+                            </button></a>
+                }
+            </td>
+        </tr>
+    );
+}
 
 {/* {% for v in x.get_variants %}
     <div className="modal fade" id="variant_edit{{v.id}}" tabindex="-1" aria-labelledby="variant_edit{{v.id}}Label" aria-hidden="true">

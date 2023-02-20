@@ -3,21 +3,23 @@ import Button from 'react-bootstrap/Button';
 import { ipAddress, getJsonHeader } from './constants';
 import axios from 'axios';
 import AuthContext from './context/AuthContext';
+import Login from './components/login';
 
 function Test(){
-    const {authTokens, user} = useContext(AuthContext);
+    const {authTokens, user, logoutUser} = useContext(AuthContext);
+
 
     let runGet = async(e) => {
         e.preventDefault();
         console.log('boobs');
-        axios.get(ipAddress + 'product-list/', getJsonHeader(authTokens)).then((response) => {
-            console.log(response.data)
-        });
+        axios.get(ipAddress + 'migrate/', getJsonHeader(authTokens)).then((reponse) => console.log(reponse.data))
     }
 
     return (
         <div>
-            <Button onClick={(e) => runGet(e)}>Test</Button>
+            <Login></Login>
+            <Button onClick={logoutUser}>Logout</Button>
+            <Button onClick={(e) => runGet(e)}></Button>
         </div>
     );
 }

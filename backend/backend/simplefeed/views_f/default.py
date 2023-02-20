@@ -8,6 +8,7 @@ from ..utils.create_default import CreateUtil
 from ..modelDBUsage import crossroads
 from multiprocessing import Process
 from ..models import Variant, Variant_Update, Common, Feeds
+from django.core.management import call_command
 
 # Create your views here.
 
@@ -66,4 +67,14 @@ def run(request):
         response = 'started'
     else:
         response = 'no DB'
+    return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def migrate(request):
+    if DB := create_dbconnect(request.user.username):
+        call_command('migrate', 'simplefeed', database=DB)
+        response = 'OK'
+    else:
+        response = 'noDB'
     return Response(response)

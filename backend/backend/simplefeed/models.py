@@ -167,8 +167,8 @@ class Variant(models.Model):
             return 0
     
 class VariantParam(models.Model):
-    variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
-    param = models.ForeignKey(Param, on_delete=models.CASCADE)
+    variant = models.ForeignKey(Variant, on_delete=models.CASCADE, related_name='variants_params')
+    param = models.ForeignKey(Param, on_delete=models.CASCADE, related_name='params_variants')
     var_param = models.BooleanField()
 
 class Variant_Update(models.Model):
@@ -213,6 +213,11 @@ class Common(models.Model):
         except:
             sum = None
         return sum
+    
+    @property
+    def total_amount(self):
+        q = self.variants.all().aggregate(total_amount=models.Sum('amount'))
+        return q['total_amount']
     
     def count(self):
         return self.variants.count()

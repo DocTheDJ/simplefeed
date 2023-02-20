@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import AuthContext from './context/AuthContext';
 import { Routes, Route } from 'react-router-dom';
 import "./cssModules";
@@ -12,6 +12,13 @@ function NavBar(){
     // const [username, setUsername] = useState("");
     // const [password, setPassword] = useState("");
     // let {loginUser} = useContext(AuthContext);
+    const {authTokens, user} = useContext(AuthContext);
+
+    if(user === null || user === undefined){
+        return (
+            <Test></Test>
+        );
+    }
     return (
         <div className="container-scroller">
             <Header></Header>
@@ -22,6 +29,7 @@ function NavBar(){
                         <Routes>
                             <Route path='/' element={<Overview></Overview>}></Route>
                             <Route path='productlist/' element={<ProductList></ProductList>}></Route>
+                            <Route path='test/' element={<Test></Test>}></Route>
                         </Routes>
                     </div>
                 </div>
