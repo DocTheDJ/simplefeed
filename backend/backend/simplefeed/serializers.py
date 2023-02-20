@@ -47,12 +47,8 @@ class ImageSerializer(serializers.ModelSerializer):
         model = models.Image
         fields = '__all__'
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Common
-        fields = '__all__'
-
 class VariantSerializer(serializers.ModelSerializer):
+    image_ref = ImageSerializer()
     class Meta:
         model = models.Variant
         fields = '__all__'
@@ -60,4 +56,13 @@ class VariantSerializer(serializers.ModelSerializer):
 class VariantUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Variant_Update
+        fields = '__all__'
+
+class ProductSerializer(serializers.ModelSerializer):
+    price_common = VariantSerializer()
+    supplier = FeedSerializer()
+    variants = VariantSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Common
         fields = '__all__'

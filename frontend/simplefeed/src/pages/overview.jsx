@@ -14,7 +14,6 @@ function Overview(){
     useEffect(() => {
         axios.get(ipAddress + "overview/", getJsonHeader(authTokens)).then((response) => {setData(response.data);});
     }, [authTokens]);
-    console.log(data);
 
     return (
         <>

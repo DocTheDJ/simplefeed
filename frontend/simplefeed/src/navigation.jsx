@@ -1,22 +1,23 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import Icon from '@mdi/react';
 import { mdiSitemapOutline } from '@mdi/js';
+import { NavLink } from 'react-router-dom';
 
 function Navigation(){
     return (
         <nav className="sidebar sidebar-offcanvas" id="sidebar">
             <ul className="nav">
                 <li className="nav-item">
-                    <a className="nav-link" href="/products/">
+                    <NavLink className="nav-link" to={'/'}>
                         <i className="ti-dashboard menu-icon"></i>
                         <span className="menu-title">Přehled</span>
-                    </a>
+                    </NavLink>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="/products_list/?approved=all&page=1">
+                    <NavLink className='nav-link' to={'productlist/'}>
                         <i className="ti-package menu-icon"></i>
                         <span className="menu-title">Produkty</span>
-                    </a>
+                    </NavLink>
                 </li>
 
                 <li className="nav-item">

@@ -14,3 +14,19 @@ def listProducts(request):
         return Response(serializer.data)
     else:
         return Response('no DB connection')
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def approve_product(request, id, approve):
+    if DB := create_dbconnect(request.user.username):
+        if int(approve) == 1:
+            approve = 0
+        else:
+            approve = 1
+        product = Common.objects.using(DB).filter(id=id)
+        product.update(approved=approve)
+        product.get().get_variants().exclude(visible='2').update(visible=approve)
+        response = 'OK'
+    else:
+        response = 'no DB'
+    return Response(response)

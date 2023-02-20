@@ -1,9 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import AuthContext from './context/AuthContext';
+import { Routes, Route } from 'react-router-dom';
 import "./cssModules";
 import Header from './header';
 import Navigation from './navigation';
 import Overview from './pages/overview';
+import { Test } from './test';
+import ProductList from './pages/productlist';
 
 function NavBar(){
     // const [username, setUsername] = useState("");
@@ -16,7 +19,10 @@ function NavBar(){
                 <Navigation></Navigation>
                 <div className="main-panel">
                     <div className="content-wrapper">
-                        <Overview></Overview>
+                        <Routes>
+                            <Route path='/' element={<Overview></Overview>}></Route>
+                            <Route path='productlist/' element={<ProductList></ProductList>}></Route>
+                        </Routes>
                     </div>
                 </div>
             </div>
