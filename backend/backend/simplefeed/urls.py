@@ -19,6 +19,7 @@ from .views_f.products import (
 
 from .views_f.variants import (
     get_variants,
+    updateVariant
 )
 
 urlpatterns = [
@@ -32,6 +33,7 @@ urlpatterns = [
     
     path("product-list/", listProducts),
     path("approve_product/<str:id>/<str:approve>", approve_product),
-    path("get-variants/<str:id>", get_variants)
+    path("get-variants/<str:id>", get_variants),
+    path("update-variant/<str:id>", updateVariant)
     # re_path(r'^approve_product/(?P<id>\d+)/(?P<approve>\d)$', approve_product),
 ]
