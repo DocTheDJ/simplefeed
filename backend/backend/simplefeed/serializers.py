@@ -60,14 +60,16 @@ class VariantSerializer(serializers.ModelSerializer):
         model = models.Variant
         fields = '__all__'
 
-class VariantPostSerializer(serializers.ModelSerializer):
+class ProductDefaultSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Variant
+        model = models.Common
         fields = '__all__'
 
 class VariantWithParamsSerializer(serializers.ModelSerializer):
     image_ref = ImageSerializer()
     params = VariantParamSerializer(many=True, source='variants_params')
+    decide_main = serializers.ReadOnlyField()
+    get_supplier = serializers.ReadOnlyField()
     class Meta:
         model = models.Variant()
         fields = '__all__'

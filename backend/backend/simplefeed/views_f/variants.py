@@ -1,10 +1,10 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from ..serializers import VariantWithParamsSerializer, VariantPostSerializer
+from ..serializers import VariantWithParamsSerializer, VariantSerializer
 from ..models import Variant
 from ..utils.db_access import create_dbconnect
 from rest_framework.permissions import IsAuthenticated
-
+import math
 
 
 @api_view(['GET'])
@@ -33,3 +33,16 @@ def updateVariant(request, id):
     else:
         response = 'noDB'
     return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def variantList(request, pagenum):
+    if DB := create_dbconnect(request.user.username):
+        data = Variant.objects.using(DB).prefetch_related('product').all()
+        count = data.count()
+        data = data[(int(pagenum)-1)*20:int(pagenum)*20]
+        # ser = VariantSerializer(data, many=True)
+        ser = VariantWithParamsSerializer(data, many=True)
+        return Response({'data': ser.data, 'count': list(range(1, math.ceil(count / 20) + 1))})
+    else:
+        return Response('noDB')

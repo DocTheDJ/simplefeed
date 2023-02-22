@@ -4,20 +4,34 @@ import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import Button from 'react-bootstrap/esm/Button';
 import Product from '../components/product';
+import Variant from '../components/variant';
+
+const activeButton = 'mr-1 btn-primary btn-icon-text';
+const secondaryButton = 'btn-outline-secondary btn-icon-text';
 
 function ProductList(){
     const [data, setData] = useState(null);
     const [pagenumber, setPage] = useState(1);
     const [pages, setPages] = useState([]);
+    const [products, setProducts] = useState(true);
 
     const {authTokens} = useContext(AuthContext);
 
     useEffect(() => {
-        axios.get(ipAddress + `product-list/${pagenumber}`, getJsonHeader(authTokens)).then((response) => {
-            setData(response.data.data);
-            setPages(response.data.count);
-        });
-    }, [authTokens, pagenumber]);
+        console.log(products);
+        if(products){
+            axios.get(ipAddress + `product-list/${pagenumber}`, getJsonHeader(authTokens)).then((response) => {
+                setData(response.data.data);
+                setPages(response.data.count);
+            });
+        }else{
+            axios.get(ipAddress + `variant-list/${pagenumber}`, getJsonHeader(authTokens)).then((response) => {
+                setData(response.data.data);
+                setPages(response.data.count);
+            });
+        }
+        window.scrollTo(0,0)
+    }, [authTokens, products, pagenumber]);
     console.log(data);
 
     return (
@@ -72,14 +86,21 @@ function ProductList(){
                         </div>
                         <div className="col-lg-4 d-flex justify-content-end">
                             <div className="btn-group md-auto mb-3" role="group" aria-label="Basic example">
-                                <a href="/products_list/?approved=all&page=1"><button type="button" className="mr-1 btn btn-primary btn-icon-text"><i className="ti-layout-media-left btn-icon-prepend"></i>Produkty</button></a>
-                                <a href="/variants_list/?visible=all&page=1"><button type="button" className="btn btn-outline-secondary btn-icon-text"><i className="ti-layout-grid2-thumb btn-icon-prepend"></i>Varianty</button></a>
+                                <Button className={products ? activeButton : secondaryButton} onClick={(e) => {setData(null);setProducts(true);}}><i className="ti-layout-media-left btn-icon-prepend"></i>Produkty</Button>
+                                <Button className={products ? secondaryButton : activeButton} onClick={(e) => {setData(null);setProducts(false);}}><i className="ti-layout-grid2-thumb btn-icon-prepend"></i>Varianty</Button>
+                                {/* <a href="/products_list/?approved=all&page=1"><button type="button" className="mr-1 btn btn-primary btn-icon-text"><i className="ti-layout-media-left btn-icon-prepend"></i>Produkty</button></a>
+                                <a href="/variants_list/?visible=all&page=1"><button type="button" className="btn btn-outline-secondary btn-icon-text"><i className="ti-layout-grid2-thumb btn-icon-prepend"></i>Varianty</button></a> */}
                             </div>
                         </div>
                             {
-                                data?.map((value) => {
-                                    return(<Product data={value} key={value.id} context={authTokens}></Product>)
-                                })
+                                products ? 
+                                    data?.map((value) => {
+                                        return(<Product data={value} key={value.id} context={authTokens}></Product>)
+                                    })
+                                :
+                                    data?.map((value) => {
+                                        return(<Variant data={value} key={value.id} context={authTokens}></Variant>);
+                                    })
                             }
                     </div>
                     <div className="btn-group" role="group" aria-label="Basic example">

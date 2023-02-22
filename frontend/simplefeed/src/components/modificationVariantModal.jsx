@@ -64,9 +64,16 @@ function ModificationVariantModal(props){
 
     return (
         <>
-            <Button className="btn-warning btn-rounded btn-icon" onClick={handleShow}>
-                <i className="ti-pencil"></i>
-            </Button>
+            {
+                props.fromVar ? 
+                    <Button className='btn-inverse-warning btn-icon' onClick={handleShow}>
+                        <i className="ti-pencil"></i>
+                    </Button>
+                :
+                    <Button className="btn-warning btn-rounded btn-icon" onClick={handleShow}>
+                        <i className="ti-pencil"></i>
+                    </Button>
+            }
             <Modal dialogClassName='modal-xl modal-dialog-scrollable' show={show}>
                 <Form>
                     <Modal.Header>

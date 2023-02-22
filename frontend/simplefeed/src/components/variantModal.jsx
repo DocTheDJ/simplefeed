@@ -78,7 +78,7 @@ function VariantModalItem(props){
                 {props.data.price} {props.data.currency}
             </td>
             <td>
-                <ModificationVariantModal data={props.data} context={props.context}></ModificationVariantModal>
+                <ModificationVariantModal data={props.data} context={props.context} fromVar={false}></ModificationVariantModal>
                 <a href="/var_detail/{{v.id}}"><button type="button" className="btn btn-info btn-rounded btn-icon">
                 <i className="ti-eye"></i></button>
                 </a>

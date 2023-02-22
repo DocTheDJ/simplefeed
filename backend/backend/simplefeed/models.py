@@ -99,14 +99,16 @@ class Variant(models.Model):
     def decide_useable_count(self):
         return self.params.filter(variantparam__var_param=True).count() > 0
 
+    @property
     def get_supplier(self):
-        return self.product.get().supplier
+        return self.product.get().supplier.name
     
     def get_manufacturer(self):
         return self.product.get().manufacturer.name
     
+    @property
     def decide_main(self):
-        return True if self.product.get().price_common == self else False
+        return self.product.get().price_common == self
     
     def get_itemgroup(self):
         return self.product.get().itemgroup_id
