@@ -73,7 +73,7 @@ function Navigation(){
                     </div>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="">
+                    <a className="nav-link" href="tmp/">
                         <i className="ti-export menu-icon"></i>
                         <span className="menu-title">Export feedu</span>
                     </a>

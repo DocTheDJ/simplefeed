@@ -60,6 +60,11 @@ class VariantSerializer(serializers.ModelSerializer):
         model = models.Variant
         fields = '__all__'
 
+class VariantPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Variant
+        fields = '__all__'
+
 class VariantWithParamsSerializer(serializers.ModelSerializer):
     image_ref = ImageSerializer()
     params = VariantParamSerializer(many=True, source='variants_params')

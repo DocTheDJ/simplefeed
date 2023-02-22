@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from ..serializers import VariantWithParamsSerializer, VariantSerializer
+from ..serializers import VariantWithParamsSerializer, VariantPostSerializer
 from ..models import Variant
 from ..utils.db_access import create_dbconnect
 from rest_framework.permissions import IsAuthenticated

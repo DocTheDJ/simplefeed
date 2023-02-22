@@ -31,7 +31,7 @@ urlpatterns = [
     path("test/", run),
     path("migrate/", migrate),
     
-    path("product-list/", listProducts),
+    path("product-list/<str:pagenum>", listProducts),
     path("approve_product/<str:id>/<str:approve>", approve_product),
     path("get-variants/<str:id>", get_variants),
     path("update-variant/<str:id>", updateVariant)

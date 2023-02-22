@@ -4,14 +4,17 @@ from ..serializers import ProductSerializer
 from ..models import Common
 from ..utils.db_access import create_dbconnect
 from rest_framework.permissions import IsAuthenticated
+import math
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def listProducts(request):
+def listProducts(request, pagenum):
     if DB := create_dbconnect(request.user.username):
         data = Common.objects.using(DB).all()
+        count = data.count()
+        data = data[(int(pagenum)-1)*20:int(pagenum)*20]
         serializer = ProductSerializer(data, many=True)
-        return Response(serializer.data)
+        return Response({'data': serializer.data, 'count': list(range(1, math.ceil(count / 20) + 1))})
     else:
         return Response('no DB connection')
 
