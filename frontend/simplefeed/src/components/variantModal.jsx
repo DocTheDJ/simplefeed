@@ -3,6 +3,7 @@ import { ipAddress, getJsonHeader } from '../constants';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import ModificationVariantModal from './modificationVariantModal';
+import Button from 'react-bootstrap/esm/Button';
 
 
 function VariantModal(props){
@@ -78,7 +79,12 @@ function VariantModalItem(props){
                 {props.data.price} {props.data.currency}
             </td>
             <td>
-                <ModificationVariantModal data={props.data} context={props.context} fromVar={false}></ModificationVariantModal>
+                <ModificationVariantModal 
+                    data={props.data} 
+                    context={props.context} 
+                    Child={() => <i className="ti-pencil"></i>}
+                    buttonStyle={'btn-warning btn-rounded btn-icon'}>
+                </ModificationVariantModal>
                 <a href="/var_detail/{{v.id}}"><button type="button" className="btn btn-info btn-rounded btn-icon">
                 <i className="ti-eye"></i></button>
                 </a>

@@ -11,11 +11,13 @@ function ModificationVariantModal(props){
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const [price, setPrice] = useState(props.data.price);
-    const [recprice, setRecPrice] = useState(props.data.rec_price);
-    const [purPrice, setPurPrice] = useState(props.data.pur_price);
-    const [vat, setVat] = useState(props.data.vat);
-    const [params, setParams] = useState(props.data.params.map(value => {return value.param}));
+    const {data, context, Child, buttonStyle} = props;
+
+    const [price, setPrice] = useState(data.price);
+    const [recprice, setRecPrice] = useState(data.rec_price);
+    const [purPrice, setPurPrice] = useState(data.pur_price);
+    const [vat, setVat] = useState(data.vat);
+    const [params, setParams] = useState(data.params.map(value => {return value.param}));
 
     const [priceMessage, setPriceMessage] = useState(null)
     const [recPriceMessage, setRecPriceMessage] = useState(null)
@@ -44,11 +46,11 @@ function ModificationVariantModal(props){
             setVatMessage('Missing vat');
         }
         if(send){
-            formData.append('image_ref', props.data.image_ref.id)
-            formData.append('availability', parseInt(props.data.availability, 10))
-            formData.append('mods', props.data.mods)
+            formData.append('image_ref', data.image_ref.id)
+            formData.append('availability', parseInt(data.availability, 10))
+            formData.append('mods', data.mods)
             try{
-                axios.post(ipAddress + `update-variant/${props.data.id}`, formData, getJsonHeader(props.context)).then((response) => {
+                axios.post(ipAddress + `update-variant/${data.id}`, formData, getJsonHeader(context)).then((response) => {
                     if(response.status !== 200 || response.data !== 'OK'){
                         console.log(response);
                         alert('Something fucked up');
@@ -64,20 +66,11 @@ function ModificationVariantModal(props){
 
     return (
         <>
-            {
-                props.fromVar ? 
-                    <Button className='btn-inverse-warning btn-icon' onClick={handleShow}>
-                        <i className="ti-pencil"></i>
-                    </Button>
-                :
-                    <Button className="btn-warning btn-rounded btn-icon" onClick={handleShow}>
-                        <i className="ti-pencil"></i>
-                    </Button>
-            }
+            <Button onClick={handleShow} className={buttonStyle}><Child></Child></Button>
             <Modal dialogClassName='modal-xl modal-dialog-scrollable' show={show}>
                 <Form>
                     <Modal.Header>
-                        <Modal.Title>Upravit variantu:  {props.code}</Modal.Title>
+                        <Modal.Title>Upravit variantu:  {data.code}</Modal.Title>
                         <Button className='btn-secondary' onClick={handleClose}>Zrušit</Button>
                         <Button className='btn-primary' onClick={(e) => saveMods(e)}>Upravit variantu</Button>
                     </Modal.Header>

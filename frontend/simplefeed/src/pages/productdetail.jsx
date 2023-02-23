@@ -2,7 +2,7 @@ import React, {useState, useContext, useEffect} from 'react';
 import { ipAddress, getJsonHeader } from '../constants';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, NavLink } from "react-router-dom"
 import Button from 'react-bootstrap/esm/Button';
 import ProductImages from '../components/imageslider';
 import Tab from 'react-bootstrap/Tab';
@@ -24,9 +24,11 @@ function ProductDetail(){
                 <div className="col-lg-12 d-flex justify-content-between">
                     <div>
                         <Button onClick={() => navigate(-1)} className="btn btn-primary btn-icon-text"><i className="ti-arrow-left btn-icon-prepend"></i>Zpět</Button>
-                        <a href="/products_list/?approved=all&page=1"><button type="button" className="btn btn-outline-primary btn-icon-text">
-                            Seznam produktů
-                        </button></a>
+                        <NavLink to={'/productlist'}>
+                            <button type="button" className="btn btn-outline-primary btn-icon-text">
+                                Seznam produktů
+                            </button>
+                        </NavLink>
                     </div>
                     <div>
                         {
@@ -179,7 +181,6 @@ function ProductData(props){
 
 function ProductDetailTabs(props){
     const [tabKey, setTabKey] = useState('variants');
-    console.log(props.data);
     return (
         <Tabs activeKey={tabKey} onSelect={(e) => setTabKey(e)}>
             <Tab eventKey={'variants'} title={`Varianty ${props.data.variants.length}`}>

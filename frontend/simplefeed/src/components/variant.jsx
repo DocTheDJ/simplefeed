@@ -4,6 +4,7 @@ import React from 'react';
 // import VariantModal from './variantModal';
 // import axios from 'axios';
 import ModificationVariantModal from './modificationVariantModal';
+import Button from 'react-bootstrap/esm/Button';
 
 function Variant(props){
     return (
@@ -68,7 +69,12 @@ function Variant(props){
                         {props.data.price} {props.data.currency}
                     </p>
                     <div>
-                        <ModificationVariantModal data={props.data} context={props.context} fromVar={true}></ModificationVariantModal>
+                        <ModificationVariantModal
+                            data={props.data} 
+                            context={props.context} 
+                            Child={() => <i className="ti-pencil"></i>}
+                            buttonStyle={'btn-inverse-warning btn-icon'}>
+                        </ModificationVariantModal>
                         {
                             props.data.visible === '1' ? 
                                 <a href="approve_var/{{x.id}}/1"><button type="button" className="btn btn-inverse-success btn-icon">
