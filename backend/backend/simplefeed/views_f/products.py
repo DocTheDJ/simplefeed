@@ -43,3 +43,14 @@ def detailProduct(request, id):
         return Response(ser.data)
     else:
         return Response('noDB')
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def setMain(request, id, new):
+    if DB := create_dbconnect(request):
+        product = Common.objects.using(DB).filter(id=id)
+        product.update(price_common=new)
+        response = 'OK'
+    else:
+        response = 'noDB'
+    return Response(response)

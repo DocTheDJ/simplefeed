@@ -16,6 +16,7 @@ from .views_f.products import (
     listProducts,
     approve_product,
     detailProduct,
+    setMain,
 )
 
 from .views_f.variants import (
@@ -39,4 +40,5 @@ urlpatterns = [
     path("update-variant/<str:id>", updateVariant),
     path('variant-list/<str:pagenum>', variantList),
     path('product-detail/<str:id>', detailProduct),
+    path('set-main/<int:id>/<int:new>', setMain),
 ]

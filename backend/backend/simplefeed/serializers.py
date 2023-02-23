@@ -71,6 +71,7 @@ class VariantWithParamsSerializer(serializers.ModelSerializer):
     params = VariantParamSerializer(many=True, source='variants_params')
     decide_main = serializers.ReadOnlyField()
     get_supplier = serializers.ReadOnlyField()
+    profit = serializers.ReadOnlyField()
     class Meta:
         model = models.Variant()
         fields = '__all__'

@@ -7,58 +7,84 @@ import Button from 'react-bootstrap/esm/Button';
 import ProductImages from '../components/imageslider';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import ModificationVariantModal from '../components/modificationVariantModal';
 
 function ProductDetail(){
     const [data, setData] = useState(null);
     const {authTokens} = useContext(AuthContext);
     const {id} = useParams();
-    const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(ipAddress + `product-detail/${id}`, getJsonHeader(authTokens)).then((response) => {setData(response.data[0]);});
+        axios.get(ipAddress + `product-detail/${id}`, getJsonHeader(authTokens)).then((response) => {
+            setData(response.data[0]);
+        });
     }, [authTokens, id]);
+
 
     return (
         <>
-            <div className="row mb-3 ">
-                <div className="col-lg-12 d-flex justify-content-between">
-                    <div>
-                        <Button onClick={() => navigate(-1)} className="btn btn-primary btn-icon-text"><i className="ti-arrow-left btn-icon-prepend"></i>Zpět</Button>
-                        <NavLink to={'/productlist'}>
-                            <button type="button" className="btn btn-outline-primary btn-icon-text">
-                                Seznam produktů
-                            </button>
-                        </NavLink>
-                    </div>
-                    <div>
-                        {
-                            data?.approved ? 
-                                <a href="approve_product/{{common.id}}/1"><button type="button" className="btn btn-inverse-success btn-icon">
-                                    <i className="ti-arrow-circle-down"></i>
-                                </button></a>
-                            :
-                                <a href="approve_product/{{common.id}}/0"><button type="button" className="btn btn-inverse-danger btn-icon">
-                                    <i className="ti-na"></i>
-                                </button></a>
-                        }
-                        <button type="button" className="btn btn-primary btn-icon-text">
-                            <i className="ti-pencil btn-icon-prepend"></i>
-                            Upravit produkt
-                        </button>
-                        <div className="btn-group">
-                            <button type="button" className="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Možnosti</button>
-                            <div className="dropdown-menu" >
-                                <a className="dropdown-item" href="generate_output_product/{{common.id}}/">Vygenerovat data</a>
-                                <a className="dropdown-item">Zobrazit u dodavatele</a>
-                            </div>
-                        </div>
-                    </div>    
-                </div>
-            </div>
             {
-                data !== null ? <ProductData data={data}></ProductData> : <></>
+                data !== null ? 
+                    <>
+                        <ProductBar data={data} context={authTokens} setData={setData}></ProductBar>
+                        <ProductData data={data} context={authTokens} setData={setData}></ProductData> 
+                    </>
+                :
+                    <></>
             }
         </>
+    );
+}
+
+function ProductBar(props){
+    console.log(props.data);
+    const navigate = useNavigate();
+    const [approved, setApprove] = useState(props.data?.approved)
+
+    let updateApprovement = async(e) =>{
+        e.preventDefault();
+        axios.get(ipAddress + `approve_product/${props.data.id}/${+approved}`, getJsonHeader(props.context)).then((response) => {
+            if(response.status === 200 && response.data === 'OK'){
+                setApprove(!approved);
+                axios.get(ipAddress + `product-detail/${props.data.id}`, getJsonHeader(props.context)).then((response) => {
+                    props.setData(response.data[0]);
+                });
+            }
+        });
+    }
+
+    return (
+        <div className="row mb-3 ">
+            <div className="col-lg-12 d-flex justify-content-between">
+                <div>
+                    <Button onClick={() => navigate(-1)} className="btn btn-primary btn-icon-text"><i className="ti-arrow-left btn-icon-prepend"></i>Zpět</Button>
+                    <NavLink to={'/productlist'}>
+                        <button type="button" className="btn btn-outline-primary btn-icon-text">
+                            Seznam produktů
+                        </button>
+                    </NavLink>
+                </div>
+                <div>
+                    {
+                        approved ? 
+                            <Button className="btn btn-inverse-success btn-icon" onClick={(e) => updateApprovement(e)}><i className="ti-arrow-circle-down"></i></Button>
+                        :
+                            <Button className="btn btn-inverse-danger btn-icon" onClick={(e) => updateApprovement(e)}><i className="ti-na"></i></Button>
+                    }
+                    <button type="button" className="btn btn-primary btn-icon-text">
+                        <i className="ti-pencil btn-icon-prepend"></i>
+                        Upravit produkt
+                    </button>
+                    <div className="btn-group">
+                        <button type="button" className="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Možnosti</button>
+                        <div className="dropdown-menu" >
+                            <a className="dropdown-item" href="generate_output_product/{{common.id}}/">Vygenerovat data</a>
+                            <a className="dropdown-item">Zobrazit u dodavatele</a>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
     );
 }
 
@@ -74,10 +100,11 @@ function ProductData(props){
                 <div className="card mb-4" style={{background:'transparent'}}>
                     <div className="card-body" >
                         <div className="d-flex">
-                            <p className="text-center mr-3" style={{display:'block', width:'200px !important', background:'lightgray', padding: '2px', borderRadius: '8px'}}>
+                            <p className="text-center mr-3" style={{display:'block', background:'lightgray', padding: '2px', borderRadius: '8px'}}
+                                ref={el => {if(el) {el.style.setProperty('width', '200px', 'important');}}}>
                                 {props.data.supplier.name}
                             </p>
-                            <p className="text-center" style={{display:'block', width:'200px !important', border:'1px solid black', padding: '2px', borderRadius: '8px'}}>Produkt</p>
+                            <p className="text-center" style={{display:'block', border:'1px solid black', padding: '2px', borderRadius: '8px'}} ref={el => {if(el) {el.style.setProperty('width', '200px', 'important');}}}>Produkt</p>
                         </div>
                         <br/>
                         <h2>
@@ -172,7 +199,7 @@ function ProductData(props){
                 </div>
             </div>
             <div className="col-lg-12 mt-4">
-                <ProductDetailTabs data={props.data}></ProductDetailTabs>
+                <ProductDetailTabs data={props.data} context={props.context} setData={props.setData}></ProductDetailTabs>
             </div>
         </div>
 
@@ -184,7 +211,7 @@ function ProductDetailTabs(props){
     return (
         <Tabs activeKey={tabKey} onSelect={(e) => setTabKey(e)}>
             <Tab eventKey={'variants'} title={`Varianty ${props.data.variants.length}`}>
-                <ProductVariants data={props.data.variants}></ProductVariants>
+                <ProductVariants data={props.data.variants} context={props.context} id={props.data.id} setData={props.setData}></ProductVariants>
             </Tab>
             <Tab eventKey={'desc'} title={'Detailní a krátký popis'}>
                 <Descriptions data={props.data}></Descriptions>
@@ -221,7 +248,7 @@ function ProductVariants(props){
                     <tbody>
                         {
                             props.data.map((value, key) =>{
-                                return <VariantListItem data={value} key={key}/>
+                                return <VariantListItem data={value} key={key} context={props.context} id={props.id} setData={props.setData}/>
                             })
                         }
                     </tbody>
@@ -238,6 +265,18 @@ function VariantListItem(props){
     var params = props.data.params.filter(useableParam);
     if(params.length === 0){
         params = props.data.params;
+    }
+    let setMain = async(e) => {
+        e.preventDefault();
+        axios.get(ipAddress + `set-main/${props.id}/${props.data.id}`, getJsonHeader(props.context)).then((response) => {
+            if(response.status !== 200 || response.statusText !== 'OK'){
+                alert('Something fucked up');
+            }else{
+                axios.get(ipAddress + `product-detail/${props.id}`, getJsonHeader(props.context)).then((response) => {
+                    props.setData(response.data[0]);
+                });
+            }
+        })
     }
     return (
         <tr>
@@ -267,15 +306,19 @@ function VariantListItem(props){
                 {props.data.price} {props.data.currency}
             </td>
             <td>
-                <button type="button" className="btn btn-warning btn-rounded btn-icon" data-bs-toggle="modal" data-bs-target="#variant_edit{{x.id}}">
-                    <i className="ti-pencil"></i>
-                </button>
+                <ModificationVariantModal 
+                    data={props.data}
+                    context={props.context}
+                    Child={() => <i className="ti-pencil"></i>}
+                    buttonStyle={'btn btn-warning btn-rounded btn-icon'}>
+                </ModificationVariantModal>
                 <a href="/var_detail/{{x.id}}"><button type="button" className="btn btn-info btn-rounded btn-icon">
                     <i className="ti-eye"></i>
                 </button></a>
-                <a href="/set_main/{{x.id}}"><button type="button" className="btn btn-primary btn-rounded btn-icon">
+                <Button className='btn btn-primary btn-rounded btn-icon' onClick={setMain}><i className="ti-star"></i></Button>
+                {/* <a href="/set_main/{{x.id}}"><button type="button" className="btn btn-primary btn-rounded btn-icon">
                     <i className="ti-star"></i>
-                </button></a>
+                </button></a> */}
                 {
                     props.data.visible === '1' ? 
                         <a href="approve_var/{{x.id}}/1"><button type="button" className="btn btn-inverse-success btn-icon">
@@ -389,88 +432,3 @@ function Categories(props){
         </div>
     );
 }
-
-
-{/* <div className="modal fade" id="aktualizace" tabIndex="-1" role="dialog" aria-labelledby="aktualizace" aria-hidden="true">
-    <div className="modal-dialog" role="document">
-        <div className="modal-content">
-            <div className="modal-body">
-                Opravdu si přejete aktualizovat produkt?
-            </div>
-            <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-dismiss="modal">Zrušit</button>
-                <button type="button" className="btn btn-primary">Aktualizovat</button>
-            </div>
-        </div>
-    </div>
-</div> */}
-
-
-{/* <div className="modal fade" id="variant_edit{{x.id}}" tabIndex="-1" aria-labelledby="variant_edit{{x.id}}Label" aria-hidden="true">
-    <div className="modal-dialog modal-xl">
-        <div className="modal-content">
-        <form method="POST" action="update_var/{{x.id}}">
-        {% csrf_token %}
-            <div className="modal-header">
-            <h5 className="modal-title" id="variant_edit{{x.id}}Label">Upravit variantu:  {{x.code}}</h5>
-            <div>
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
-                <input type="submit" className="btn btn-primary" value="Upravit variantu">
-            </div>
-            </div>
-            <div className="modal-body">
-            <h3>Ceník:</h3>
-            <br>
-            <div className="row">
-                <div className="col-6">
-                <label className="form-label">Prodejní cena (s DPH)</label>
-                <input type="number" step=".01" className="form-control" value="{{x.price}}" name="price_input">
-                <p style="padding-top:10px"><strong>Cena bez DPH:</strong> 1568 Kč</p>
-                </div>
-            
-                <div className="col-6">
-                <label className="form-label">Běžná cena (Doporučená) (s DPH)</label>
-                <input type="number" step=".01" className="form-control"  value="{{x.rec_price}}" name="rec_price_input">
-                <p style="padding-top:10px"><strong>Cena bez DPH:</strong> 1568 Kč</p>
-                </div>
-            
-            </div>
-            <br>
-            <div className="row">
-                <div className="col-6">
-                <label className="form-label">Nákupní cena (bez DPH)</label>
-                <input type="number" step=".01" className="form-control"  value="{{x.pur_price}}" name="pur_price_input">
-                <p style="padding-top:10px"><strong>Cena včetně DPH:</strong> 1568 Kč</p>
-                </div>
-    
-                <div className="col-6">
-                <label className="form-label">Jednotná sazba DPH (v %)</label>
-                <input type="number" className="form-control" value="{{x.vat}}" name="vat_input">
-                </div>
-            
-            </div>
-            <br>
-            <h3>Parametry:</h3>
-            <br>
-            <div className="row">
-                {% for p in x.get_params %}
-                <div className="col-6">
-                <label className="form-label">Název</label>
-                <input type="text" className="form-control" value="{{p.name.name}}" name="param_name_{{p.name.id}}">
-                </div>    
-                <div className="col-6">
-                <label className="form-label">Hodnota</label>
-                <input type="text" className="form-control" value="{{p.value.value}}" name="param_value_{{p.value.id}}">
-                </div>
-                <br>
-                {% endfor %}
-            </div>
-            <br>
-            </div>
-            <div className="modal-footer">
-            </div>
-        </form>
-        </div>
-    </div>
-    </div>
-     */}
