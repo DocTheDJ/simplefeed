@@ -4,6 +4,9 @@ import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import { useParams, useNavigate } from "react-router-dom"
 import Button from 'react-bootstrap/esm/Button';
+import ProductImages from '../components/imageslider';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 
 function ProductDetail(){
     const [data, setData] = useState(null);
@@ -21,10 +24,6 @@ function ProductDetail(){
                 <div className="col-lg-12 d-flex justify-content-between">
                     <div>
                         <Button onClick={() => navigate(-1)} className="btn btn-primary btn-icon-text"><i className="ti-arrow-left btn-icon-prepend"></i>Zpět</Button>
-                        {/* <button onclick="history.back()" type="button" className="btn btn-primary btn-icon-text">
-                            <i className="ti-arrow-left btn-icon-prepend"></i>
-                            Zpět
-                        </button> */}
                         <a href="/products_list/?approved=all&page=1"><button type="button" className="btn btn-outline-primary btn-icon-text">
                             Seznam produktů
                         </button></a>
@@ -64,57 +63,31 @@ function ProductDetail(){
 export default ProductDetail;
 
 function ProductData(props){
-    console.log(props.data);
+    const images = props.data.variants?.map((value) => {return {url: value.image_ref.image}});
     return (
         <div className="row grid-margin grid-margin-md-0 stretch-card mb-4">
-            <div className="col-lg-6">
-                <div className="card">
-                    <div className="card-body">
-                        <div className="slider-for">
-                            {
-                                props.data.variants?.map((value, key) => {
-                                    return (
-                                        <figure className="figure" key={key}>
-                                            <img style={{maxWidth: '400px', maxHeight: '400px'}} className="mx-auto d-block img-fluid" src={value.image_ref.image}/>
-                                        </figure>  
-                                    );
-                                })
-                            }
-                        </div>
-                        <br/>
-                        <div className="slider-nav">
-                            {
-                                props.data.variants?.map((value, key) => {
-                                    <figure className="figure">
-                                        <img style={{maxWidth: '100px', maxHeight: '100px'}} className="mx-auto d-block img-fluid" src={value.image_ref.image}/>
-                                    </figure>
-                                })
-                            }
-                        </div>
-                    </div>
-                </div>  
-            </div>
+            <ProductImages data={images}></ProductImages>
 
             <div className="col-lg-6">
                 <div className="card mb-4" style={{background:'transparent'}}>
                     <div className="card-body" >
                         <div className="d-flex">
                             <p className="text-center mr-3" style={{display:'block', width:'200px !important', background:'lightgray', padding: '2px', borderRadius: '8px'}}>
-                                {/* {{common.supplier.name}} */}
+                                {props.data.supplier.name}
                             </p>
                             <p className="text-center" style={{display:'block', width:'200px !important', border:'1px solid black', padding: '2px', borderRadius: '8px'}}>Produkt</p>
                         </div>
                         <br/>
                         <h2>
-                            {/* {{common.name}} */}
+                            {props.data.name}
                         </h2>
                         <p className="lead">Výrobce: <strong>
-                            {/* {{common.manufacturer.name}} */}
+                            {props.data.manufacturer.name}
                             </strong>
                         </p>
                         <hr/>
                         <p>
-                            {/* {{common.short_description}} */}
+                            {props.data.short_description}
                             <a  href="">Zobrazit více...</a>
                         </p>    
                     </div>
@@ -124,13 +97,13 @@ function ProductData(props){
                         <div className="card bg-primary">
                             <div className="card-body">
                                 <h2 style={{color:'white'}}>
-                                    {/* {{common.price_common.price}} {{common.price_common.currency}} */}
+                                    {props.data.price_common.price} {props.data.price_common.currency}
                                 </h2>
                                 <p style={{color:'white'}} className="lead">Nákupní cena: 
-                                    {/* {{common.price_common.pur_price}} {{common.price_common.currency}} */}
+                                {props.data.price_common.pur_price} {props.data.price_common.currency}
                                 </p>
                                 <p style={{color:'white'}}>Zisk: 
-                                    {/* {{common.price_common.profit}} {{common.price_common.currency}} */}
+                                    {props.data.price_common.profit} {props.data.price_common.currency}
                                 </p>
                             </div>
                         </div>
@@ -143,11 +116,11 @@ function ProductData(props){
                                     <i className="mdi mdi-barcode icon-lg  text-info d-flex align-self-start mr-3"></i>
                                     <div className="media-body">
                                         <p className="card-text">Kód produktu: <strong>
-                                            {/* {{common.price_common.code}} */}
+                                            {props.data.price_common.code}
                                             </strong>
                                         </p>
                                         <p className="card-text">EAN: <strong>
-                                            {/* {{common.price_common.ean}} */}
+                                            {props.data.price_common.ean}
                                             </strong>
                                         </p>
                                     </div>
@@ -164,7 +137,7 @@ function ProductData(props){
                                     <div className="media-body">
                                         <p className="card-text">Skladová dostupnost: <strong>Skladem</strong></p>
                                         <p className="card-text">Počet kusů: <strong>
-                                            {/* {{common.price_common.amount}} */}
+                                            {props.data.price_common.amount}
                                             </strong>
                                         </p>
                                     </div>
@@ -197,188 +170,222 @@ function ProductData(props){
                 </div>
             </div>
             <div className="col-lg-12 mt-4">
-                <div className="nav nav-tabs d-flex justify-content-center" id="myTab" role="tablist" style={{borderBottom:'0px'}}>
-                    <button className="nav-link active" id="variant-tab" data-bs-toggle="tab" data-bs-target="#variant-tab-pane" type="button" role="tab" aria-controls="variant-tab-pane" aria-selected="true">Varianty <strong>
-                        {/* {{common.count}} */}
-                        </strong>
-                    </button>
-                    <button className="nav-link " id="text-tab" data-bs-toggle="tab" data-bs-target="#text-tab-pane" type="button" role="tab" aria-controls="text-tab-pane" aria-selected="false" style={{borderRadius: '8px 0px 0px 8px'}}>Detailní a krátký popis</button>
-                    <button className="nav-link" id="parametrs-tab" data-bs-toggle="tab" data-bs-target="#parametrs-tab-pane" type="button" role="tab" aria-controls="parametrs-tab-pane" aria-selected="false">Parametry</button>
-                    <button className="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" style={{borderRadius: '0px 8px 8px 0px'}}>Kategorie</button>
-                </div>
+                <ProductDetailTabs data={props.data}></ProductDetailTabs>
+            </div>
+        </div>
 
-                <div className="tab-content" style={{border: '0px !important'}} id="myTabContent">
-                    <div className="card tab-pane fade  show active" id="variant-tab-pane" role="tabpanel" aria-labelledby="variant-tab" tabIndex="0">
+    );
+}
+
+function ProductDetailTabs(props){
+    const [tabKey, setTabKey] = useState('variants');
+    console.log(props.data);
+    return (
+        <Tabs activeKey={tabKey} onSelect={(e) => setTabKey(e)}>
+            <Tab eventKey={'variants'} title={`Varianty ${props.data.variants.length}`}>
+                <ProductVariants data={props.data.variants}></ProductVariants>
+            </Tab>
+            <Tab eventKey={'desc'} title={'Detailní a krátký popis'}>
+                <Descriptions data={props.data}></Descriptions>
+            </Tab>
+            <Tab eventKey={'params'} title={'Parametry'}>
+                <div className="card-body">
+                    <h3>Parametry</h3>
+                        <br/>
+                    <table className="table">
+                        <tbody>
+                            {
+                                props.data.price_common.params.map((value, key) => {
+                                    return (<tr key={key}><td><strong>{value.param.name.name}</strong></td><td>{value.param.value.value}</td></tr>);
+                                })
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </Tab>
+            <Tab eventKey={'category'} title={'Kategorie'}>
+                <p>Hello from category</p>
+            </Tab>
+        </Tabs>
+    );
+}
+
+function ProductVariants(props){
+    return (
+        <div className="card tab-pane fade  show active" id="variant-tab-pane" role="tabpanel" aria-labelledby="variant-tab" tabIndex="0">
+            <div className="card-body">
+                <h3>Varianty produktu</h3>
+                <br/>
+                <table className="table">
+                    <tbody>
+                        {
+                            props.data.map((value, key) =>{
+                                return <VariantListItem data={value} key={key}/>
+                            })
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>  
+    );
+}
+
+function useableParam(val){
+    return val.var_param;
+}
+function VariantListItem(props){
+    var params = props.data.params.filter(useableParam);
+    if(params.length === 0){
+        params = props.data.params;
+    }
+    return (
+        <tr>
+            <td><input className="form-check-input form-control-lg" type="checkbox" value="{{x.id}}" name="uncouple_vars" form="uncouple-form"/></td>
+            <td><img src={props.data.image_ref.image} style={{width: '100px', height: '100px'}}/></td>
+            <td>
+                {
+                    params.map((value, key) => {
+                        return (<p key={key}><strong>{value.param.name.name}:</strong> {value.param.value.value}</p>);
+                    })
+                }
+            </td>
+            <td>
+                {
+                    props.data.decide_main ? 
+                        <p className="text-center" style={{display:'block', width:'200px !important', border:'1px solid black', padding: '2px', borderRadius: '8px'}}>Hlavní varianta</p>
+                    :
+                        <></>
+                }
+                <strong>Kód:</strong>
+                    {props.data.code}
+            </td>
+            <td><strong>Skladem</strong><br/>
+                {props.data.amount} Ks
+            </td>
+            <td>
+                {props.data.price} {props.data.currency}
+            </td>
+            <td>
+                <button type="button" className="btn btn-warning btn-rounded btn-icon" data-bs-toggle="modal" data-bs-target="#variant_edit{{x.id}}">
+                    <i className="ti-pencil"></i>
+                </button>
+                <a href="/var_detail/{{x.id}}"><button type="button" className="btn btn-info btn-rounded btn-icon">
+                    <i className="ti-eye"></i>
+                </button></a>
+                <a href="/set_main/{{x.id}}"><button type="button" className="btn btn-primary btn-rounded btn-icon">
+                    <i className="ti-star"></i>
+                </button></a>
+                {
+                    props.data.visible === '1' ? 
+                        <a href="approve_var/{{x.id}}/1"><button type="button" className="btn btn-inverse-success btn-icon">
+                            <i className="ti-arrow-circle-down"></i>
+                        </button></a>
+                    : props.data.visible === '0' ?
+                            <a href="approve_var/{{x.id}}/0"><button type="button" className="btn btn-inverse-danger btn-icon">
+                                <i className="ti-na"></i>
+                            </button></a>
+                        :
+                            <a href="approve_var/{{x.id}}/0"><button type="button" className="btn btn-info btn-icon">
+                                <i className="ti-na"></i>
+                            </button></a>
+                }
+            </td>
+        </tr>
+    );
+}
+
+function Descriptions(props){
+    return (
+        <div className="row">
+            <div className="col-lg-4">
+                <div className="card" >
+                    <div className="card-body">
+                        <h3>Krátký popis</h3>
+                        <br/>
+                        <p className="lead">
+                            {props.data.short_description}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div className="col-lg-8">
+                <div className="card">
+                    <div className="card-body">
+                        <h3>Dlouhý popis</h3>
+                        <br/>
+                        {props.data.description}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function Categories(props){
+    return (
+        <div className="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabIndex="0">
+            <div className="row">
+                <div className="col-lg-12 mb-3">
+                    <div className="card">
                         <div className="card-body">
-                            <h3>Varianty produktu</h3>
+                            <h3>Eshopové kategorie</h3>
                             <br/>
-                            {/* <form id="uncouple-form" method="POST">
-                                <button type="submit" className="btn btn-info" formaction="multiple_action/uncouple/">Uncouple</button>
-                            </form> */}
                             <table className="table">
                                 <tbody>
-                                {/* {% for x in common.get_variants %} */}
                                     <tr>
-                                        <td><input className="form-check-input form-control-lg" type="checkbox" value="{{x.id}}" name="uncouple_vars" form="uncouple-form"/></td>
-                                        <td><img src="{{x.image_ref.image}}" style={{width: '100px', height: '100px'}}/></td>
-                                        <td>
-                                            {/* {% if x.get_useable_count > 0%}
-                                                {% for p in x.get_useable %}
-                                                <p><strong>{{p.name.name}}:</strong> {{p.value.value}}</p>
-                                                {% endfor %}
-                                            {% else %}
-                                                {% for p in x.get_params %}
-                                                <p><strong>{{p.name.name}}:</strong> {{p.value.value}}</p>
-                                                {% endfor %}
-                                            {% endif %} */}
-                                        </td>
-                                        <td>
-                                            {/* {% if x.decide_main %}  */}
-                                            <p className="text-center" style={{display:'block', width:'200px !important', border:'1px solid black', padding: '2px', borderRadius: '8px'}}>Hlavní varianta</p>
-                                            {/* {% endif %}  */}
-                                            <strong>Kód:</strong>
-                                                {/* {{x.code}} */}
-                                        </td>
-                                        <td><strong>Skladem</strong><br/>
-                                            {/* {{x.amount}} */}
-                                                Ks
-                                        </td>
-                                        <td>
-                                            {/* {{x.price}} {{x.currency}} */}
-                                        </td>
-                                        <td>
-                                            <button type="button" className="btn btn-warning btn-rounded btn-icon" data-bs-toggle="modal" data-bs-target="#variant_edit{{x.id}}">
-                                                <i className="ti-pencil"></i>
-                                            </button>
-                                            <a href="/var_detail/{{x.id}}"><button type="button" className="btn btn-info btn-rounded btn-icon">
-                                                <i className="ti-eye"></i>
-                                            </button></a>
-                                            <a href="/set_main/{{x.id}}"><button type="button" className="btn btn-primary btn-rounded btn-icon">
-                                                <i className="ti-star"></i>
-                                            </button></a>
-                                            {/* {% if x.visible == "1" %}
-                                                <a href="approve_var/{{x.id}}/1"><button type="button" className="btn btn-inverse-success btn-icon">
-                                                <i className="ti-arrow-circle-down"></i>
-                                                </button></a>
-                                            {% elif x.visible == "0" %}
-                                                <a href="approve_var/{{x.id}}/0"><button type="button" className="btn btn-inverse-danger btn-icon">
-                                                <i className="ti-na"></i>
-                                                </button></a>
-                                            {% else %}
-                                                <a href="approve_var/{{x.id}}/0"><button type="button" className="btn btn-info btn-icon">
-                                                <i className="ti-na"></i>
-                                                </button></a>
-                                            {% endif %} */}
-                                        </td>
+                                        {/* <form method="POST" action="add_cat_to_com/{{common.id}}"> */}
+                                            {/* {% csrf_token %} */}
+                                            <td>
+                                            <select className="form-control" name="category">
+                                                {/* {% for node in pick_categories %}
+                                                    {% include "print_tree_view.html" %}
+                                                {% endfor %} */}
+                                            </select>
+                                            </td>
+                                            <td><input className="btn btn-success"type="submit" value="Přidat kategorii"/></td>
+                                            
+                                        {/* </form> */}
                                     </tr>
-                            {/* {% endfor %} */}
+                                    {/* {% for node in category_list %}
+                                        {% if node.id in common.get_cats and node.supplier == eshop_id %}
+                                        <tr id="cat_row_{{node.id}}">
+                                            <td>{{ node.path }}</td>
+                                            {% if node.buttonTrue %}
+                                            <td>
+                                                <form>
+                                                {% csrf_token %}
+                                                <input type="submit" className="btn btn-danger js-remove-cat-from-comm" data-remove-cat-id="{{node.id}}" data-comm-victim="{{common.id}}" value="Remove from">
+                                                </form>
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %} */}
                                 </tbody>
                             </table>
                         </div>
-                    </div>  
-                
-                    <div className="tab-pane fade" id="text-tab-pane" role="tabpanel" aria-labelledby="text-tab" >
-                        <div className="row">
-                            <div className="col-lg-4">
-                                <div className="card" >
-                                    <div className="card-body">
-                                        <h3>Krátký popis</h3>
-                                        <br/>
-                                        <p className="lead">
-                                            {/* {{common.short_description}} */}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-8">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h3>Dlouhý popis</h3>
-                                        <br/>
-                                        {/* {{common.description}} */}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <div className="card tab-pane fade" id="parametrs-tab-pane" role="tabpanel" aria-labelledby="parametrs-tab" tabIndex="0">
+                </div>
+
+                <div className="col-lg-12">
+                    <div className="card" >
                         <div className="card-body">
-                            <h3>Parametry</h3>
-                                <br/>
+                            <h3>Dodavatelské kategorie</h3>
+                            <br/>
                             <table className="table">
-                            {/* {% for x in common.price_common.get_params %}
-                                <tr><td><strong>{{x.name.name}}</strong></td><td>{{x.value.value}}</td></tr>
+                            {/* {% for node in category_list %}
+                                {% if node.id in common.get_cats and node.supplier == common.supplier_id %}
+                                <tr>
+                                    <td>{{ node.path }}</td>
+                                </tr>
+                                {% endif %}
                             {% endfor %} */}
                             </table>
-                        </div>
-                    </div>
-                    <div className="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabIndex="0">
-                        <div className="row">
-                            <div className="col-lg-12 mb-3">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h3>Eshopové kategorie</h3>
-                                        <br/>
-                                        <table className="table">
-                                            <tbody>
-                                                <tr>
-                                                    {/* <form method="POST" action="add_cat_to_com/{{common.id}}"> */}
-                                                        {/* {% csrf_token %} */}
-                                                        <td>
-                                                        <select className="form-control" name="category">
-                                                            {/* {% for node in pick_categories %}
-                                                                {% include "print_tree_view.html" %}
-                                                            {% endfor %} */}
-                                                        </select>
-                                                        </td>
-                                                        <td><input className="btn btn-success"type="submit" value="Přidat kategorii"/></td>
-                                                        
-                                                    {/* </form> */}
-                                                </tr>
-                                                {/* {% for node in category_list %}
-                                                    {% if node.id in common.get_cats and node.supplier == eshop_id %}
-                                                    <tr id="cat_row_{{node.id}}">
-                                                        <td>{{ node.path }}</td>
-                                                        {% if node.buttonTrue %}
-                                                        <td>
-                                                            <form>
-                                                            {% csrf_token %}
-                                                            <input type="submit" className="btn btn-danger js-remove-cat-from-comm" data-remove-cat-id="{{node.id}}" data-comm-victim="{{common.id}}" value="Remove from">
-                                                            </form>
-                                                        </td>
-                                                        {% endif %}
-                                                    </tr>
-                                                    {% endif %}
-                                                {% endfor %} */}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-lg-12">
-                                <div className="card" >
-                                    <div className="card-body">
-                                        <h3>Dodavatelské kategorie</h3>
-                                        <br/>
-                                        <table className="table">
-                                        {/* {% for node in category_list %}
-                                            {% if node.id in common.get_cats and node.supplier == common.supplier_id %}
-                                            <tr>
-                                                <td>{{ node.path }}</td>
-                                            </tr>
-                                            {% endif %}
-                                        {% endfor %} */}
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     );
 }
 

@@ -3,8 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import React, {useState, useContext} from 'react';
 import AuthContext from '../context/AuthContext';
 import Form from 'react-bootstrap/Form';
-import axios from 'axios';
-import { ipAddress, getJsonHeader } from '../constants';
 
 function Login(){
     const [show, setShow] = useState(false);
@@ -13,7 +11,7 @@ function Login(){
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    let {authTokens, loginUser} = useContext(AuthContext);
+    let {loginUser} = useContext(AuthContext);
 
     return (
         <>

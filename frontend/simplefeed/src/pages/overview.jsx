@@ -45,7 +45,7 @@ function Overview(){
                     inactive_variants={data?.inactive_variants}
                     faulty_variants={data?.faulty_variants}></Panels>
         
-            <FeedList suppliers={data?.suppliers}></FeedList>
+            <FeedList data={data}></FeedList>
 
             <div className="col-lg-12">
                 <div className="row">

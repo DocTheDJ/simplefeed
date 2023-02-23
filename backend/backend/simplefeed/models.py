@@ -162,6 +162,7 @@ class Variant(models.Model):
     def is_variant(self):
         return True
 
+    @property
     def profit(self):
         try:
             return self.price - self.pur_price

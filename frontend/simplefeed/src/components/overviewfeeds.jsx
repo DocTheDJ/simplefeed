@@ -1,6 +1,7 @@
 import React from 'react';
 
 function FeedList(props){
+    console.log(props.data);
     return (
         <div className="col-md-12 grid-margin stretch-card">
             <div className="card position-relative">
@@ -8,7 +9,7 @@ function FeedList(props){
                     <div id="detailedReports" className="carousel slide detailed-report-carousel position-static pt-2" data-bs-ride="carousel">
                         <div className="carousel-inner">
                             {
-                                props.suppliers?.map((supplier, key) => {
+                                props.data?.suppliers.map((supplier, key) => {
                                     return (<Feed data={supplier} key={key} first={key === 0}></Feed>)
                                 })
                             }
@@ -31,8 +32,11 @@ function Feed(props){
     if(props.first){
         bigClass += " active";
     }
-    const active_percentage = props.data.active_count / props.data.total_count
-    const inactive_percentage = props.data.inactive_count / props.data.total_count
+    const active_percentage = props.data.active_count / props.data.total_count;
+    const inactive_percentage = props.data.inactive_count / props.data.total_count;
+
+    console.log(props.data);
+    console.log(active_percentage, inactive_percentage);
 
     return (
         <div className={bigClass}>
