@@ -79,6 +79,14 @@ class VariantUpdateSerializer(serializers.ModelSerializer):
         model = models.Variant_Update
         fields = '__all__'
 
+class ProductDetailSerializer(serializers.ModelSerializer):
+    variants = VariantSerializer(many=True)
+    supplier = FeedSerializer()
+    price_common = VariantSerializer()
+    class Meta:
+        model = models.Common
+        fields = '__all__'
+
 class ProductSerializer(serializers.ModelSerializer):
     price_common = VariantSerializer()
     supplier = FeedSerializer()

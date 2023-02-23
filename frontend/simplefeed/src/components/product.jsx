@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/esm/Button';
 import { ipAddress, getJsonHeader} from '../constants';
 import VariantModal from './variantModal';
 import axios from 'axios';
+import { NavLink } from 'react-router-dom';
 
 function Product(props){
 
@@ -20,7 +21,7 @@ function Product(props){
         <div className="col-md-3 grid-margin grid-margin-md-0 stretch-card mb-4">
             <div className="card">
                 <div className="card-body">
-
+                    
                     <input style={{
                         position: 'absolute',
                         left: '55px',
@@ -28,11 +29,12 @@ function Product(props){
                         width: '20px', height: '20px'}}
                     className="form-check-input form-control-lg" type="checkbox" value="{{x.id}}" name="product_check" form="checking-form"/>
 
-                    <a href="/product_detail/{{x.id}}/"><img className="img-fluid mb-4 mx-auto d-block" style={{borderRadius: '8px', height: '220px'}} src={props.data.price_common.image_ref.image}></img>
+                    <NavLink to={`/productdetail/${props.data.id}`}>
+                        <img className="img-fluid mb-4 mx-auto d-block" style={{borderRadius: '8px', height: '220px'}} src={props.data.price_common.image_ref.image}></img>
                         <h4 className="card-title text-center">
                             {props.data.name}
                         </h4>
-                    </a>
+                    </NavLink>
                     <div className="d-flex justify-content-between">
                         <VariantModal id={props.data.id} length={props.data.variants.length} authTokens={props.context}></VariantModal>
                         <p className="card-description">

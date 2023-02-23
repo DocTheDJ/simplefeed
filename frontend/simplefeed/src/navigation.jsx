@@ -14,7 +14,7 @@ function Navigation(){
                     </NavLink>
                 </li>
                 <li className="nav-item">
-                    <NavLink className='nav-link' to={'productlist/'}>
+                    <NavLink className='nav-link' to={'/productlist'}>
                         <i className="ti-package menu-icon"></i>
                         <span className="menu-title">Produkty</span>
                     </NavLink>
@@ -50,7 +50,7 @@ function Navigation(){
                     </div>
                 </li>
                 <li className="nav-item">
-                    <NavLink className='nav-link' to={'test/'}>
+                    <NavLink className='nav-link' to={'/test'}>
                     {/* <a className="nav-link" href=""> */}
                         <i className="ti-ruler-pencil menu-icon"></i>
                         <span className="menu-title">Pravidla</span>

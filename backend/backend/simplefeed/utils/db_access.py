@@ -49,10 +49,10 @@ def create_user_access(name:str):
     # localcursor.execute("INSERT INTO products_rules (products_rules.name, products_rules.css_class, products_rules.action) VALUES ('Automaticke schvaleni', 'success', 'com_cat_s_1'), ('Automaticke zamitnuti', 'danger', 'com_cat_s_0'),('Schvalovat rucne', 'primary', 'com_cat_d_n'),('Pair to', 'warning', 'com_cat_p_t')")
     return 0
     
-def create_dbconnect(DB_name:str)->str:
+def create_dbconnect(DB_name)->str:
     new_database = {}
     new_database['ENGINE'] = 'django.db.backends.mysql'
-    new_database['NAME'] = 'simplefeed_' + DB_name
+    new_database['NAME'] = 'simplefeed_' + (DB_name if type(DB_name) == str else DB_name.user.username)
     new_database['USER'] = 'python'
     new_database['PASSWORD'] = 'poophead159'
     new_database['HOST'] = 'localhost'

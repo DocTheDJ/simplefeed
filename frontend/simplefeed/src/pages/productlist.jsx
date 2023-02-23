@@ -88,8 +88,6 @@ function ProductList(){
                             <div className="btn-group md-auto mb-3" role="group" aria-label="Basic example">
                                 <Button className={products ? activeButton : secondaryButton} onClick={(e) => {setData(null);setProducts(true);}}><i className="ti-layout-media-left btn-icon-prepend"></i>Produkty</Button>
                                 <Button className={products ? secondaryButton : activeButton} onClick={(e) => {setData(null);setProducts(false);}}><i className="ti-layout-grid2-thumb btn-icon-prepend"></i>Varianty</Button>
-                                {/* <a href="/products_list/?approved=all&page=1"><button type="button" className="mr-1 btn btn-primary btn-icon-text"><i className="ti-layout-media-left btn-icon-prepend"></i>Produkty</button></a>
-                                <a href="/variants_list/?visible=all&page=1"><button type="button" className="btn btn-outline-secondary btn-icon-text"><i className="ti-layout-grid2-thumb btn-icon-prepend"></i>Varianty</button></a> */}
                             </div>
                         </div>
                             {
