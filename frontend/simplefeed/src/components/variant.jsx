@@ -1,10 +1,6 @@
 import React from 'react';
-// import Button from 'react-bootstrap/esm/Button';
-// import { ipAddress, getJsonHeader} from '../constants';
-// import VariantModal from './variantModal';
-// import axios from 'axios';
 import ModificationVariantModal from './modificationVariantModal';
-import Button from 'react-bootstrap/esm/Button';
+import { NavLink } from 'react-router-dom';
 
 function Variant(props){
     return (
@@ -18,12 +14,14 @@ function Variant(props){
                         width: '20px', height: '20px'}}
                     className="form-check-input form-control-lg" type="checkbox" value="{{x.id}}" name="variant_check" form="checking-form"/>
 
-                    <a href="/var_detail/{{x.id}}/">
+                    {/* <a href="/var_detail/{{x.id}}/"> */}
+                        <NavLink to={`/variantdetail/${props.data.id}`}>
                         <img className="img-fluid mb-4 mx-auto d-block" style={{borderRadius: '8px', height: '220px'}} src={props.data.image_ref.image}/>
                         <h4 className="card-title text-center">
                             {props.data.name}
                         </h4>
-                    </a>
+                        </NavLink>
+                    {/* </a> */}
                     <div className="d-flex justify-content-between">
                         <div>
                             {

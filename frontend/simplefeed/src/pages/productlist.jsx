@@ -5,15 +5,17 @@ import AuthContext from '../context/AuthContext';
 import Button from 'react-bootstrap/esm/Button';
 import Product from '../components/product';
 import Variant from '../components/variant';
+import { useParams } from 'react-router-dom';
 
 const activeButton = 'mr-1 btn-primary btn-icon-text';
 const secondaryButton = 'btn-outline-secondary btn-icon-text';
 
 function ProductList(){
+    const {type} = useParams()
     const [data, setData] = useState(null);
     const [pagenumber, setPage] = useState(1);
     const [pages, setPages] = useState([]);
-    const [products, setProducts] = useState(true);
+    const [products, setProducts] = useState((type & 1));
 
     const {authTokens} = useContext(AuthContext);
 
@@ -32,7 +34,13 @@ function ProductList(){
         }
         window.scrollTo(0,0)
     }, [authTokens, products, pagenumber]);
-    console.log(data);
+
+    let swap = async(e, val) => {
+        e.preventDefault();
+        setData(null);
+        setProducts(val);
+        window.history.replaceState(null, null, `/productlist/${+val}`);
+    }
 
     return (
         <>
@@ -86,8 +94,8 @@ function ProductList(){
                         </div>
                         <div className="col-lg-4 d-flex justify-content-end">
                             <div className="btn-group md-auto mb-3" role="group" aria-label="Basic example">
-                                <Button className={products ? activeButton : secondaryButton} onClick={(e) => {setData(null);setProducts(true);}}><i className="ti-layout-media-left btn-icon-prepend"></i>Produkty</Button>
-                                <Button className={products ? secondaryButton : activeButton} onClick={(e) => {setData(null);setProducts(false);}}><i className="ti-layout-grid2-thumb btn-icon-prepend"></i>Varianty</Button>
+                                <Button className={products ? activeButton : secondaryButton} onClick={(e) => {swap(e, true);}}><i className="ti-layout-media-left btn-icon-prepend"></i>Produkty</Button>
+                                <Button className={products ? secondaryButton : activeButton} onClick={(e) => {swap(e, false);}}><i className="ti-layout-grid2-thumb btn-icon-prepend"></i>Varianty</Button>
                             </div>
                         </div>
                             {

@@ -8,6 +8,7 @@ import Overview from './pages/overview';
 import { Test } from './test';
 import ProductList from './pages/productlist';
 import ProductDetail from './pages/productdetail';
+import VariantDetail from './pages/variantdetail';
 
 function NavBar(){
     const {user} = useContext(AuthContext);
@@ -26,9 +27,10 @@ function NavBar(){
                     <div className="content-wrapper">
                         <Routes>
                             <Route path='/' element={<Overview></Overview>}></Route>
-                            <Route path='/productlist' element={<ProductList></ProductList>}></Route>
+                            <Route path='/productlist/:type' element={<ProductList></ProductList>}></Route>
                             <Route path='/test' element={<Test></Test>}></Route>
                             <Route path='/productdetail/:id' element={<ProductDetail></ProductDetail>}></Route>
+                            <Route path='/variantdetail/:id' element={<VariantDetail></VariantDetail>}></Route>
                         </Routes>
                     </div>
                 </div>

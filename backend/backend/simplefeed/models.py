@@ -169,6 +169,10 @@ class Variant(models.Model):
         except:
             return 0
     
+    @property
+    def variants(self):
+        return self.product.get().variants
+    
 class VariantParam(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE, related_name='variants_params')
     param = models.ForeignKey(Param, on_delete=models.CASCADE, related_name='params_variants')

@@ -76,6 +76,12 @@ class VariantWithParamsSerializer(serializers.ModelSerializer):
         model = models.Variant()
         fields = '__all__'
 
+class VariantUltimateSerializer(serializers.ModelSerializer):
+    variants = VariantWithParamsSerializer(many=True)
+    class Meta:
+        model = models.Variant
+        fields = '__all__'
+
 class VariantUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Variant_Update

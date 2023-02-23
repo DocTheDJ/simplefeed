@@ -22,7 +22,9 @@ from .views_f.products import (
 from .views_f.variants import (
     get_variants,
     updateVariant,
-    variantList
+    variantList,
+    variantDetail,
+    setVisibility,
 )
 
 urlpatterns = [
@@ -41,4 +43,6 @@ urlpatterns = [
     path('variant-list/<str:pagenum>', variantList),
     path('product-detail/<str:id>', detailProduct),
     path('set-main/<int:id>/<int:new>', setMain),
+    path('variant-detail/<int:id>', variantDetail),
+    path('set-visibility/<int:id>/<str:new>', setVisibility)
 ]
