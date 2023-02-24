@@ -69,6 +69,10 @@ class Category(models.Model):
     pair_onto = models.ManyToManyField('self')
     action = models.ForeignKey(Rules, null=True, on_delete=models.DO_NOTHING)
     
+    @property
+    def children(self):
+        return self.child.all()
+    
 class Variant(models.Model):
     code = models.CharField(max_length=32, null=True, unique=True)
     ean = models.CharField(max_length=16, null=True)

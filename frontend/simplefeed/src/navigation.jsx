@@ -30,7 +30,7 @@ function Navigation(){
                     </a>
                     <Collapse isOpened={categoryCollapse}>
                         <ul className="nav flex-column sub-menu" style={{paddingLeft:'20px'}}>
-                            <li className="nav-item"> <a className="nav-link" href="/categories/">Eshopové</a></li>
+                            <li className="nav-item"> <NavLink to={'/categories'} className='nav-link'>Eshopové</NavLink></li>
                             <li className="nav-item"> <a className="nav-link" href="/categories_supplier/">Dodavatelské</a></li>
                             <li className="nav-item"> <a className="nav-link" href="/categories_paring/">Párování</a></li>
                         </ul>
@@ -64,10 +64,8 @@ function Navigation(){
                 </li>
                 <li className="nav-item">
                     <NavLink className='nav-link' to={'/test'}>
-                    {/* <a className="nav-link" href=""> */}
                         <i className="ti-ruler-pencil menu-icon"></i>
                         <span className="menu-title">Pravidla</span>
-                    {/* </a> */}
                     </NavLink>
                 </li>
                 <li className="nav-item">

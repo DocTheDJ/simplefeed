@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from . import models
+from rest_framework_recursive.fields import RecursiveField
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -115,4 +116,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Common
+        fields = '__all__'
+
+class CategorySerializer(serializers.ModelSerializer):
+    children = serializers.ListField(child=RecursiveField())
+    class Meta:
+        model = models.Category
         fields = '__all__'

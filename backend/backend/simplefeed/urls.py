@@ -27,6 +27,12 @@ from .views_f.variants import (
     setVisibility,
 )
 
+from .views_f.category import (
+    pullCats,
+    getTree,
+    updateCat
+)
+
 urlpatterns = [
     path("token/", MyTokenObtainPairView.as_view(), name="obtain_token"),
     path("token/refresh/", TokenRefreshView.as_view(), name="refresh_token"),
@@ -44,5 +50,8 @@ urlpatterns = [
     path('product-detail/<str:id>', detailProduct),
     path('set-main/<int:id>/<int:new>', setMain),
     path('variant-detail/<int:id>', variantDetail),
-    path('set-visibility/<int:id>/<str:new>', setVisibility)
+    path('set-visibility/<int:id>/<str:new>', setVisibility),
+    path('pull-cats/', pullCats),
+    path('categories/', getTree),
+    path('update-category/<int:id>', updateCat)
 ]
