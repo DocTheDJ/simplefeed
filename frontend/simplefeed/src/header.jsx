@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import LargeLogo from "./static/images/simplefeed_large_logo.svg"
 import FaviconLogo from "./static/images/simplefeed_favicon_logo.svg"
 import Icon from '@mdi/react';

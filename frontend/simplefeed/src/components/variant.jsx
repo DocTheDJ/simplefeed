@@ -14,14 +14,12 @@ function Variant(props){
                         width: '20px', height: '20px'}}
                     className="form-check-input form-control-lg" type="checkbox" value="{{x.id}}" name="variant_check" form="checking-form"/>
 
-                    {/* <a href="/var_detail/{{x.id}}/"> */}
-                        <NavLink to={`/variantdetail/${props.data.id}`}>
-                        <img className="img-fluid mb-4 mx-auto d-block" style={{borderRadius: '8px', height: '220px'}} src={props.data.image_ref.image}/>
+                    <NavLink to={`/variantdetail/${props.data.id}`}>
+                        <img className="img-fluid mb-4 mx-auto d-block" style={{borderRadius: '8px', height: '220px'}} src={props.data.image_ref.image} alt=''/>
                         <h4 className="card-title text-center">
                             {props.data.name}
                         </h4>
-                        </NavLink>
-                    {/* </a> */}
+                    </NavLink>
                     <div className="d-flex justify-content-between">
                         <div>
                             {
@@ -37,11 +35,11 @@ function Variant(props){
                                 props.data.decide_main ? 
                                     <p className="text-center" style={{background:'#4b49ac',borderRadius:'8px',padding:'4px',color: 'white'}}>Výchozí</p>
                                 :
-                                    <a style={{textDecoration: 'none', color: '#010101'}} href="">
+                                    // <a style={{textDecoration: 'none', color: '#010101'}} href="">
                                         <p className="text-center" style={{background:'#d4d4da',borderRadius:'8px',padding:'4px'}}>
                                             Varianta
                                         </p>
-                                    </a>
+                                    // </a>
                             }
                             <p className="card-description">
                             

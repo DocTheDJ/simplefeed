@@ -62,7 +62,7 @@ function VariantListItem(props){
     return (
         <tr>
             <td><input className="form-check-input form-control-lg" type="checkbox" value="{{x.id}}" name="uncouple_vars" form="uncouple-form"/></td>
-            <td><img src={props.data.image_ref.image} style={{width: '100px', height: '100px'}}/></td>
+            <td><img src={props.data.image_ref.image} style={{width: '100px', height: '100px'}} alt=''/></td>
             <td>
                 {
                     params.map((value, key) => {

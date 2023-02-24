@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Icon from '@mdi/react';
 import { mdiSitemapOutline } from '@mdi/js';
 import { NavLink } from 'react-router-dom';
+import {Collapse} from 'react-collapse';
 
 function Navigation(){
+    const [categoryCollapse, setCategoryCollapse] = useState(false);
     return (
         <nav className="sidebar sidebar-offcanvas" id="sidebar">
             <ul className="nav">
@@ -21,11 +23,22 @@ function Navigation(){
                 </li>
 
                 <li className="nav-item">
-                    <a className="nav-link" data-toggle="collapse" href="#nav_categories" aria-expanded="false" aria-controls="nav_categories">
-                        {/* <i className="mdi mdi-sitemap-outline menu-icon"></i> */}
+                    <a className='nav-link' onClick={(e) => {setCategoryCollapse(!categoryCollapse)}} href>
                         <Icon path={mdiSitemapOutline} size={0.666667} style={{marginRight: '1rem'}}></Icon>
                         <span className="menu-title">Kategorie</span>
-                    <i className="menu-arrow"></i>
+                        <i className="menu-arrow"></i>
+                    </a>
+                    <Collapse isOpened={categoryCollapse}>
+                        <ul className="nav flex-column sub-menu" style={{paddingLeft:'20px'}}>
+                            <li className="nav-item"> <a className="nav-link" href="/categories/">Eshopové</a></li>
+                            <li className="nav-item"> <a className="nav-link" href="/categories_supplier/">Dodavatelské</a></li>
+                            <li className="nav-item"> <a className="nav-link" href="/categories_paring/">Párování</a></li>
+                        </ul>
+                    </Collapse>
+                    {/* <a className="nav-link" data-toggle="collapse" href="#nav_categories" aria-expanded="false" aria-controls="nav_categories">
+                        <Icon path={mdiSitemapOutline} size={0.666667} style={{marginRight: '1rem'}}></Icon>
+                        <span className="menu-title">Kategorie</span>
+                        <i className="menu-arrow"></i>
                     </a>
                     <div className="collapse" id="nav_categories">
                         <ul className="nav flex-column sub-menu" style={{paddingLeft:'20px'}}>
@@ -33,7 +46,7 @@ function Navigation(){
                             <li className="nav-item"> <a className="nav-link" href="/categories_supplier/">Dodavatelské</a></li>
                             <li className="nav-item"> <a className="nav-link" href="/categories_paring/">Párování</a></li>
                         </ul>
-                    </div>
+                    </div> */}
                 </li>
 
                 <li className="nav-item">

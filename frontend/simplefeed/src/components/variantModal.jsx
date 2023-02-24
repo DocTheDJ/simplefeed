@@ -3,7 +3,6 @@ import { ipAddress, getJsonHeader } from '../constants';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import ModificationVariantModal from './modificationVariantModal';
-import Button from 'react-bootstrap/esm/Button';
 
 
 function VariantModal(props){
@@ -21,7 +20,7 @@ function VariantModal(props){
 
     return (
         <>
-            <a onClick={(e) => getData(e)} href=''>
+            <a onClick={(e) => getData(e)} href>
                 <p className="card-description">Počet variant: <strong>{props.length}</strong></p>
             </a>
             <Modal show={show} dialogClassName='modal-xl modal-dialog-scrollable'>

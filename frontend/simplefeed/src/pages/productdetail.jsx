@@ -79,7 +79,7 @@ function ProductBar(props){
                         <button type="button" className="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Možnosti</button>
                         <div className="dropdown-menu" >
                             <a className="dropdown-item" href="generate_output_product/{{common.id}}/">Vygenerovat data</a>
-                            <a className="dropdown-item">Zobrazit u dodavatele</a>
+                            <a className="dropdown-item" href>Zobrazit u dodavatele</a>
                         </div>
                     </div>
                 </div>    
@@ -117,7 +117,7 @@ function ProductData(props){
                         <hr/>
                         <p>
                             {props.data.short_description}
-                            <a  href="">Zobrazit více...</a>
+                            <a href>Zobrazit více...</a>
                         </p>    
                     </div>
                 </div>
