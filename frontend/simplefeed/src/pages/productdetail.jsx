@@ -8,6 +8,7 @@ import ProductImages from '../components/imageslider';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import ProductVariants from '../components/variantListTab';
+import Descriptions from '../components/descriptionTab';
 
 function ProductDetail(){
     const [data, setData] = useState(null);
@@ -210,7 +211,7 @@ function ProductDetailTabs(props){
     return (
         <Tabs activeKey={tabKey} onSelect={(e) => setTabKey(e)}>
             <Tab eventKey={'variants'} title={`Varianty ${props.data.variants.length}`}>
-                <ProductVariants data={props.data.variants} context={props.context} id={props.data.id} setData={props.setData}></ProductVariants>
+                <ProductVariants data={props.data.variants} context={props.context} id={props.data.id} setData={props.setData} product={true}></ProductVariants>
             </Tab>
             <Tab eventKey={'desc'} title={'Detailní a krátký popis'}>
                 <Descriptions data={props.data}></Descriptions>
@@ -234,33 +235,6 @@ function ProductDetailTabs(props){
                 <p>Hello from category</p>
             </Tab>
         </Tabs>
-    );
-}
-
-function Descriptions(props){
-    return (
-        <div className="row">
-            <div className="col-lg-4">
-                <div className="card" >
-                    <div className="card-body">
-                        <h3>Krátký popis</h3>
-                        <br/>
-                        <p className="lead">
-                            {props.data.short_description}
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div className="col-lg-8">
-                <div className="card">
-                    <div className="card-body">
-                        <h3>Dlouhý popis</h3>
-                        <br/>
-                        {props.data.description}
-                    </div>
-                </div>
-            </div>
-        </div>
     );
 }
 

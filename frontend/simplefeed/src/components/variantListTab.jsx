@@ -3,6 +3,7 @@ import React from 'react';
 import { ipAddress, getJsonHeader } from '../constants';
 import axios from 'axios';
 import Button from 'react-bootstrap/esm/Button';
+import { NavLink } from 'react-router-dom';
 
 function ProductVariants(props){
     return (
@@ -14,7 +15,13 @@ function ProductVariants(props){
                     <tbody>
                         {
                             props.data.map((value, key) =>{
-                                return <VariantListItem data={value} key={key} context={props.context} id={props.id} setData={props.setData}/>
+                                return <VariantListItem 
+                                            data={value} 
+                                            key={key} 
+                                            context={props.context} 
+                                            id={props.id} 
+                                            setData={props.setData} 
+                                            product={props.product}/>
                             })
                         }
                     </tbody>
@@ -40,9 +47,15 @@ function VariantListItem(props){
             if(response.status !== 200 || response.statusText !== 'OK'){
                 alert('Something fucked up');
             }else{
-                axios.get(ipAddress + `product-detail/${props.id}`, getJsonHeader(props.context)).then((response) => {
-                    props.setData(response.data[0]);
-                });
+                if(props.product){
+                    axios.get(ipAddress + `product-detail/${props.id}`, getJsonHeader(props.context)).then((response) => {
+                        props.setData(response.data[0]);
+                    });
+                }else{
+                    axios.get(ipAddress + `variant-detail/${props.data.id}`, getJsonHeader(props.context)).then((response) => {
+                        props.setData(response.data[0]);
+                    });
+                }
             }
         })
     }
@@ -80,9 +93,11 @@ function VariantListItem(props){
                     Child={() => <i className="ti-pencil"></i>}
                     buttonStyle={'btn btn-warning btn-rounded btn-icon'}>
                 </ModificationVariantModal>
-                <a href="/var_detail/{{x.id}}"><button type="button" className="btn btn-info btn-rounded btn-icon">
-                    <i className="ti-eye"></i>
-                </button></a>
+                <NavLink to={`/variantdetail/${props.data.id}`} onClick={(e) => {window.scrollTo(0,0)}}>
+                    <button type="button" className="btn btn-info btn-rounded btn-icon">
+                        <i className="ti-eye"></i>
+                    </button>
+                </NavLink>
                 <Button className='btn btn-primary btn-rounded btn-icon' onClick={setMain}><i className="ti-star"></i></Button>
                 {
                     props.data.visible === '1' ? 

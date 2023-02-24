@@ -78,6 +78,13 @@ class VariantWithParamsSerializer(serializers.ModelSerializer):
 
 class VariantUltimateSerializer(serializers.ModelSerializer):
     variants = VariantWithParamsSerializer(many=True)
+    product = ProductDefaultSerializer(many=True)
+    get_supplier = serializers.ReadOnlyField()
+    decide_main = serializers.ReadOnlyField()
+    profit = serializers.ReadOnlyField()
+    manufacturer = serializers.ReadOnlyField()
+    image_ref = ImageSerializer()
+    params = VariantParamSerializer(many=True, source='variants_params')
     class Meta:
         model = models.Variant
         fields = '__all__'

@@ -110,11 +110,20 @@ class Variant(models.Model):
     def decide_main(self):
         return self.product.get().price_common == self
     
+    @property
+    def manufacturer(self):
+        return self.product.get().manufacturer.name
+    
     def get_itemgroup(self):
         return self.product.get().itemgroup_id
     
-    def get_productID(self):
+    @property
+    def productID(self):
         return self.product.get().id
+    
+    @property
+    def product(self):
+        return self.product.get()
     
     def if_mods_set(self, mod, data):
         try:
