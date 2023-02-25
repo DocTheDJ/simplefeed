@@ -31,7 +31,7 @@ function Navigation(){
                     <Collapse isOpened={categoryCollapse}>
                         <ul className="nav flex-column sub-menu" style={{paddingLeft:'20px'}}>
                             <li className="nav-item"> <NavLink to={'/categories'} className='nav-link'>Eshopové</NavLink></li>
-                            <li className="nav-item"> <a className="nav-link" href="/categories_supplier/">Dodavatelské</a></li>
+                            <li className="nav-item"> <NavLink to={'/suppliercategories'} className='nav-link'>Dodavatelské</NavLink></li>
                             <li className="nav-item"> <a className="nav-link" href="/categories_paring/">Párování</a></li>
                         </ul>
                     </Collapse>

@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from ..models import Category
-from ..serializers import CategorySerializer
+from ..models import Category, Feeds
+from ..serializers import CategorySerializer, CategoryParentSerializer
 from ..utils.db_access import create_dbconnect
 from rest_framework.permissions import IsAuthenticated
 from multiprocessing import Process
@@ -69,4 +69,15 @@ def moveCat(request, id, new):
     else:
         response = 'noDB'
     return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getSupplierCats(request):
+    if DB := create_dbconnect(request):
+        category_feed = Feeds.objects.using(DB).filter(usage='c')
+        data = Category.objects.using(DB).filter(parent=None).exclude(source=category_feed[0].id)
+        ser = CategoryParentSerializer(data, many=True)
+        return Response(ser.data)
+    else:
+        return Response('noDB')
         

@@ -64,6 +64,7 @@ def run(request):
         t = Process(target=crossroads, args=(DB,))
         t.name = 'test'
         t.start()
+        # CreateUtil().add_category_rules(DB)
         response = 'started'
     else:
         response = 'no DB'

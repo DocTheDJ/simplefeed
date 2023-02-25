@@ -17,11 +17,11 @@ def crossroads(DB):
             print("finished "+data.name)
             set_updated_on(data)
             continue
-        # if data.source == 'H':
-        #     heureka_to_shoptet(DB, data)
-        #     print("finished "+data.name)
-        #     set_updated_on(data)
-        #     continue
+        if data.source == 'H':
+            heureka_to_shoptet(DB, data)
+            print("finished "+data.name)
+            set_updated_on(data)
+            continue
         # if data.source == 'E':
         #     esportshop_to_shoptet(DB, data)
         #     print("finished "+data.name)

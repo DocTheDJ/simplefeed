@@ -123,3 +123,10 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Category
         fields = '__all__'
+
+class CategoryParentSerializer(serializers.ModelSerializer):
+    children = CategorySerializer(many=True)
+    source = FeedSerializer()
+    class Meta:
+        model = models.Category
+        fields = '__all__'

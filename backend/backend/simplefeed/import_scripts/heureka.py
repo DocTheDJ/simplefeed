@@ -1,10 +1,11 @@
 from ..utils.open_urls import xml_from_url
 from xml.etree.ElementTree import fromstring
 from queue import LifoQueue
-from ..models import Image, Variant, Common, Feeds, Rules, Manufacturers, Param
+from ..models import Image, Variant, Common, Feeds, Rules, Manufacturers, Param, Variant_Image
 from ..utils.importutils import ImportUtils
 from ..utils.category import CategoryUtil
 from ..utils.availability import AvailabilityUtils
+from ..utils.default import get_new_search
 
 def heureka_to_shoptet(DB, url_data):
     supplier_id = url_data.id
@@ -65,12 +66,8 @@ def heureka_to_shoptet(DB, url_data):
         CategoryUtil.add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORIES", tmp), " | ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
         
         for item in reversed(list_same):
-            for t in item.findall("IMGURL_ALTERNATIVE"):
-                new_im, created_im = Image.objects.using(DB).get_or_create(image=t.text)
-                curr_comm.images.add(new_im)
             
             main_im, created_main = Image.objects.using(DB).get_or_create(image=ImportUtils().get_text(dict, parent_stack, "IMAGE", item))
-            curr_comm.images.add(main_im)
             
             param_list = []
             parent_stack.put("PARAM")
@@ -87,9 +84,9 @@ def heureka_to_shoptet(DB, url_data):
                     if (node := ImportUtils().look_for_flaws(amount_data, "SHOPITEM", "ID", ImportUtils().get_text(dict, parent_stack, "CODE", item), "_", "/")) == None:
                         if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "EAN", ImportUtils().get_text(dict, parent_stack, "EAN", item))) == None:
                             for p in param_list:
-                                if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ID", ImportUtils().get_new_search(code, "_", p.value.value))) == None:
-                                    if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ID", ImportUtils().get_new_search(code, " ", p.value.value))) == None:
-                                        if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ID", ImportUtils().get_new_search(code, "/", p.value.value))) != None:
+                                if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ID", get_new_search(code, "_", p.value.value))) == None:
+                                    if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ID", get_new_search(code, " ", p.value.value))) == None:
+                                        if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ID", get_new_search(code, "/", p.value.value))) != None:
                                             break
                                     else:
                                         break
@@ -111,23 +108,35 @@ def heureka_to_shoptet(DB, url_data):
                 visible = 0
             
             availability = in_stock if ImportUtils().get_text(dict, parent_stack, "AVAILABLE_ON", item) == "1" else out_stock
+            ean = ImportUtils().get_text(dict, parent_stack, "EAN", item)
+            if(len(ean) > 16):
+                continue
+            print(ean)
             curr_var, created_var = Variant.objects.using(DB).get_or_create(code=code,
-                                                                            ean=ImportUtils().get_text(dict, parent_stack, "EAN", item),
+                                                                            ean=ean,
                                                                             defaults={  'vat': vat,
                                                                                         'pur_price': price,
                                                                                         'price': price,
                                                                                         'amount': amount,
                                                                                         'currency': 'czk',
                                                                                         'visible': visible,
-                                                                                        'image_ref_id': main_im.id,
+                                                                                        # 'image_ref_id': main_im.id,
                                                                                         'rec_price': rec_price,
                                                                                         'free_billing': 0,
                                                                                         'free_shipping': 0,
                                                                                         'name': ImportUtils().get_text(dict, parent_stack, "NAME_VAR", item),
                                                                                         'availability': availability})
+            for t in item.findall("IMGURL_ALTERNATIVE"):
+                new_im, created_im = Image.objects.using(DB).get_or_create(image=t.text)
+                Variant_Image.objects.using(DB).get_or_create(variant=curr_var, image=new_im, defaults={'main': False})
+                # curr_var.images.add(new_im)
+            Variant_Image.objects.using(DB).get_or_create(variant=curr_var, image=main_im, defaults={'main': True})
+            # curr_var.images.add(main_im)
+
+            
             if not created_var:
                 curr_var.name = ImportUtils().get_text(dict, parent_stack, "NAME_VAR", item)
-                curr_var.image_ref_id = main_im.id
+                # curr_var.image_ref_id = main_im.id
                 curr_var.amount = amount
                 curr_var.visible = visible
                 curr_var.availability = availability
@@ -159,4 +168,4 @@ def heureka_to_shoptet(DB, url_data):
         group_by_done.append(c.text)
         parent_stack.get()
     Common.objects.using(DB).bulk_update(common_list, ['short_description', 'description', 'manufacturer', 'supplier_id', 'price_common_id', 'name', 'approved'])
-    Variant.objects.using(DB).bulk_update(var_list, ['name', 'vat', 'pur_price', 'price', 'amount', 'image_ref_id', 'visible', 'availability', 'rec_price'])
+    Variant.objects.using(DB).bulk_update(var_list, ['name', 'vat', 'pur_price', 'price', 'amount', 'visible', 'availability', 'rec_price'])

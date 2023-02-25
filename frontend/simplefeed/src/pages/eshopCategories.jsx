@@ -94,7 +94,7 @@ function Tile(props){
     );
 }
 
-export default EshopCategories;
+export {EshopCategories, Tile};
 
 function EditModal(props){
     const [show, setShow] = useState(false);
