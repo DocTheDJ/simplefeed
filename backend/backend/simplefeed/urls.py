@@ -34,7 +34,8 @@ from .views_f.category import (
     deleteCat,
     getTreeWithout,
     moveCat,
-    getSupplierCats
+    getSupplierCats,
+    getBySource
 )
 
 urlpatterns = [
@@ -61,5 +62,6 @@ urlpatterns = [
     path('delete-category/<int:id>', deleteCat),
     # path('categories-excluded/<int:id>', getTreeWithout),
     path('move-category/<int:id>/<int:new>', moveCat),
-    path('supplier-cats/', getSupplierCats)
+    path('supplier-cats/', getSupplierCats),
+    path('cats-from-source/<int:id>', getBySource),
 ]

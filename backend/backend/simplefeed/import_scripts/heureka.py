@@ -111,7 +111,6 @@ def heureka_to_shoptet(DB, url_data):
             ean = ImportUtils().get_text(dict, parent_stack, "EAN", item)
             if(len(ean) > 16):
                 continue
-            print(ean)
             curr_var, created_var = Variant.objects.using(DB).get_or_create(code=code,
                                                                             ean=ean,
                                                                             defaults={  'vat': vat,

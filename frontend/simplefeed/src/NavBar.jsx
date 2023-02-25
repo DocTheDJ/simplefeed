@@ -9,7 +9,7 @@ import { Test } from './test';
 import ProductList from './pages/productlist';
 import ProductDetail from './pages/productdetail';
 import VariantDetail from './pages/variantdetail';
-import {EshopCategories} from './pages/eshopCategories';
+import EshopCategories from './pages/eshopCategories';
 import SupplierCategories from './pages/supplierCategories';
 
 function NavBar(){

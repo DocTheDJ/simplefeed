@@ -80,4 +80,13 @@ def getSupplierCats(request):
         return Response(ser.data)
     else:
         return Response('noDB')
-        
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getBySource(request, id):
+    if DB := create_dbconnect(request):
+        data = Category.objects.using(DB).filter(parent=None, source=id)
+        ser = CategorySerializer(data, many=True)
+        return Response(ser.data)
+    else:
+        return Response('noDB')
