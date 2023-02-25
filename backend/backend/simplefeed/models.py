@@ -65,7 +65,7 @@ class Category(models.Model):
     parent = models.ForeignKey('self', null=True, related_name='child', on_delete=models.CASCADE)
     original_id = models.IntegerField(null=True)
     source = models.ForeignKey(Feeds, null=True, on_delete=models.DO_NOTHING)
-    original_parent = models.ForeignKey('self', null=True, related_name='original_child', on_delete=models.DO_NOTHING)
+    original_parent = models.ForeignKey('self', null=True, related_name='original_child', on_delete=models.SET_NULL)
     pair_onto = models.ManyToManyField('self')
     action = models.ForeignKey(Rules, null=True, on_delete=models.DO_NOTHING)
     

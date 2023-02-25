@@ -30,7 +30,10 @@ from .views_f.variants import (
 from .views_f.category import (
     pullCats,
     getTree,
-    updateCat
+    updateCat,
+    deleteCat,
+    getTreeWithout,
+    moveCat
 )
 
 urlpatterns = [
@@ -53,5 +56,8 @@ urlpatterns = [
     path('set-visibility/<int:id>/<str:new>', setVisibility),
     path('pull-cats/', pullCats),
     path('categories/', getTree),
-    path('update-category/<int:id>', updateCat)
+    path('update-category/<int:id>', updateCat),
+    path('delete-category/<int:id>', deleteCat),
+    # path('categories-excluded/<int:id>', getTreeWithout),
+    path('move-category/<int:id>/<int:new>', moveCat), 
 ]

@@ -39,3 +39,34 @@ def updateCat(request, id):
     else:
         response = 'noDB'
     return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def deleteCat(request, id):
+    if DB := create_dbconnect(request):
+        Category.objects.using(DB).get(id=id).delete()
+        response = 'OK'
+    else:
+        response = 'noDB'
+    return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getTreeWithout(request, id):
+    if DB := create_dbconnect(request):
+        data = Category.objects.using(DB).all().exclude(id=id)
+        ser = CategorySerializer(data, many=True)
+        return Response(ser.data)
+    else:
+        return Response('noDB')
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def moveCat(request, id, new):
+    if DB := create_dbconnect(request):
+        Category.objects.using(DB).filter(id=id).update(parent=new)
+        response = 'OK'
+    else:
+        response = 'noDB'
+    return Response(response)
+        
