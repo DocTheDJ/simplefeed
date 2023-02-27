@@ -73,6 +73,18 @@ class Category(models.Model):
     def children(self):
         return self.child.all()
     
+    @property
+    def getParent(self):
+        return self.parent
+    
+    # @property
+    # def lowerPair(self):
+    #     return self.pair_onto.exclude(pair_onto__id__in=self.pair_onto)
+    
+    @property
+    def childless(self):
+        return self.pair_onto.exclude(child__in=list(self.pair_onto.all().values_list('id', flat=True)))
+    
 class Variant(models.Model):
     code = models.CharField(max_length=32, null=True, unique=True)
     ean = models.CharField(max_length=16, null=True)

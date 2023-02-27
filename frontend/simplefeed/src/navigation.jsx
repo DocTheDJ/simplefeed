@@ -32,7 +32,7 @@ function Navigation(){
                         <ul className="nav flex-column sub-menu" style={{paddingLeft:'20px'}}>
                             <li className="nav-item"> <NavLink to={'/categories'} className='nav-link'>Eshopové</NavLink></li>
                             <li className="nav-item"> <NavLink to={'/suppliercategories'} className='nav-link'>Dodavatelské</NavLink></li>
-                            <li className="nav-item"> <a className="nav-link" href="/categories_paring/">Párování</a></li>
+                            <li className="nav-item"> <NavLink to={'/pairingcategories'} className="nav-link">Párování</NavLink></li>
                         </ul>
                     </Collapse>
                     {/* <a className="nav-link" data-toggle="collapse" href="#nav_categories" aria-expanded="false" aria-controls="nav_categories">

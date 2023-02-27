@@ -11,6 +11,7 @@ import ProductDetail from './pages/productdetail';
 import VariantDetail from './pages/variantdetail';
 import EshopCategories from './pages/eshopCategories';
 import SupplierCategories from './pages/supplierCategories';
+import PairingCategory from './pages/pairingCategory';
 
 function NavBar(){
     const {user} = useContext(AuthContext);
@@ -35,6 +36,7 @@ function NavBar(){
                             <Route path='/variantdetail/:id' element={<VariantDetail></VariantDetail>}></Route>
                             <Route path='/categories' element={<EshopCategories></EshopCategories>}></Route>
                             <Route path='/suppliercategories' element={<SupplierCategories></SupplierCategories>}></Route>
+                            <Route path='/pairingcategories' element={<PairingCategory></PairingCategory>}></Route>
                         </Routes>
                     </div>
                 </div>

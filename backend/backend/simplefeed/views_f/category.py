@@ -1,11 +1,17 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from ..models import Category, Feeds
-from ..serializers import CategorySerializer, CategoryParentSerializer
+from ..serializers import (
+    CategorySerializer,
+    CategoryParentSerializer,
+    CategoryPairingParentSerializer,
+    CategoryPathToMasterSerializer
+)
 from ..utils.db_access import create_dbconnect
 from rest_framework.permissions import IsAuthenticated
 from multiprocessing import Process
 from ..modelDBUsage import category_import
+from ..utils.category import CategoryUtil
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -87,6 +93,29 @@ def getBySource(request, id):
     if DB := create_dbconnect(request):
         data = Category.objects.using(DB).filter(parent=None, source=id)
         ser = CategorySerializer(data, many=True)
+        return Response(ser.data)
+    else:
+        return Response('noDB')
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getPairingCategories(request):
+    if DB := create_dbconnect(request):
+        category_feed = Feeds.objects.using(DB).filter(usage='c')
+        data = Category.objects.using(DB).filter(parent=None).exclude(source=category_feed[0].id)
+        ser = CategoryPairingParentSerializer(data, many=True)
+        return Response(ser.data)
+    else:
+        return Response('noDB')
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def pairCategories(request, whom, to):
+    if DB := create_dbconnect(request):
+        victim = Category.objects.using(DB).filter(id=whom)
+        target = Category.objects.using(DB).filter(id=to)
+        ser = CategoryPathToMasterSerializer(target, many=True)
+        CategoryUtil().from_view_pair(victim, ser.data[0], [])
         return Response(ser.data)
     else:
         return Response('noDB')

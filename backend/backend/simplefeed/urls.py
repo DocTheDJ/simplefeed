@@ -35,7 +35,9 @@ from .views_f.category import (
     getTreeWithout,
     moveCat,
     getSupplierCats,
-    getBySource
+    getBySource,
+    getPairingCategories,
+    pairCategories
 )
 
 urlpatterns = [
@@ -64,4 +66,6 @@ urlpatterns = [
     path('move-category/<int:id>/<int:new>', moveCat),
     path('supplier-cats/', getSupplierCats),
     path('cats-from-source/<int:id>', getBySource),
+    path('category-pairing/', getPairingCategories),
+    path('pair-categories/<int:whom>/<int:to>', pairCategories)
 ]

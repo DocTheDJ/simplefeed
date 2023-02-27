@@ -130,3 +130,29 @@ class CategoryParentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Category
         fields = '__all__'
+
+class CategoryPairedOntoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Category
+        fields = ('name')
+
+class CategoryPathToMasterSerializer(serializers.ModelSerializer):
+    getParent = RecursiveField()
+    class Meta:
+        model = models.Category
+        fields = '__all__'
+
+class CategoryPairingSerializer(serializers.ModelSerializer):
+    children = serializers.ListField(child=RecursiveField())
+    # pair_onto = CategoryPairedOntoSerializer(many=True)
+    childless = CategoryPathToMasterSerializer(many=True)
+    class Meta:
+        model = models.Category
+        fields = '__all__'
+
+class CategoryPairingParentSerializer(serializers.ModelSerializer):
+    children = CategoryPairingSerializer(many=True)
+    source = FeedSerializer()
+    class Meta:
+        model = models.Category
+        fields = '__all__'

@@ -187,3 +187,11 @@ class CategoryUtil():
 
     def create_default_category(DB, source, action):
         Category.objects.using(DB).get_or_create(original_parent=None, source_id=source.id, defaults={'name': source.name, 'parent': None, 'action': action})
+    
+    
+    def from_view_pair(self, victim, this, pairings:list):
+        pairings.append(this['id'])
+        if this['getParent'] == None:
+            victim.get().pair_onto.add(*pairings)
+        else:
+            self.from_view_pair(victim, this['getParent'], pairings)
