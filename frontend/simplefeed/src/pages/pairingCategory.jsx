@@ -124,7 +124,7 @@ function PairingTile(props){
                 </div>
                 <div className="cat_functions">
                     <div className='d-flex'>
-                        <ActionButton selected={props.data.action} rules={props.rules}></ActionButton>
+                        <ActionButton selected={props.data.action} rules={props.rules} data={props.data.pair_onto} id={props.data.id} context={props.context}></ActionButton>
                         <PickPairingCatModal id={props.data.id} context={props.context} setData={props.setData}></PickPairingCatModal>
                     </div>
                 </div>
@@ -215,13 +215,28 @@ function PickPairingCatModal(props){
 
 function ActionButton(props){
     const [state, setState] = useState(props.selected);
+    var rules;
+    if(props.data.length > 0){
+        rules = props.rules;
+    }else{
+        rules = props.rules?.filter(val => val.action.startsWith('com_cat'));
+    }
+    let run = async(e, val) => {
+        e.preventDefault();
+        setState(val);
+        axios.get(ipAddress + `update-action/${props.id}/${val.id}`, getJsonHeader(props.context)).then((response) =>{
+            if(response.status !== 200 || response.statusText !== 'OK'){
+                alert('Something fucked up');
+            }
+        })
+    }
     return(
         <Dropdown>
             <Dropdown.Toggle variant={state.css_class}>{state.name}</Dropdown.Toggle>
             <Dropdown.Menu>
                 {
-                    props.rules?.map((value) => {
-                        return(<Dropdown.Item key={value.id} onClick={(e) => setState(value)}>{value.name}</Dropdown.Item>)
+                    rules?.map((value) => {
+                        return(<Dropdown.Item key={value.id} onClick={(e) => run(e, value)}>{value.name}</Dropdown.Item>)
                     })
                 }
             </Dropdown.Menu>

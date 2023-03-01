@@ -11,7 +11,7 @@ from ..utils.db_access import create_dbconnect
 from rest_framework.permissions import IsAuthenticated
 from multiprocessing import Process
 from ..modelDBUsage import category_import
-from ..utils.category import CategoryUtil
+from ..utils.category import CategoryUtil, ProductUtils
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -133,3 +133,15 @@ def unpairCategories(request, whom):
     else:
         response = 'noDB'
         return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def updateAction(request, whom, to):
+    if DB := create_dbconnect(request):
+        cat = Category.objects.using(DB).filter(id=whom)
+        cat.update(action=to)
+        ProductUtils.setVisForAll(Common.objects.using(DB).filter(categories__id__exact=cat.get().id), cat.get())
+        response = 'OK'
+    else:
+        response = 'noDB'
+    return Response(response)

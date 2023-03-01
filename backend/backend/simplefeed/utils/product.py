@@ -20,3 +20,20 @@ class ProductUtils:
         except Exception as e:
             print(e)
             pass
+    
+    def setVisForAll(products, cat):
+        varsVis = ''
+        if str(cat.action.action).startswith("com_cat_s_"):
+            varsVis = str(cat.action.action).replace("com_cat_s_", "")
+            products.update(approved=(True if varsVis == "1" else False))
+        elif str(cat.action.action).startswith("cat_cat_s_"):
+            varsVis = str(cat.action.action).replace("cat_cat_s_", "")
+            products.update(approved=(True if varsVis == "1" else False))
+        else:
+            pass
+        try:
+            if(varsVis != ''):
+                for p in products:
+                    p.get_variants().exclude(visible='2').update(visible=varsVis)
+        except Exception as e:
+            print(e)

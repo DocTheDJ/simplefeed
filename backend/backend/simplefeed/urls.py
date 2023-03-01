@@ -38,7 +38,8 @@ from .views_f.category import (
     getBySource,
     getPairingCategories,
     pairCategories,
-    unpairCategories
+    unpairCategories,
+    updateAction
 )
 
 from .views_f.rules import (
@@ -74,5 +75,6 @@ urlpatterns = [
     path('category-pairing/', getPairingCategories),
     path('pair-categories/<int:whom>/<int:to>', pairCategories),
     path('unpair-categories/<int:whom>', unpairCategories),
+    path('update-action/<int:whom>/<int:to>', updateAction),
     path('rules/', getRules),
 ]
