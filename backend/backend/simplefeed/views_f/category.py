@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from ..models import Category, Feeds
+from ..models import Category, Feeds, Common
 from ..serializers import (
     CategorySerializer,
     CategoryParentSerializer,
@@ -114,8 +114,22 @@ def pairCategories(request, whom, to):
     if DB := create_dbconnect(request):
         victim = Category.objects.using(DB).filter(id=whom)
         target = Category.objects.using(DB).filter(id=to)
+        CategoryUtil().from_view_unpair(victim)
         ser = CategoryPathToMasterSerializer(target, many=True)
-        CategoryUtil().from_view_pair(victim, ser.data[0], [])
+        new_cats = []
+        CategoryUtil().from_view_pair(victim, ser.data[0], new_cats)
+        Common.objects.using(DB).filter(categories__id__exact=whom).categories.add(*new_cats)
         return Response(ser.data)
     else:
         return Response('noDB')
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def unpairCategories(request, whom):
+    if DB := create_dbconnect(request):
+        victim = Category.objects.using(DB).filter(id=whom)
+        CategoryUtil().from_view_unpair(victim)
+        return getPairingCategories(request)
+    else:
+        response = 'noDB'
+        return Response(response)

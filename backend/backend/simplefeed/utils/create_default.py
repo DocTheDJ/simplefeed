@@ -11,10 +11,10 @@ class CreateUtil:
     def add_category_rules(self, DB):
         Rules.objects.using(DB).get_or_create(name="Automaticke schvaleni", action = self.com_cat_s_1, defaults={'css_class': "success"})
         Rules.objects.using(DB).get_or_create(name="Automaticke zamitnuti", action = self.com_cat_s_0, defaults={'css_class': "danger"})
-        Rules.objects.using(DB).get_or_create(name="Rucni schavleni", action = self.com_cat_d_n, defaults={'css_class': "primary"})
+        Rules.objects.using(DB).get_or_create(name="Rucni schvaleni", action = self.com_cat_d_n, defaults={'css_class': "primary"})
         Rules.objects.using(DB).get_or_create(name="Pair to/Automaticke schvaleni", action = self.cat_cat_s_1, defaults={'css_class': "success"})
         Rules.objects.using(DB).get_or_create(name="Pair to/Automaticke zamitnuti", action = self.cat_cat_s_0, defaults={'css_class': "danger"})
-        Rules.objects.using(DB).get_or_create(name="Pair to/rucni schvalueni ", action = self.cat_cat_d_n, defaults={'css_class': "warning"})
+        Rules.objects.using(DB).get_or_create(name="Pair to/rucni schvaleni ", action = self.cat_cat_d_n, defaults={'css_class': "warning"})
 
 
     def add_all_feeds(DB):

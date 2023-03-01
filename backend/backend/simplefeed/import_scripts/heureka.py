@@ -63,7 +63,7 @@ def heureka_to_shoptet(DB, url_data):
             curr_comm.supplier_id = supplier_id
         common_price = False
         
-        CategoryUtil.add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORIES", tmp), " | ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
+        CategoryUtil().add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORIES", tmp), " | ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
         
         for item in reversed(list_same):
             

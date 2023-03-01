@@ -37,7 +37,12 @@ from .views_f.category import (
     getSupplierCats,
     getBySource,
     getPairingCategories,
-    pairCategories
+    pairCategories,
+    unpairCategories
+)
+
+from .views_f.rules import (
+    getRules,
 )
 
 urlpatterns = [
@@ -67,5 +72,7 @@ urlpatterns = [
     path('supplier-cats/', getSupplierCats),
     path('cats-from-source/<int:id>', getBySource),
     path('category-pairing/', getPairingCategories),
-    path('pair-categories/<int:whom>/<int:to>', pairCategories)
+    path('pair-categories/<int:whom>/<int:to>', pairCategories),
+    path('unpair-categories/<int:whom>', unpairCategories),
+    path('rules/', getRules),
 ]

@@ -20,6 +20,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
+class RuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Rules
+        fields = '__all__'
+
 class FeedSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Feeds
@@ -146,6 +151,7 @@ class CategoryPairingSerializer(serializers.ModelSerializer):
     children = serializers.ListField(child=RecursiveField())
     # pair_onto = CategoryPairedOntoSerializer(many=True)
     childless = CategoryPathToMasterSerializer(many=True)
+    action = RuleSerializer()
     class Meta:
         model = models.Category
         fields = '__all__'

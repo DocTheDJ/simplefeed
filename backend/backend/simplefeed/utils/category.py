@@ -62,47 +62,47 @@ class CategoryUtil():
             self.path += mod
 
     
-    def path_to_root_category(self, category_id, DB):
-        query = '''
-        WITH RECURSIVE parents AS (
-            SELECT products_category.*, 0 AS relative_depth
-            FROM products_category
-            WHERE id = %s
+    # def path_to_root_category(self, category_id, DB):
+    #     query = '''
+    #     WITH RECURSIVE parents AS (
+    #         SELECT products_category.*, 0 AS relative_depth
+    #         FROM products_category
+    #         WHERE id = %s
 
-            UNION ALL
+    #         UNION ALL
 
-            SELECT products_category.*, parents.relative_depth - 1
-            FROM products_category,parents
-            WHERE products_category.id = parents.parent_id
-        )
-        SELECT id, name, parent_id, relative_depth
-        FROM parents
-        ORDER BY relative_depth;
-        '''
-        return Category.objects.using(DB).raw(query, [category_id])
+    #         SELECT products_category.*, parents.relative_depth - 1
+    #         FROM products_category,parents
+    #         WHERE products_category.id = parents.parent_id
+    #     )
+    #     SELECT id, name, parent_id, relative_depth
+    #     FROM parents
+    #     ORDER BY relative_depth;
+    #     '''
+    #     return Category.objects.using(DB).raw(query, [category_id])
 
-    def create_category_tree(self, DB, root, source:list, level, list_view:list=[], common_id=None, parent_path="")->list:
-        if level <= 0:
-            categories = Category.objects.using(DB).filter(parent=root, source_id__in=source)
-            if None in source:
-                categories = categories.union(Category.objects.using(DB).filter(parent=root, source_id=None))
-        else:
-            categories = Category.objects.using(DB).filter(parent=root)
-        output = []
-        for child in categories:
-            n = self.node(child, level)
-            if level == 0:
-                n.path = ''
-            else:
-                n.add_path(parent_path)
-                tmp = self.node.list_paths(n.id, n.path, child.source_id)
-                if common_id != None:
-                    tmp.is_in_children(DB, common_id)
-                list_view.append(tmp)
-            n.get_paired(child)
-            n.children = self.create_category_tree(DB, child, source, level+1, list_view, common_id, n.path)
-            output.append(n)
-        return output
+    # def create_category_tree(self, DB, root, source:list, level, list_view:list=[], common_id=None, parent_path="")->list:
+    #     if level <= 0:
+    #         categories = Category.objects.using(DB).filter(parent=root, source_id__in=source)
+    #         if None in source:
+    #             categories = categories.union(Category.objects.using(DB).filter(parent=root, source_id=None))
+    #     else:
+    #         categories = Category.objects.using(DB).filter(parent=root)
+    #     output = []
+    #     for child in categories:
+    #         n = self.node(child, level)
+    #         if level == 0:
+    #             n.path = ''
+    #         else:
+    #             n.add_path(parent_path)
+    #             tmp = self.node.list_paths(n.id, n.path, child.source_id)
+    #             if common_id != None:
+    #                 tmp.is_in_children(DB, common_id)
+    #             list_view.append(tmp)
+    #         n.get_paired(child)
+    #         n.children = self.create_category_tree(DB, child, source, level+1, list_view, common_id, n.path)
+    #         output.append(n)
+    #     return output
 
     def add_category_use(self, DB, category_id, common, watch_out_for=None):
         if type(category_id) != Category:
@@ -132,37 +132,38 @@ class CategoryUtil():
             return
         self.remove_category_use(DB, category.parent_id, common, removed)
 
-    def print_categories(self, DB, common, delim:str, filter=Q()):
-        output = []
-        string = ""
-        for c in common.categories.filter(filter):
-            path = self.path_to_root_category(c.id, DB)
-            for i, p in enumerate(path):
-                if i == 0:
-                    continue
-                if p.relative_depth == 0:
-                    string += p.name
-                    output.append(string)
-                    string = ""
-                else:
-                    string += (p.name + delim)
-        return output
+    # def print_categories(self, DB, common, delim:str, filter=Q()):
+    #     output = []
+    #     string = ""
+    #     for c in common.categories.filter(filter):
+    #         path = self.path_to_root_category(c.id, DB)
+    #         for i, p in enumerate(path):
+    #             if i == 0:
+    #                 continue
+    #             if p.relative_depth == 0:
+    #                 string += p.name
+    #                 output.append(string)
+    #                 string = ""
+    #             else:
+    #                 string += (p.name + delim)
+    #     return output
 
-    def print_all_cats(self, DB, supplier):
-        output = []
-        output.append(self.Category_node(None))
-        for c in Category.objects.using(DB).filter(source_id=supplier):
-            path = self.path_to_root_category(c.id, DB)
-            category = self.Category_node(c.id)
-            for p in path:
-                if p.relative_depth == 0:
-                    category.mod_path(p.name)
-                    output.append(category)
-                else:
-                    category.mod_path((p.name + " > "))
-        return output
+    # def print_all_cats(self, DB, supplier):
+    #     output = []
+    #     output.append(self.Category_node(None))
+    #     for c in Category.objects.using(DB).filter(source_id=supplier):
+    #         path = self.path_to_root_category(c.id, DB)
+    #         category = self.Category_node(c.id)
+    #         for p in path:
+    #             if p.relative_depth == 0:
+    #                 category.mod_path(p.name)
+    #                 output.append(category)
+    #             else:
+    #                 category.mod_path((p.name + " > "))
+    #     return output
 
     def created_supplier_category(DB, category_string:str, delim:str, supplier_id:int, action) -> Category:
+        print(category_string)
         if delim != "":
             parsed_categories = category_string.split(delim)
         else:
@@ -195,3 +196,6 @@ class CategoryUtil():
             victim.get().pair_onto.add(*pairings)
         else:
             self.from_view_pair(victim, this['getParent'], pairings)
+    
+    def from_view_unpair(self, victim):
+        victim.get().pair_onto.clear()
