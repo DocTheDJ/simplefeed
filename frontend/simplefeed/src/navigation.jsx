@@ -6,6 +6,7 @@ import {Collapse} from 'react-collapse';
 
 function Navigation(){
     const [categoryCollapse, setCategoryCollapse] = useState(false);
+    const [settingsCollapse, setSettingsCollapse] = useState(false);
     return (
         <nav className="sidebar sidebar-offcanvas" id="sidebar">
             <ul className="nav">
@@ -69,7 +70,21 @@ function Navigation(){
                     </NavLink>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" data-toggle="collapse" href="#nastaveni" aria-expanded="false" aria-controls="ui-basic">
+                    <a className='nav-link' onClick={(e) => setSettingsCollapse(!settingsCollapse)} href>
+                        {/* <Icon path={mdiSettingsHelper} size={0.666667} style={{marginRight: '1rem'}}></Icon> */}
+                        <i className="ti-settings menu-icon"></i>
+                        <span className="menu-title">Nastavení</span>
+                        <i className="menu-arrow"></i>
+                    </a>
+                    <Collapse isOpened={settingsCollapse}>
+                        <ul className="nav flex-column sub-menu" style={{paddingLeft:'20px'}}>
+                            <li className="nav-item"> <a className="nav-link" href="pages/ui-features/buttons.html">Základní nastavení</a></li>
+                            <li className="nav-item"> <a className="nav-link" href="/avalibility/">Skladová dostupnost</a></li>
+                            <li className="nav-item"> <NavLink to={'/parameters'} className="nav-link">Parametry</NavLink></li>
+                            <li className="nav-item"> <a className="nav-link" href="/manufacturers/">Výrobci</a></li>
+                        </ul>
+                    </Collapse>
+                    {/* <a className="nav-link" data-toggle="collapse" href="#nastaveni" aria-expanded="false" aria-controls="ui-basic">
                         <i className="ti-settings menu-icon"></i>
                         <span className="menu-title">Nastavení</span>
                         <i className="menu-arrow"></i>
@@ -81,7 +96,7 @@ function Navigation(){
                             <li className="nav-item"> <a className="nav-link" href="/parameters/">Parametry</a></li>
                             <li className="nav-item"> <a className="nav-link" href="/manufacturers/">Výrobci</a></li>
                         </ul>
-                    </div>
+                    </div> */}
                 </li>
                 <li className="nav-item">
                     <a className="nav-link" href="tmp/">
