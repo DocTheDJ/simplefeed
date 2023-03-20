@@ -1,13 +1,21 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from ..serializers import UserSerializer, MyTokenObtainPairSerializer, VariantSerializer, VariantUpdateSerializer, FeedSerializer
+from ..serializers import (
+    UserSerializer,
+    MyTokenObtainPairSerializer,
+    VariantSerializer,
+    VariantUpdateSerializer,
+    FeedSerializer,
+    CategorySerializer,
+    ManufacturerSerializer,
+)
 from rest_framework_simplejwt.views import TokenObtainPairView
 from ..utils.db_access import create_user_access, create_dbconnect
 from rest_framework.permissions import IsAuthenticated
 from ..utils.create_default import CreateUtil
 from ..modelDBUsage import crossroads
 from multiprocessing import Process
-from ..models import Variant, Variant_Update, Common, Feeds
+from ..models import Variant, Variant_Update, Common, Feeds, Category, Manufacturers
 from django.core.management import call_command
 
 # Create your views here.
@@ -76,6 +84,19 @@ def migrate(request):
     if DB := create_dbconnect(request.user.username):
         call_command('migrate', 'simplefeed', database=DB)
         response = 'OK'
+    else:
+        response = 'noDB'
+    return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getFilters(request):
+    if DB := create_dbconnect(request):
+        response = {
+            'categories': CategorySerializer(Category.objects.using(DB).filter(parent=None), many=True).data,
+            'suppliers': FeedSerializer(Feeds.objects.using(DB).filter(usage='m'), many=True).data,
+            'manufacturers': ManufacturerSerializer(Manufacturers.objects.using(DB).all(), many=True).data
+        }
     else:
         response = 'noDB'
     return Response(response)

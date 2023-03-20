@@ -10,6 +10,7 @@ from .views_f.default import (
     index,
     run,
     migrate,
+    getFilters,
 )
 
 from .views_f.products import (
@@ -60,8 +61,9 @@ urlpatterns = [
     path("overview/", index),
     path("test/", run),
     path("migrate/", migrate),
+    path('get-filters/', getFilters),
     
-    path("product-list/<str:pagenum>/<str:approvement>", listProducts),
+    path("product-list/<str:pagenum>/<str:approvement>/<str:cat>/<str:supp>/<str:man>", listProducts),
     path("approve_product/<str:id>/<str:approve>", approve_product),
     path("get-variants/<str:id>", get_variants),
     path("update-variant/<str:id>", updateVariant),

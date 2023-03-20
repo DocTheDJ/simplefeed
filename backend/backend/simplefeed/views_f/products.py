@@ -3,17 +3,24 @@ from rest_framework.response import Response
 from ..serializers import ProductSerializer, ProductDetailSerializer
 from ..models import Common, Variant
 from ..utils.db_access import create_dbconnect
+from ..utils.product import ProductUtils
 from rest_framework.permissions import IsAuthenticated
 import math
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def listProducts(request, pagenum, approvement):
+def listProducts(request, pagenum, approvement, cat, supp, man):
     if DB := create_dbconnect(request.user.username):
         if int(approvement) == 3:
             data = Common.objects.using(DB).all()
         else:
             data = Common.objects.using(DB).filter(approved=int(approvement))
+        t = {
+            'cat': None if cat == '_' else int(cat),
+            'sup': None if supp == '_' else int(supp),
+            'man': None if man == '_' else int(man),
+        }
+        data = data.filter(ProductUtils.createQuery(t))
         count = data.count()
         data = data[(int(pagenum)-1)*20:int(pagenum)*20]
         serializer = ProductSerializer(data, many=True)

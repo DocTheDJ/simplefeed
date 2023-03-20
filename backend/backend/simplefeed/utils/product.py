@@ -1,3 +1,5 @@
+from django.db.models import F, Q
+
 class ProductUtils:
     def switch_visibility(obj, attr, cat):
         if str(cat.action.action).startswith("com_cat_s_"):
@@ -37,3 +39,13 @@ class ProductUtils:
                     p.get_variants().exclude(visible='2').update(visible=varsVis)
         except Exception as e:
             print(e)
+    
+    def createQuery(data: dict):
+        query = Q()
+        if data['cat'] != None:
+            query &= Q(categories__id__exact=data['cat'])
+        if data['sup'] != None:
+            query &= Q(supplier__id=data['sup'])
+        if data['man'] != None:
+            query &= Q(manufacturer__id=data['man'])
+        return query

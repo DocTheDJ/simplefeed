@@ -30,6 +30,11 @@ class FeedSerializer(serializers.ModelSerializer):
         model = models.Feeds
         fields = '__all__'
 
+class ManufacturerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Manufacturers
+        fields = '__all__'
+
 class ParamNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Param_Names
