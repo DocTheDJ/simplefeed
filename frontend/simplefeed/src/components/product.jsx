@@ -30,7 +30,7 @@ function Product(props){
                     className="form-check-input form-control-lg" type="checkbox" value="{{x.id}}" name="product_check" form="checking-form"/>
 
                     <NavLink to={`/productdetail/${props.data.id}`}>
-                        <img className="img-fluid mb-4 mx-auto d-block" style={{borderRadius: '8px', height: '220px'}} src={props.data.price_common.image_ref.image} alt=''/>
+                        <img className="img-fluid mb-4 mx-auto d-block" style={{borderRadius: '8px', height: '220px'}} src={props.data.price_common?.image_ref.image} alt=''/>
                         <h4 className="card-title text-center">
                             {props.data.name}
                         </h4>
@@ -56,7 +56,7 @@ function Product(props){
                     
                     <div className="d-flex align-items-center justify-content-between">
                         <p className="lead">
-                            {props.data.price_common.price} {props.data.price_common.currency}
+                            {props.data.price_common?.price} {props.data.price_common?.currency}
                         </p>
                         {
                             approved ? 

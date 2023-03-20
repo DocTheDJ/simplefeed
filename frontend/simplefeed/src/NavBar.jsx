@@ -31,7 +31,7 @@ function NavBar(){
                     <div className="content-wrapper">
                         <Routes>
                             <Route path='/' element={<Overview></Overview>}></Route>
-                            <Route path='/productlist/:type' element={<ProductList></ProductList>}></Route>
+                            <Route path='/productlist/:type/:page/:approvement' element={<ProductList></ProductList>}></Route>
                             <Route path='/test' element={<Test></Test>}></Route>
                             <Route path='/productdetail/:id' element={<ProductDetail></ProductDetail>}></Route>
                             <Route path='/variantdetail/:id' element={<VariantDetail></VariantDetail>}></Route>

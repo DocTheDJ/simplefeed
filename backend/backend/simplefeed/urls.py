@@ -17,6 +17,7 @@ from .views_f.products import (
     approve_product,
     detailProduct,
     setMain,
+    setAllApproved,
 )
 
 from .views_f.variants import (
@@ -60,11 +61,11 @@ urlpatterns = [
     path("test/", run),
     path("migrate/", migrate),
     
-    path("product-list/<str:pagenum>", listProducts),
+    path("product-list/<str:pagenum>/<str:approvement>", listProducts),
     path("approve_product/<str:id>/<str:approve>", approve_product),
     path("get-variants/<str:id>", get_variants),
     path("update-variant/<str:id>", updateVariant),
-    path('variant-list/<str:pagenum>', variantList),
+    path('variant-list/<str:pagenum>/<str:approvement>', variantList),
     path('product-detail/<str:id>', detailProduct),
     path('set-main/<int:id>/<int:new>', setMain),
     path('variant-detail/<int:id>', variantDetail),
@@ -84,4 +85,5 @@ urlpatterns = [
     path('rules/', getRules),
     path('parameters/', getParamNames),
     path('update-param-name/<int:id>', updateParamName),
+    path('approve-all/<str:approvement>', setAllApproved),
 ]

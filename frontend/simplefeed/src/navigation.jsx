@@ -17,7 +17,7 @@ function Navigation(){
                     </NavLink>
                 </li>
                 <li className="nav-item">
-                    <NavLink className='nav-link' to={'/productlist/1'}>
+                    <NavLink className='nav-link' to={'/productlist/1/1/3'}>
                         <i className="ti-package menu-icon"></i>
                         <span className="menu-title">Produkty</span>
                     </NavLink>

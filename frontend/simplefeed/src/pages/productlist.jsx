@@ -8,38 +8,69 @@ import Variant from '../components/variant';
 import { useParams } from 'react-router-dom';
 
 const activeButton = 'mr-1 btn-primary btn-icon-text';
-const secondaryButton = 'btn-outline-secondary btn-icon-text';
+const secondaryButton = 'mr-1 btn-outline-secondary btn-icon-text';
+
+function getData(products, pagenumber, appr, setData, setPages, authTokens){
+    if(products){
+        axios.get(ipAddress + `product-list/${pagenumber}/${appr}`, getJsonHeader(authTokens)).then((response) => {
+            setData(response.data.data);
+            setPages(response.data.count);
+        });
+    }else{
+        axios.get(ipAddress + `variant-list/${pagenumber}/${appr}`, getJsonHeader(authTokens)).then((response) => {
+            setData(response.data.data);
+            setPages(response.data.count);
+        });
+    }
+}
 
 function ProductList(){
-    const {type} = useParams()
+    const {type, page, approvement} = useParams()
     const [data, setData] = useState(null);
-    const [pagenumber, setPage] = useState(1);
+    const [pagenumber, setPage] = useState(parseInt(page, 10));
     const [pages, setPages] = useState([]);
     const [products, setProducts] = useState((type & 1));
+    const [appr, setAppr] = useState(parseInt(approvement))
 
     const {authTokens} = useContext(AuthContext);
 
     useEffect(() => {
-        console.log(products);
-        if(products){
-            axios.get(ipAddress + `product-list/${pagenumber}`, getJsonHeader(authTokens)).then((response) => {
-                setData(response.data.data);
-                setPages(response.data.count);
-            });
-        }else{
-            axios.get(ipAddress + `variant-list/${pagenumber}`, getJsonHeader(authTokens)).then((response) => {
-                setData(response.data.data);
-                setPages(response.data.count);
-            });
-        }
+        getData(products, pagenumber, appr, setData, setPages, authTokens);
         window.scrollTo(0,0)
-    }, [authTokens, products, pagenumber]);
+    }, [authTokens, products, pagenumber, appr]);
 
     let swap = async(e, val) => {
         e.preventDefault();
         setData(null);
         setProducts(val);
-        window.history.replaceState(null, null, `/productlist/${+val}`);
+        setPage(1);
+        window.history.replaceState(null, null, `/productlist/${+val}/1/${appr}`);
+    }
+
+    let goToPage = async(e, val) =>{
+        e.preventDefault();
+        setData(null);
+        setPage(val);
+        window.history.replaceState(null, null, `/productlist/${type}/${val}/${appr}`)
+    }
+
+    let goToDiffApprovement = async(e, val) =>{
+        e.preventDefault();
+        setData(null);
+        setAppr(val);
+        window.history.replaceState(null, null, `/productlist/${type}/${pagenumber}/${val}`)
+    }
+
+    let approveAll = async(e, val) => {
+        e.preventDefault();
+        axios.get(ipAddress + `approve-all/${val}`, getJsonHeader(authTokens)).then((response) => {
+            if(response.status !== 200 || response.statusText !== 'OK'){
+                alert('Something fucked up');
+            }else{
+                setData(null);
+                getData(products, pagenumber, appr, setData, setPages, authTokens);
+            }
+        });
     }
 
     return (
@@ -49,47 +80,17 @@ function ProductList(){
                     <div className="row d-flex justify-content-between">
                         <div className="col-lg-8 ">
                             <div className="btn-group md-auto mb-3" role="group" aria-label="Basic example">
-                        
-                            {/* <a href="/products_list/?approved=all&page=1"><button type="button" className="btn mr-1
-                            {% if request.GET.approved == "true" %}
-                            btn-outline-secondary
-                            {% elif request.GET.approved == "false" %}
-                            btn-outline-secondary
-                            {% else %}
-                            btn-primary
-                            {% endif %} 
-
-                            btn-icon-text"><i className="ti-layout-grid4-alt btn-icon-prepend"></i> Všechny produkty</button></a>
-                            <a href="?approved=true&page=1"><button type="button" className="btn mr-1
-
-                            {% if request.GET.approved == "true" %}
-                            btn btn-primary
-                            {% else %}
-                            btn-outline-secondary
-                            {% endif %} 
-
-                            btn-icon-text"><i className="ti-arrow-circle-down btn-icon-prepend"></i>Schválené produkty</button></a>
-                            <a href="?approved=false&page=1"><button type="button" className="btn mr-1
-                            
-                            {% if request.GET.approved == "false" %}
-                            btn btn-primary
-                            {% else %}
-                            btn-outline-secondary
-                            {% endif %} 
-
-                            btn-icon-text"><i className="ti-na btn-icon-prepend"></i>Nepovolené produkty</button></a>
-                            
-                            <form id="checking-form" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" className="btn btn-inverse-success btn-icon" formaction="multiple_action/approve_pro/1">
-                                <i className="ti-arrow-circle-down"></i>
-                            </button>
-                            <button type="submit" className="btn btn-inverse-danger btn-icon" formaction="multiple_action/approve_pro/0">
-                                <i className="ti-na"></i>
-                            </button>
-                            </form>
-                            
-                            {% comment %} <button type="button" className="btn btn-outline-secondary btn-icon-text"><i className="ti-eye btn-icon-prepend"></i>Skryté produkty</button> {% endcomment %} */}
+                                <Button onClick={(e) => goToDiffApprovement(e, 3)} className={appr === 3 ? activeButton : secondaryButton}><i className="ti-layout-grid4-alt btn-icon-prepend"></i> Všechny produkty</Button>
+                                <Button onClick={(e) => goToDiffApprovement(e, 1)} className={appr === 1 ? activeButton : secondaryButton}><i className="ti-arrow-circle-down btn-icon-prepend"></i> Schválené produkty</Button>
+                                <Button onClick={(e) => goToDiffApprovement(e, 0)} className={appr === 0 ? activeButton : secondaryButton}><i className="ti-na btn-icon-prepend"></i> Nepovolené produkty</Button>
+                                <Button onClick={(e) => approveAll(e, 1)} className='btn btn-inverse-success btn-icon'><i className="ti-arrow-circle-down"></i></Button>
+                                <Button onClick={(e) => approveAll(e, 0)} className='btn btn-inverse-danger btn-icon'><i className="ti-na"></i></Button>
+                                {
+                                    !products ? 
+                                        <Button onClick={(e) => goToDiffApprovement(e, 2)} className='btn btn-outline-secondary btn-icon-text'><i className="ti-eye btn-icon-prepend"></i> Skryté produkty</Button>
+                                    :
+                                        null
+                                }
                             </div>
                         </div>
                         <div className="col-lg-4 d-flex justify-content-end">
@@ -113,9 +114,12 @@ function ProductList(){
                         {
                             pages.map((value, key) => {
                                 if(value === pagenumber){
-                                    return(<Button onClick={() => setPage(value)} className='input-formated input-stronger' style={{color:'red'}} key={key}>{value}</Button>);
+                                    return(<Button onClick={(e) => goToPage(e, value)} className='input-formated input-stronger' style={{color:'red'}} key={key}>{value}</Button>);
                                 }
-                                return(<Button onClick={() => setPage(value)} key={key} className='input-formated' style={{color:'black'}}>{value}</Button>);
+                                if((value >= pagenumber - 3 && value <= pagenumber + 3) || (value <= 3) || (value >= pages.length - 3)){
+                                    return(<Button onClick={(e) => goToPage(e, value)} key={key} className='input-formated' style={{color:'black'}}>{value}</Button>);
+                                }
+                                return(<div key={key}></div>);
                             })
                         }
                     </div>
