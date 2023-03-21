@@ -53,6 +53,11 @@ from .views_f.parameters import (
     updateParamName
 )
 
+from .views_f.manufacturers import (
+    manList,
+    updateManName,
+)
+
 urlpatterns = [
     path("token/", MyTokenObtainPairView.as_view(), name="obtain_token"),
     path("token/refresh/", TokenRefreshView.as_view(), name="refresh_token"),
@@ -88,4 +93,7 @@ urlpatterns = [
     path('parameters/', getParamNames),
     path('update-param-name/<int:id>', updateParamName),
     path('approve-all/<str:approvement>', setAllApproved),
+    
+    path('manufacturers/', manList),
+    path('update-manufacturer-name/<int:id>', updateManName),
 ]

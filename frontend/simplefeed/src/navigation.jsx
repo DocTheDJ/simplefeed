@@ -81,7 +81,7 @@ function Navigation(){
                             <li className="nav-item"> <a className="nav-link" href="pages/ui-features/buttons.html">Základní nastavení</a></li>
                             <li className="nav-item"> <a className="nav-link" href="/avalibility/">Skladová dostupnost</a></li>
                             <li className="nav-item"> <NavLink to={'/parameters'} className="nav-link">Parametry</NavLink></li>
-                            <li className="nav-item"> <a className="nav-link" href="/manufacturers/">Výrobci</a></li>
+                            <li className="nav-item"> <NavLink to={'/manufacturers'} className="nav-link">Výrobci</NavLink></li>
                         </ul>
                     </Collapse>
                     {/* <a className="nav-link" data-toggle="collapse" href="#nastaveni" aria-expanded="false" aria-controls="ui-basic">

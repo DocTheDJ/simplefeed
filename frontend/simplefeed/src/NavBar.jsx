@@ -13,6 +13,7 @@ import EshopCategories from './pages/eshopCategories';
 import SupplierCategories from './pages/supplierCategories';
 import PairingCategory from './pages/pairingCategory';
 import Parameters from './pages/parameters';
+import Manufacturers from './pages/manufacturers';
 
 function NavBar(){
     const {user} = useContext(AuthContext);
@@ -39,6 +40,7 @@ function NavBar(){
                             <Route path='/suppliercategories' element={<SupplierCategories></SupplierCategories>}></Route>
                             <Route path='/pairingcategories' element={<PairingCategory></PairingCategory>}></Route>
                             <Route path='/parameters' element={<Parameters></Parameters>}></Route>
+                            <Route path='/manufacturers' element={<Manufacturers></Manufacturers>}></Route>
                         </Routes>
                     </div>
                 </div>
