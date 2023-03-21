@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from ..serializers import VariantWithParamsSerializer, VariantUltimateSerializer
 from ..models import Variant
 from ..utils.db_access import create_dbconnect
+from ..utils.variant import VariantUtils
 from rest_framework.permissions import IsAuthenticated
 import math
 
@@ -36,12 +37,20 @@ def updateVariant(request, id):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def variantList(request, pagenum):
+def variantList(request, pagenum, approvement, cat, supp, man):
     if DB := create_dbconnect(request.user.username):
-        data = Variant.objects.using(DB).prefetch_related('product').all()
+        if int(approvement) == 3:
+            data = Variant.objects.using(DB).prefetch_related('product').all()
+        else:
+            data = Variant.objects.using(DB).prefetch_related('product').filter(visible=approvement)
+        t = {
+            'cat': None if cat == '_' else int(cat),
+            'sup': None if supp == '_' else int(supp),
+            'man': None if man == '_' else int(man),
+        }
+        data = data.filter(VariantUtils.createQuery(t))
         count = data.count()
         data = data[(int(pagenum)-1)*20:int(pagenum)*20]
-        # ser = VariantSerializer(data, many=True)
         ser = VariantWithParamsSerializer(data, many=True)
         return Response({'data': ser.data, 'count': list(range(1, math.ceil(count / 20) + 1))})
     else:

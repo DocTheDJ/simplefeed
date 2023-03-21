@@ -16,17 +16,11 @@ const activeButton = 'mr-1 btn-primary btn-icon-text';
 const secondaryButton = 'mr-1 btn-outline-secondary btn-icon-text';
 
 function getData(products, pagenumber, appr, setData, setPages, authTokens, cat, supp, man){
-    if(products){
-        axios.get(ipAddress + `product-list/${pagenumber}/${appr}/${cat}/${supp}/${man}`, getJsonHeader(authTokens)).then((response) => {
-            setData(response.data.data);
-            setPages(response.data.count);
-        });
-    }else{
-        axios.get(ipAddress + `variant-list/${pagenumber}/${appr}`, getJsonHeader(authTokens)).then((response) => {
-            setData(response.data.data);
-            setPages(response.data.count);
-        });
-    }
+    let link = products ? 'product-list' : 'variant-list';
+    axios.get(ipAddress + `${link}/${pagenumber}/${appr}/${cat}/${supp}/${man}`, getJsonHeader(authTokens)).then((response) => {
+        setData(response.data.data);
+        setPages(response.data.count);
+    });
 }
 
 function ProductList(){
@@ -46,7 +40,7 @@ function ProductList(){
                 <SideFilters
                     context={authTokens}
                     page={pagenumber}
-                    type={products}
+                    type={type}
                     appr={appr}
                     cat={cat}
                     setCat={setCat}
@@ -89,14 +83,12 @@ function SideFilters(props){
 
     let settingSup = async(e, val) => {
         e.preventDefault();
-        // let t = val === 0 ? '_' : val;
         props.setSup(val);
         window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/${props.cat}/${val}/${props.man}`);
     }
 
     let settingMan = async(e, val) => {
         e.preventDefault();
-        // let t = val === 0 ? '_' : val;
         props.setMan(val);
         window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/${props.cat}/${props.sup}/${val}`);
     }

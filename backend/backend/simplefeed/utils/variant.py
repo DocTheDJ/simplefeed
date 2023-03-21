@@ -1,4 +1,5 @@
 from ..models import Modifications
+from django.db.models import Q
 
 class VariantUtils:
     def get_update_dict(request, var:bool, ids):
@@ -66,3 +67,13 @@ class VariantUtils:
                 mods.add(self.get_or_create_mod(DB, "pur_price"))
             if k == 'rec_price':
                 mods.add(self.get_or_create_mod(DB, "rec_price"))
+    
+    def createQuery(data:dict):
+        query = Q()
+        if data['cat'] != None:
+            query &= Q(product__categories__id__exact=data['cat'])
+        if data['sup'] != None:
+            query &= Q(product__supplier__id=data['sup'])
+        if data['man'] != None:
+            query &= Q(product__manufacturer__id=data['man'])
+        return query
