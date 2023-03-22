@@ -15,11 +15,12 @@ import { mdiChevronDown, mdiChevronRight } from '@mdi/js';
 const activeButton = 'mr-1 btn-primary btn-icon-text';
 const secondaryButton = 'mr-1 btn-outline-secondary btn-icon-text';
 
-function getData(products, pagenumber, appr, setData, setPages, authTokens, cat, supp, man, query){
+function getData(products, pagenumber, appr, setData, setPages, authTokens, cat, supp, man, query, setIdsList){
     let link = products ? 'product-list' : 'variant-list';
     axios.get(ipAddress + `${link}/${pagenumber}/${appr}/${cat}/${supp}/${man}/${query}`, getJsonHeader(authTokens)).then((response) => {
         setData(response.data.data);
         setPages(response.data.count);
+        setIdsList(response.data.ids);
     });
 }
 
@@ -233,9 +234,12 @@ function Products(props){
 
     const [data, setData] = useState(null);
     const [pages, setPages] = useState([]);
+    const [idsList, setIdsList] = useState(null);
+    const [checkedList, setCheckedList] = useState([]);
+    const [checkedAll, setCheckedAll] = useState(false);
 
     useEffect(() => {
-        getData(props.products, props.pagenumber, props.appr, setData, setPages, props.context, props.category, props.supplier, props.manufact, props.query);
+        getData(props.products, props.pagenumber, props.appr, setData, setPages, props.context, props.category, props.supplier, props.manufact, props.query, setIdsList);
         window.scrollTo(0,0)
     }, [props.context, props.products, props.pagenumber, props.appr, props.category, props.supplier, props.manufact, props.query]);
 
@@ -261,14 +265,25 @@ function Products(props){
         window.history.replaceState(null, null, `/productlist/${props.products}/${props.pagenumber}/${val}/${props.category}/${props.supplier}/${props.manufact}/${props.query}`)
     }
 
+    let handleCheckAll = async(e) => {
+        setCheckedAll(!checkedAll);
+        if(!checkedAll){
+            setCheckedList(idsList);
+        }else{
+            setCheckedList([]);
+        }
+    }
+
     let approveAll = async(e, val) => {
         e.preventDefault();
-        axios.get(ipAddress + `approve-all/${val}`, getJsonHeader(props.context)).then((response) => {
+        axios.post(ipAddress + `approve-all/${val}`, {'ids': checkedList}, getJsonHeader(props.context)).then((response) => {
             if(response.status !== 200 || response.statusText !== 'OK'){
                 alert('Something fucked up');
             }else{
                 setData(null);
-                getData(props.products, props.pagenumber, props.appr, setData, setPages, props.context, props.category, props.supplier, props.manufact);
+                getData(props.products, props.pagenumber, props.appr, setData, setPages, props.context, props.category, props.supplier, props.manufact, props.query, setIdsList);
+                setCheckedAll(false);
+                setCheckedList([]);
             }
         });
     }
@@ -281,6 +296,7 @@ function Products(props){
                         <Button onClick={(e) => goToDiffApprovement(e, 3)} className={props.appr === 3 ? activeButton : secondaryButton}><i className="ti-layout-grid4-alt btn-icon-prepend"></i> Všechny produkty</Button>
                         <Button onClick={(e) => goToDiffApprovement(e, 1)} className={props.appr === 1 ? activeButton : secondaryButton}><i className="ti-arrow-circle-down btn-icon-prepend"></i> Schválené produkty</Button>
                         <Button onClick={(e) => goToDiffApprovement(e, 0)} className={props.appr === 0 ? activeButton : secondaryButton}><i className="ti-na btn-icon-prepend"></i> Nepovolené produkty</Button>
+                        <input className="form-check-input form-control-lg" type="checkbox" checked={checkedAll} onChange={handleCheckAll}></input>
                         <Button onClick={(e) => approveAll(e, 1)} className='btn btn-inverse-success btn-icon'><i className="ti-arrow-circle-down"></i></Button>
                         <Button onClick={(e) => approveAll(e, 0)} className='btn btn-inverse-danger btn-icon'><i className="ti-na"></i></Button>
                         {
@@ -300,7 +316,13 @@ function Products(props){
                     {
                         props.products ? 
                             data?.map((value) => {
-                                return(<Product data={value} key={value.id} context={props.context}></Product>)
+                                return(
+                                    <Product 
+                                        data={value} 
+                                        key={value.id} 
+                                        context={props.context}
+                                        checkedList={checkedList}
+                                        setCheckedList={setCheckedList}></Product>)
                             })
                         :
                             data?.map((value) => {

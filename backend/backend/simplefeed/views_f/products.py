@@ -23,9 +23,18 @@ def listProducts(request, pagenum, approvement, cat, supp, man, que):
         }
         data = data.filter(ProductUtils.createQuery(t)).distinct()
         count = data.count()
+        # print(count)
+        ids = data.values_list('id', flat=True)
+        # print(ids)
         data = data[(int(pagenum)-1)*20:int(pagenum)*20]
         serializer = ProductSerializer(data, many=True)
-        return Response({'data': serializer.data, 'count': list(range(1, math.ceil(count / 20) + 1))})
+        return Response(
+            {
+                'data': serializer.data,
+                'count': list(range(1, math.ceil(count / 20) + 1)),
+                'ids': ids
+            }
+        )
     else:
         return Response('noDB')
 
@@ -66,12 +75,12 @@ def setMain(request, id, new):
         response = 'noDB'
     return Response(response)
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def setAllApproved(request, approvement):
     if DB := create_dbconnect(request):
-        Common.objects.using(DB).all().update(approved=int(approvement))
-        Variant.objects.using(DB).exclude(visible='2').update(visible=approvement)
+        Common.objects.using(DB).filter(id__in=request.data['ids']).update(approved=int(approvement))
+        Variant.objects.using(DB).filter(product__id__in=request.data['ids']).exclude(visible='2').update(visible=approvement)
         response = 'OK'
     else:
         response = 'noDB'

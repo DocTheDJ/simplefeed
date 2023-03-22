@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import { ipAddress, getJsonHeader} from '../constants';
 import VariantModal from './variantModal';
@@ -8,6 +8,11 @@ import { NavLink } from 'react-router-dom';
 function Product(props){
 
     const [approved, setApprove] = useState(props.data.approved);
+    const [checked, setChecked] = useState(false);
+
+    useEffect(() => {
+        setChecked(props.checkedList.includes(props.data.id));
+    }, [props.checkedList, props.data.id]);
 
     let updateApprovement = async(e) =>{
         e.preventDefault();
@@ -16,6 +21,16 @@ function Product(props){
                 setApprove(!approved);
             }
         });
+    }
+
+    let handleCheck = async() => {
+        setChecked(!checked);
+        if(!checked){
+            props.setCheckedList([...props.checkedList, props.data.id]);
+        }else{
+            let newList = props.checkedList.filter((item) => item !== props.data.id);
+            props.setCheckedList(newList);
+        }
     }
     return (
         <div className="col-md-3 grid-margin grid-margin-md-0 stretch-card mb-4">
@@ -27,7 +42,7 @@ function Product(props){
                         left: '55px',
                         top: '30px',
                         width: '20px', height: '20px'}}
-                    className="form-check-input form-control-lg" type="checkbox" value="{{x.id}}" name="product_check" form="checking-form"/>
+                    className="form-check-input form-control-lg" type="checkbox" checked={checked} onChange={handleCheck}/>
 
                     <NavLink to={`/productdetail/${props.data.id}`}>
                         <img className="img-fluid mb-4 mx-auto d-block" style={{borderRadius: '8px', height: '220px'}} src={props.data.price_common?.image_ref.image} alt=''/>
