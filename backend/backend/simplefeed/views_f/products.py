@@ -21,7 +21,7 @@ def listProducts(request, pagenum, approvement, cat, supp, man, que):
             'man': None if man == '_' else int(man),
             'que': None if que == '_' else que,
         }
-        data = data.filter(ProductUtils.createQuery(t))
+        data = data.filter(ProductUtils.createQuery(t)).distinct()
         count = data.count()
         data = data[(int(pagenum)-1)*20:int(pagenum)*20]
         serializer = ProductSerializer(data, many=True)

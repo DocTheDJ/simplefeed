@@ -49,5 +49,6 @@ class ProductUtils:
         if data['man'] != None:
             query &= Q(manufacturer__id=data['man'])
         if data['que']:
-            query &= (Q(itemgroup_id__icontains=data['que']) | Q(manufacturer__name__icontains=data['que']) | Q(supplier__name__icontains=data['que']))
+            query &= (Q(itemgroup_id__icontains=data['que']) | Q(manufacturer__name__icontains=data['que']) | Q(supplier__name__icontains=data['que']) |
+                      Q(price_common__code__icontains=data['que']) | Q(price_common__ean__icontains=data['que']) | Q(price_common__name__icontains=data['que']))
         return query
