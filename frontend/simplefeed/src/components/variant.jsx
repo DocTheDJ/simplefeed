@@ -1,8 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ModificationVariantModal from './modificationVariantModal';
 import { NavLink } from 'react-router-dom';
+import { ipAddress, getJsonHeader} from '../constants';
+import axios from 'axios';
 
 function Variant(props){
+    const [visibility, setVisibility] = useState(props.data.visible)
+    const [checked, setChecked] = useState(false);
+
+    useEffect(() => {
+        setChecked(props.checkedList.includes(props.data.id));
+    }, [props.checkedList, props.data.id]);
+
+    let updateVisibility = async(e, val) =>{
+        e.preventDefault();
+        axios.get(ipAddress + `set-visibility/${props.data.id}/${val}`, getJsonHeader(props.context)).then((response) => {
+            if(response.status === 200 && response.data === 'OK'){
+                setVisibility(val);
+            }
+        });
+    }
+
+    let handleCheck = async() => {
+        setChecked(!checked);
+        if(!checked){
+            props.setCheckedList([...props.checkedList, props.data.id]);
+        }else{
+            let newList = props.checkedList.filter((item) => item !== props.data.id);
+            props.setCheckedList(newList);
+        }
+    }
+
     return (
         <div className="col-md-3 grid-margin grid-margin-md-0 stretch-card mb-4">
             <div className="card">
@@ -12,7 +40,7 @@ function Variant(props){
                         left: '55px',
                         top: '30px',
                         width: '20px', height: '20px'}}
-                    className="form-check-input form-control-lg" type="checkbox" value="{{x.id}}" name="variant_check" form="checking-form"/>
+                    className="form-check-input form-control-lg" type="checkbox" checked={checked} onChange={handleCheck}/>
 
                     <NavLink to={`/variantdetail/${props.data.id}`}>
                         <img className="img-fluid mb-4 mx-auto d-block" style={{borderRadius: '8px', height: '220px'}} src={props.data.image_ref.image} alt=''/>
@@ -35,11 +63,9 @@ function Variant(props){
                                 props.data.decide_main ? 
                                     <p className="text-center" style={{background:'#4b49ac',borderRadius:'8px',padding:'4px',color: 'white'}}>Výchozí</p>
                                 :
-                                    // <a style={{textDecoration: 'none', color: '#010101'}} href="">
-                                        <p className="text-center" style={{background:'#d4d4da',borderRadius:'8px',padding:'4px'}}>
-                                            Varianta
-                                        </p>
-                                    // </a>
+                                    <p className="text-center" style={{background:'#d4d4da',borderRadius:'8px',padding:'4px'}}>
+                                        Varianta
+                                    </p>
                             }
                             <p className="card-description">
                             
@@ -72,22 +98,18 @@ function Variant(props){
                             buttonStyle={'btn-inverse-warning btn-icon'}>
                         </ModificationVariantModal>
                         {
-                            props.data.visible === '1' ? 
-                                <a href="approve_var/{{x.id}}/1"><button type="button" className="btn btn-inverse-success btn-icon">
+                            visibility === '1' ? 
+                                <button type="button" className="btn btn-inverse-success btn-icon" onClick={(e) => updateVisibility(e, '0')}>
                                     <i className="ti-arrow-circle-down"></i>
-                                </button></a>
-                            : props.data.visible === '0' ? 
-                                    <a href="approve_var/{{x.id}}/0">
-                                        <button type="button" className="btn btn-inverse-danger btn-icon">
-                                            <i className="ti-na"></i>
-                                        </button>
-                                    </a>
+                                </button>
+                            : visibility === '0' ? 
+                                    <button type="button" className="btn btn-inverse-danger btn-icon" onClick={(e) => updateVisibility(e, '2')}>
+                                        <i className="ti-na"></i>
+                                    </button>
                                 :
-                                    <a href="approve_var/{{x.id}}/0">
-                                        <button type="button" className="btn btn-info btn-icon">
-                                            <i className="ti-na"></i>
-                                        </button>
-                                    </a>
+                                    <button type="button" className="btn btn-info btn-icon" onClick={(e) => updateVisibility(e, '1')}>
+                                        <i className="ti-na"></i>
+                                    </button>
                         }
                     </div>            
                 </div>

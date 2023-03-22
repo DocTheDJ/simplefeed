@@ -27,7 +27,7 @@ function getData(products, pagenumber, appr, setData, setPages, authTokens, cat,
 function ProductList(){
     const {type, page, approvement, category, supplier, manufact, query} = useParams();
     const [pagenumber, setPage] = useState(parseInt(page, 10));
-    const [products, setProducts] = useState((type & 1));
+    const [products, setProducts] = useState(parseInt(type));
     const [appr, setAppr] = useState(parseInt(approvement));
     const [cat, setCat] = useState(category === undefined ? '_' : category);
     const [sup, setSup] = useState(supplier === undefined ? '_' : supplier);
@@ -42,7 +42,7 @@ function ProductList(){
                 <SideFilters
                     context={authTokens}
                     page={pagenumber}
-                    type={type}
+                    type={products}
                     appr={appr}
                     cat={cat}
                     setCat={setCat}
@@ -276,7 +276,8 @@ function Products(props){
 
     let approveAll = async(e, val) => {
         e.preventDefault();
-        axios.post(ipAddress + `approve-all/${val}`, {'ids': checkedList}, getJsonHeader(props.context)).then((response) => {
+        let link = props.products === 1 ? 'approve-all' : 'update-mul-vis';
+        axios.post(ipAddress + `${link}/${val}`, {'ids': checkedList}, getJsonHeader(props.context)).then((response) => {
             if(response.status !== 200 || response.statusText !== 'OK'){
                 alert('Something fucked up');
             }else{
@@ -309,8 +310,8 @@ function Products(props){
                 </div>
                 <div className="col-lg-4 d-flex justify-content-end">
                     <div className="btn-group md-auto mb-3" role="group" aria-label="Basic example">
-                        <Button className={props.products ? activeButton : secondaryButton} onClick={(e) => {swap(e, true);}}><i className="ti-layout-media-left btn-icon-prepend"></i>Produkty</Button>
-                        <Button className={props.products ? secondaryButton : activeButton} onClick={(e) => {swap(e, false);}}><i className="ti-layout-grid2-thumb btn-icon-prepend"></i>Varianty</Button>
+                        <Button className={props.products ? activeButton : secondaryButton} onClick={(e) => {swap(e, 1);}}><i className="ti-layout-media-left btn-icon-prepend"></i>Produkty</Button>
+                        <Button className={props.products ? secondaryButton : activeButton} onClick={(e) => {swap(e, 0);}}><i className="ti-layout-grid2-thumb btn-icon-prepend"></i>Varianty</Button>
                     </div>
                 </div>
                     {
@@ -322,11 +323,17 @@ function Products(props){
                                         key={value.id} 
                                         context={props.context}
                                         checkedList={checkedList}
-                                        setCheckedList={setCheckedList}></Product>)
+                                        setCheckedList={setCheckedList}></Product>);
                             })
                         :
                             data?.map((value) => {
-                                return(<Variant data={value} key={value.id} context={props.context}></Variant>);
+                                return(
+                                    <Variant 
+                                        data={value} 
+                                        key={value.id} 
+                                        context={props.context}
+                                        checkedList={checkedList}
+                                        setCheckedList={setCheckedList}></Variant>);
                             })
                     }
             </div>

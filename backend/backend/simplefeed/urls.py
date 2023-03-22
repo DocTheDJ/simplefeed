@@ -27,6 +27,7 @@ from .views_f.variants import (
     variantList,
     variantDetail,
     setVisibility,
+    setVisMultiple,
 )
 
 from .views_f.category import (
@@ -96,4 +97,5 @@ urlpatterns = [
     
     path('manufacturers/', manList),
     path('update-manufacturer-name/<int:id>', updateManName),
+    path('update-mul-vis/<str:new>', setVisMultiple),
 ]

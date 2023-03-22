@@ -23,9 +23,7 @@ def listProducts(request, pagenum, approvement, cat, supp, man, que):
         }
         data = data.filter(ProductUtils.createQuery(t)).distinct()
         count = data.count()
-        # print(count)
         ids = data.values_list('id', flat=True)
-        # print(ids)
         data = data[(int(pagenum)-1)*20:int(pagenum)*20]
         serializer = ProductSerializer(data, many=True)
         return Response(

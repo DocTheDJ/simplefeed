@@ -1,7 +1,6 @@
 import React from 'react';
 
 function FeedList(props){
-    console.log(props.data);
     return (
         <div className="col-md-12 grid-margin stretch-card">
             <div className="card position-relative">
@@ -34,9 +33,6 @@ function Feed(props){
     }
     const active_percentage = props.data.active_count / props.data.total_count;
     const inactive_percentage = props.data.inactive_count / props.data.total_count;
-
-    console.log(props.data);
-    console.log(active_percentage, inactive_percentage);
 
     return (
         <div className={bigClass}>

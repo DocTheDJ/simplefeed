@@ -51,9 +51,16 @@ def variantList(request, pagenum, approvement, cat, supp, man, que):
         }
         data = data.filter(VariantUtils.createQuery(t))
         count = data.count()
+        ids = data.values_list('id', flat=True)
         data = data[(int(pagenum)-1)*20:int(pagenum)*20]
         ser = VariantWithParamsSerializer(data, many=True)
-        return Response({'data': ser.data, 'count': list(range(1, math.ceil(count / 20) + 1))})
+        return Response(
+            {
+                'data': ser.data,
+                'count': list(range(1, math.ceil(count / 20) + 1)),
+                'ids': ids
+            }
+        )
     else:
         return Response('noDB')
 
@@ -71,8 +78,17 @@ def variantDetail(request, id):
 @permission_classes([IsAuthenticated])
 def setVisibility(request, id, new):
     if DB := create_dbconnect(request):
-        data = Variant.objects.using(DB).filter(id=id)
-        data.update(visible=new)
+        Variant.objects.using(DB).filter(id=id).update(visible=new)
+        response = 'OK'
+    else:
+        response = 'noDB'
+    return Response(response)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def setVisMultiple(request, new):
+    if DB := create_dbconnect(request):
+        Variant.objects.using(DB).filter(id__in=request.data['ids']).update(visible=new)
         response = 'OK'
     else:
         response = 'noDB'
