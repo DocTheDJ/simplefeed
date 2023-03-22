@@ -68,11 +68,11 @@ urlpatterns = [
     path("migrate/", migrate),
     path('get-filters/', getFilters),
     
-    path("product-list/<str:pagenum>/<str:approvement>/<str:cat>/<str:supp>/<str:man>", listProducts),
+    path("product-list/<str:pagenum>/<str:approvement>/<str:cat>/<str:supp>/<str:man>/<str:que>", listProducts),
     path("approve_product/<str:id>/<str:approve>", approve_product),
     path("get-variants/<str:id>", get_variants),
     path("update-variant/<str:id>", updateVariant),
-    path('variant-list/<str:pagenum>/<str:approvement>/<str:cat>/<str:supp>/<str:man>', variantList),
+    path('variant-list/<str:pagenum>/<str:approvement>/<str:cat>/<str:supp>/<str:man>/<str:que>', variantList),
     path('product-detail/<str:id>', detailProduct),
     path('set-main/<int:id>/<int:new>', setMain),
     path('variant-detail/<int:id>', variantDetail),

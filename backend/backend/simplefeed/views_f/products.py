@@ -9,7 +9,7 @@ import math
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def listProducts(request, pagenum, approvement, cat, supp, man):
+def listProducts(request, pagenum, approvement, cat, supp, man, que):
     if DB := create_dbconnect(request.user.username):
         if int(approvement) == 3:
             data = Common.objects.using(DB).all()
@@ -19,6 +19,7 @@ def listProducts(request, pagenum, approvement, cat, supp, man):
             'cat': None if cat == '_' else int(cat),
             'sup': None if supp == '_' else int(supp),
             'man': None if man == '_' else int(man),
+            'que': None if que == '_' else que,
         }
         data = data.filter(ProductUtils.createQuery(t))
         count = data.count()

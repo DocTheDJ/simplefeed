@@ -48,4 +48,6 @@ class ProductUtils:
             query &= Q(supplier__id=data['sup'])
         if data['man'] != None:
             query &= Q(manufacturer__id=data['man'])
+        if data['que']:
+            query &= (Q(itemgroup_id__icontains=data['que']) | Q(manufacturer__name__icontains=data['que']) | Q(supplier__name__icontains=data['que']))
         return query

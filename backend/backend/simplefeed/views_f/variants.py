@@ -37,7 +37,7 @@ def updateVariant(request, id):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def variantList(request, pagenum, approvement, cat, supp, man):
+def variantList(request, pagenum, approvement, cat, supp, man, que):
     if DB := create_dbconnect(request.user.username):
         if int(approvement) == 3:
             data = Variant.objects.using(DB).prefetch_related('product').all()
@@ -47,6 +47,7 @@ def variantList(request, pagenum, approvement, cat, supp, man):
             'cat': None if cat == '_' else int(cat),
             'sup': None if supp == '_' else int(supp),
             'man': None if man == '_' else int(man),
+            'que': None if que == '_' else que,
         }
         data = data.filter(VariantUtils.createQuery(t))
         count = data.count()

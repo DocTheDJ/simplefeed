@@ -76,4 +76,6 @@ class VariantUtils:
             query &= Q(product__supplier__id=data['sup'])
         if data['man'] != None:
             query &= Q(product__manufacturer__id=data['man'])
+        if data['que']:
+            query &= (Q(code__icontains=data['que']) | Q(ean__icontains=data['que']) | Q(name__icontains=data['que']))
         return query

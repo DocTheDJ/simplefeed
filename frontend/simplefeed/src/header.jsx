@@ -1,14 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import LargeLogo from "./static/images/simplefeed_large_logo.svg"
 import FaviconLogo from "./static/images/simplefeed_favicon_logo.svg"
 import Icon from '@mdi/react';
 import { mdiCheckBold, mdiMenuDown } from '@mdi/js';
 import AuthContext from './context/AuthContext';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { useParams } from 'react-router-dom';
+import Form from 'react-bootstrap/Form';
+import { Button } from 'react-bootstrap';
 
 
 function Header(){
-    let {user} = useContext(AuthContext)
+    let {user} = useContext(AuthContext);
+    const {type, approvement, category, supplier, manufact, query} = useParams();
+    const [quer, setQuery] = useState(query === '_' || query === undefined ? '' : query);
+
+    let searchProducts = async(e, val) => {
+      let t = type === undefined ? '1' : type;
+      let a = approvement === undefined ? '3' : approvement;
+      let c = category === undefined ? '_' : category;
+      let s = supplier === undefined ? '_' : supplier;
+      let m = manufact === undefined ? '_' : manufact;
+      let q = val === undefined || val === '' ? '_' : val;
+      window.history.replaceState(null, null, `/productlist/${t}/1/${a}/${c}/${s}/${m}/${q}`);
+    }
     return (
         <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
           <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
@@ -22,7 +37,17 @@ function Header(){
             </button>
             <ul className="navbar-nav mr-lg-2">
               <li className="nav-item nav-search d-none d-lg-block">
-                <form method="POST" action="/search/?page=1">
+                <Form onSubmit={(e) => searchProducts(e, quer)}>
+                  <div className="input-group">
+                    <Form.Control type='text' onChange={(e) => setQuery(e.target.value)} value={quer} placeholder="Vyhledat produkt, variantu..."></Form.Control>
+                    <div className="input-group-prepend hover-cursor" id="navbar-search-icon">
+                      <Button type='submit' style={ {borderRadius: '8px'} } className="btn btn-primary btn-icon">
+                        <i className="icon-search"></i>
+                      </Button>
+                    </div>
+                  </div>
+                </Form>
+                {/* <form method="POST" action="/search/?page=1">
                   <div className="input-group">
                     
                       <input name="search_bar" type="text" className="form-control" id="navbar-search-input" placeholder="Vyhledat produkt, variantu..." aria-label="search" aria-describedby="search"/>
@@ -30,7 +55,7 @@ function Header(){
                         <button style={ {borderRadius: '8px'} } className="btn btn-primary btn-icon" type="submit" value="search"><i className="icon-search"></i></button>
                       </div>
                     </div>
-                  </form>
+                  </form> */}
               </li>
             </ul>
             <ul className="navbar-nav navbar-nav-right">

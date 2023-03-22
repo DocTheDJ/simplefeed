@@ -15,22 +15,23 @@ import { mdiChevronDown, mdiChevronRight } from '@mdi/js';
 const activeButton = 'mr-1 btn-primary btn-icon-text';
 const secondaryButton = 'mr-1 btn-outline-secondary btn-icon-text';
 
-function getData(products, pagenumber, appr, setData, setPages, authTokens, cat, supp, man){
+function getData(products, pagenumber, appr, setData, setPages, authTokens, cat, supp, man, query){
     let link = products ? 'product-list' : 'variant-list';
-    axios.get(ipAddress + `${link}/${pagenumber}/${appr}/${cat}/${supp}/${man}`, getJsonHeader(authTokens)).then((response) => {
+    axios.get(ipAddress + `${link}/${pagenumber}/${appr}/${cat}/${supp}/${man}/${query}`, getJsonHeader(authTokens)).then((response) => {
         setData(response.data.data);
         setPages(response.data.count);
     });
 }
 
 function ProductList(){
-    const {type, page, approvement, category, supplier, manufact} = useParams();
+    const {type, page, approvement, category, supplier, manufact, query} = useParams();
     const [pagenumber, setPage] = useState(parseInt(page, 10));
     const [products, setProducts] = useState((type & 1));
     const [appr, setAppr] = useState(parseInt(approvement));
     const [cat, setCat] = useState(category === undefined ? '_' : category);
     const [sup, setSup] = useState(supplier === undefined ? '_' : supplier);
     const [man, setMan] = useState(manufact === undefined ? '_' : manufact);
+    const [que, setQue] = useState(query === undefined ? '_' : query);
 
     const {authTokens} = useContext(AuthContext);
 
@@ -47,7 +48,9 @@ function ProductList(){
                     sup={sup}
                     setSup={setSup}
                     man={man}
-                    setMan={setMan}/>
+                    setMan={setMan}
+                    query={que}
+                    setQue={setQue}/>
                 <Products 
                     context={authTokens}
                     pagenumber={pagenumber}
@@ -58,7 +61,8 @@ function ProductList(){
                     setAppr={setAppr}
                     category={cat}
                     supplier={sup}
-                    manufact={man}/>
+                    manufact={man}
+                    query={que}/>
             </div>
         </>
     );
@@ -84,21 +88,30 @@ function SideFilters(props){
     let settingSup = async(e, val) => {
         e.preventDefault();
         props.setSup(val);
-        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/${props.cat}/${val}/${props.man}`);
+        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/${props.cat}/${val}/${props.man}/${props.query}`);
     }
 
     let settingMan = async(e, val) => {
         e.preventDefault();
         props.setMan(val);
-        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/${props.cat}/${props.sup}/${val}`);
+        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/${props.cat}/${props.sup}/${val}/${props.query}`);
     }
+
+    let settingCat = async(e, val) => {
+        e.preventDefault();
+        let t = val === 0 ? '_' : val;
+        props.setCat(t);
+        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.approvement}/${t}/${props.sup}/${props.man}/${props.query}`);
+    }
+
 
     let resetFilter = (e) => {
         e.preventDefault();
         props.setSup('_')
         props.setMan('_')
         props.setCat('_')
-        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/_/_/_`);
+        props.setQue('_')
+        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/_/_/_/_`);
     }
 
     return(
@@ -114,7 +127,7 @@ function SideFilters(props){
                                     key={`category_${value.id}`} 
                                     man={props.man} 
                                     sup={props.sup} 
-                                    setCat={props.setCat} 
+                                    settingCat={settingCat} 
                                     page={props.page}
                                     type={props.type}
                                     approvement={props.appr}/>
@@ -172,12 +185,6 @@ function SideFilters(props){
 function CategoryFilter(props){
     const [openSubs, setOpenSubs] = useState(false);
 
-    let settingCat = async(e, val) => {
-        e.preventDefault();
-        let t = val === 0 ? '_' : val;
-        props.setCat(t);
-        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.approvement}/${t}/${props.sup}/${props.man}`);
-    }
     return(
         <li className="ml-3">
             {
@@ -193,7 +200,7 @@ function CategoryFilter(props){
                 :
                 <Icon path={undefined} size={0.9}></Icon>
             }
-            <a className='input-formated' href style={{textDecoration: 'none'}} onClick={e => settingCat(e, props.data.id)}>{props.data.name}</a>
+            <a className='input-formated' href style={{textDecoration: 'none'}} onClick={e => props.settingCat(e, props.data.id)}>{props.data.name}</a>
             {
                 props.data.children.length > 0 && openSubs ?
                     <Collapse isOpened={openSubs}>
@@ -206,7 +213,7 @@ function CategoryFilter(props){
                                             key={value.id} 
                                             sup={props.sup} 
                                             man={props.man} 
-                                            setCat={props.setCat}
+                                            settingCat={props.settingCat}
                                             page={props.page}
                                             type={props.type}
                                             approvement={props.approvement}/>
@@ -228,30 +235,30 @@ function Products(props){
     const [pages, setPages] = useState([]);
 
     useEffect(() => {
-        getData(props.products, props.pagenumber, props.appr, setData, setPages, props.context, props.category, props.supplier, props.manufact);
+        getData(props.products, props.pagenumber, props.appr, setData, setPages, props.context, props.category, props.supplier, props.manufact, props.query);
         window.scrollTo(0,0)
-    }, [props.context, props.products, props.pagenumber, props.appr, props.category, props.supplier, props.manufact]);
+    }, [props.context, props.products, props.pagenumber, props.appr, props.category, props.supplier, props.manufact, props.query]);
 
     let swap = async(e, val) => {
         e.preventDefault();
         setData(null);
         props.setProducts(val);
         props.setPage(1);
-        window.history.replaceState(null, null, `/productlist/${+val}/1/${props.appr}/${props.category}/${props.supplier}/${props.manufact}`);
+        window.history.replaceState(null, null, `/productlist/${+val}/1/${props.appr}/${props.category}/${props.supplier}/${props.manufact}/${props.query}`);
     }
 
     let goToPage = async(e, val) =>{
         e.preventDefault();
         setData(null);
         props.setPage(val);
-        window.history.replaceState(null, null, `/productlist/${props.products}/${val}/${props.appr}/${props.category}/${props.supplier}/${props.manufact}`)
+        window.history.replaceState(null, null, `/productlist/${props.products}/${val}/${props.appr}/${props.category}/${props.supplier}/${props.manufact}/${props.query}`)
     }
 
     let goToDiffApprovement = async(e, val) =>{
         e.preventDefault();
         setData(null);
         props.setAppr(val);
-        window.history.replaceState(null, null, `/productlist/${props.products}/${props.pagenumber}/${val}/${props.category}/${props.supplier}/${props.manufact}`)
+        window.history.replaceState(null, null, `/productlist/${props.products}/${props.pagenumber}/${val}/${props.category}/${props.supplier}/${props.manufact}/${props.query}`)
     }
 
     let approveAll = async(e, val) => {
