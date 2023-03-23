@@ -47,15 +47,6 @@ function Header(){
                     </div>
                   </div>
                 </Form>
-                {/* <form method="POST" action="/search/?page=1">
-                  <div className="input-group">
-                    
-                      <input name="search_bar" type="text" className="form-control" id="navbar-search-input" placeholder="Vyhledat produkt, variantu..." aria-label="search" aria-describedby="search"/>
-                      <div className="input-group-prepend hover-cursor" id="navbar-search-icon">
-                        <button style={ {borderRadius: '8px'} } className="btn btn-primary btn-icon" type="submit" value="search"><i className="icon-search"></i></button>
-                      </div>
-                    </div>
-                  </form> */}
               </li>
             </ul>
             <ul className="navbar-nav navbar-nav-right">

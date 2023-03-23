@@ -163,7 +163,6 @@ class CategoryUtil():
     #     return output
 
     def created_supplier_category(DB, category_string:str, delim:str, supplier_id:int, action) -> Category:
-        print(category_string)
         if delim != "":
             parsed_categories = category_string.split(delim)
         else:

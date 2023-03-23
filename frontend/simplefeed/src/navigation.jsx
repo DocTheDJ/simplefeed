@@ -79,7 +79,7 @@ function Navigation(){
                     <Collapse isOpened={settingsCollapse}>
                         <ul className="nav flex-column sub-menu" style={{paddingLeft:'20px'}}>
                             <li className="nav-item"> <a className="nav-link" href="pages/ui-features/buttons.html">Základní nastavení</a></li>
-                            <li className="nav-item"> <a className="nav-link" href="/avalibility/">Skladová dostupnost</a></li>
+                            <li className="nav-item"> <NavLink to={'/availabilities'} className="nav-link">Skladová dostupnost</NavLink></li>
                             <li className="nav-item"> <NavLink to={'/parameters'} className="nav-link">Parametry</NavLink></li>
                             <li className="nav-item"> <NavLink to={'/manufacturers'} className="nav-link">Výrobci</NavLink></li>
                         </ul>

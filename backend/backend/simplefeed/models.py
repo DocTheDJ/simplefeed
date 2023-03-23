@@ -19,6 +19,10 @@ class Feeds(models.Model):
     def get_inactive_count(self):
         self.inactive_count = self.supplied_product.filter(approved=False).count()
         self.inactive_percentage = self.inactive_count / self.total_count * 100
+    
+    @property
+    def availabilities(self):
+        return self.availab.all()
 
 class Image(models.Model):
     image = models.CharField(max_length=512, unique=True)
@@ -56,7 +60,7 @@ class Availabilities(models.Model):
     name = models.CharField(max_length=64)
     original_name = models.CharField(max_length=64)
     buyable = models.BooleanField()
-    supplier = models.ForeignKey(Feeds, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(Feeds, on_delete=models.CASCADE, related_name='availab')
     arrives_in = models.CharField(max_length=16, null=True)
     active = models.BooleanField()
 

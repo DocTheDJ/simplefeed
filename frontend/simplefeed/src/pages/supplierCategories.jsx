@@ -14,7 +14,6 @@ function SupplierCategories(){
             setData(response.data);
         })
     }, [authTokens]);
-    console.log(data);
 
     return(
         <div className="row justify-content-md-center" id="categories">

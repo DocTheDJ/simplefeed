@@ -58,7 +58,7 @@ function ProductBar(props){
             <div className="col-lg-12 d-flex justify-content-between">
                 <div>
                     <Button onClick={() => navigate(-1)} className="btn btn-primary btn-icon-text"><i className="ti-arrow-left btn-icon-prepend"></i>Zpět</Button>
-                    <NavLink to={'/productlist'}>
+                    <NavLink to={'/productlist/1/1/3/_/_/_/_'}>
                         <button type="button" className="btn btn-outline-primary btn-icon-text">
                             Seznam produktů
                         </button>

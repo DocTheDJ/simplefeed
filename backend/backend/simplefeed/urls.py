@@ -59,6 +59,13 @@ from .views_f.manufacturers import (
     updateManName,
 )
 
+from .views_f.availabilities import (
+    getSupplierAvailab,
+    setBuyable,
+    setNames,
+    setActive,
+)
+
 urlpatterns = [
     path("token/", MyTokenObtainPairView.as_view(), name="obtain_token"),
     path("token/refresh/", TokenRefreshView.as_view(), name="refresh_token"),
@@ -98,4 +105,10 @@ urlpatterns = [
     path('manufacturers/', manList),
     path('update-manufacturer-name/<int:id>', updateManName),
     path('update-mul-vis/<str:new>', setVisMultiple),
+    
+    path('supp-availab/', getSupplierAvailab),
+    
+    path('availability-buyable/<int:id>/<int:b>', setBuyable),
+    path('availability-names/<int:id>', setNames),
+    path('availability-active/<int:id>/<int:a>', setActive)
 ]

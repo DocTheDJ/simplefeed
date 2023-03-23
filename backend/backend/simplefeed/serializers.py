@@ -167,3 +167,14 @@ class CategoryPairingParentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Category
         fields = '__all__'
+
+class AvailabilitiesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Availabilities
+        fields = '__all__'
+
+class FeedAvaSeri(serializers.ModelSerializer):
+    availabilities = AvailabilitiesSerializer(many=True)
+    class Meta:
+        model = models.Feeds
+        fields = '__all__'

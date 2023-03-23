@@ -12,7 +12,7 @@ function Test(){
     let runGet = async(e) => {
         e.preventDefault();
         console.log('boobs');
-        axios.get(ipAddress + 'test/', getJsonHeader(authTokens)).then((reponse) => console.log(reponse.data))
+        axios.get(ipAddress + 'migrate/', getJsonHeader(authTokens)).then((reponse) => console.log(reponse.data))
     }
 
     return (
