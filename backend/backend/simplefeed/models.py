@@ -255,6 +255,10 @@ class Common(models.Model):
         q = self.variants.all().aggregate(total_amount=models.Sum('amount'))
         return q['total_amount']
     
+    @property
+    def childless_cat(self):
+        return self.categories.exclude(child__in=list(self.categories.all().values_list('id', flat=True)))
+    
     def count(self):
         return self.variants.count()
     

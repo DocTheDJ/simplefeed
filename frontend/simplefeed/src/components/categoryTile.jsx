@@ -174,7 +174,6 @@ function MoveModal(props){
     const [target, setTarget] = useState(null);
     const [data, setData] = useState(null);
 
-    console.log(props.data);
     useEffect(() => {
         if(show){
             var source = Number.isInteger(props.data.source) ? props.data.source : props.data.source.id;

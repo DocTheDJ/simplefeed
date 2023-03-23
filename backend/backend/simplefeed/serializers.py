@@ -110,11 +110,18 @@ class ManufacturerSerializer(serializers.ModelSerializer):
         model = models.Manufacturers
         fields = '__all__'
 
+class CategoryPathToMasterSerializer(serializers.ModelSerializer):
+    getParent = RecursiveField()
+    class Meta:
+        model = models.Category
+        fields = '__all__'
+
 class ProductDetailSerializer(serializers.ModelSerializer):
     variants = VariantWithParamsSerializer(many=True)
     supplier = FeedSerializer()
     price_common = VariantWithParamsSerializer()
     manufacturer = ManufacturerSerializer()
+    childless_cat = CategoryPathToMasterSerializer(many=True)
     class Meta:
         model = models.Common
         fields = '__all__'
@@ -145,12 +152,6 @@ class CategoryPairedOntoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Category
         fields = ('name')
-
-class CategoryPathToMasterSerializer(serializers.ModelSerializer):
-    getParent = RecursiveField()
-    class Meta:
-        model = models.Category
-        fields = '__all__'
 
 class CategoryPairingSerializer(serializers.ModelSerializer):
     children = serializers.ListField(child=RecursiveField())

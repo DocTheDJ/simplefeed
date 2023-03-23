@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
-import { ipAddress, getJsonHeader, WarningStyle, dataCheck } from '../constants';
+import { ipAddress, getJsonHeader } from '../constants';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import { Button } from 'react-bootstrap';

@@ -19,6 +19,8 @@ from .views_f.products import (
     detailProduct,
     setMain,
     setAllApproved,
+    addCategory,
+    removeCategory
 )
 
 from .views_f.variants import (
@@ -110,5 +112,7 @@ urlpatterns = [
     
     path('availability-buyable/<int:id>/<int:b>', setBuyable),
     path('availability-names/<int:id>', setNames),
-    path('availability-active/<int:id>/<int:a>', setActive)
+    path('availability-active/<int:id>/<int:a>', setActive),
+    path('add-cat/<int:target>/<int:cat>', addCategory),
+    path('remove-cat/<int:target>/<int:cat>', removeCategory),
 ]

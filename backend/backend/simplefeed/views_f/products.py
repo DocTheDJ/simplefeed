@@ -4,6 +4,7 @@ from ..serializers import ProductSerializer, ProductDetailSerializer
 from ..models import Common, Variant
 from ..utils.db_access import create_dbconnect
 from ..utils.product import ProductUtils
+from ..utils.category import CategoryUtil
 from rest_framework.permissions import IsAuthenticated
 import math
 
@@ -79,6 +80,28 @@ def setAllApproved(request, approvement):
     if DB := create_dbconnect(request):
         Common.objects.using(DB).filter(id__in=request.data['ids']).update(approved=int(approvement))
         Variant.objects.using(DB).filter(product__id__in=request.data['ids']).exclude(visible='2').update(visible=approvement)
+        response = 'OK'
+    else:
+        response = 'noDB'
+    return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def addCategory(request, target, cat):
+    if DB := create_dbconnect(request):
+        product = Common.objects.using(DB).get(id=target)
+        CategoryUtil().add_category_use(DB, cat, product)
+        response = 'OK'
+    else:
+        response = 'noDB'
+    return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def removeCategory(request, target, cat):
+    if DB := create_dbconnect(request):
+        product = Common.objects.using(DB).get(id=target)
+        CategoryUtil().remove_category_use(DB, cat, product)
         response = 'OK'
     else:
         response = 'noDB'

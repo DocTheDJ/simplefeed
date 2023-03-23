@@ -9,6 +9,9 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import ProductVariants from '../components/variantListTab';
 import Descriptions from '../components/descriptionTab';
+import Modal from 'react-bootstrap/Modal';
+import PickingTile from '../components/categoryPickingTile';
+
 
 function ProductDetail(){
     const [data, setData] = useState(null);
@@ -232,76 +235,161 @@ function ProductDetailTabs(props){
                 </div>
             </Tab>
             <Tab eventKey={'category'} title={'Kategorie'}>
-                <p>Hello from category</p>
+                <Categories 
+                    data={props.data.childless_cat} 
+                    source={props.data.supplier.id} 
+                    id={props.data.id} 
+                    context={props.context}
+                    setData={props.setData}></Categories>
             </Tab>
         </Tabs>
     );
 }
 
 function Categories(props){
+
+    let removeCat = async(e, cat) => {
+        e.preventDefault();
+        axios.get(ipAddress + `remove-cat/${props.id}/${cat}`, getJsonHeader(props.context)).then((response) => {
+            if(response.status !== 200 || response.statusText !== 'OK'){
+                alert('Something fucked up');
+            }else{
+                axios.get(ipAddress + `product-detail/${props.id}`, getJsonHeader(props.context)).then((response) => {
+                    props.setData(response.data[0]);
+                });
+            }
+        });
+    }
+
     return (
-        <div className="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabIndex="0">
-            <div className="row">
-                <div className="col-lg-12 mb-3">
-                    <div className="card">
-                        <div className="card-body">
-                            <h3>Eshopové kategorie</h3>
-                            <br/>
-                            <table className="table">
-                                <tbody>
-                                    <tr>
-                                        {/* <form method="POST" action="add_cat_to_com/{{common.id}}"> */}
-                                            {/* {% csrf_token %} */}
-                                            <td>
-                                            <select className="form-control" name="category">
-                                                {/* {% for node in pick_categories %}
-                                                    {% include "print_tree_view.html" %}
-                                                {% endfor %} */}
-                                            </select>
-                                            </td>
-                                            <td><input className="btn btn-success"type="submit" value="Přidat kategorii"/></td>
-                                            
-                                        {/* </form> */}
-                                    </tr>
-                                    {/* {% for node in category_list %}
-                                        {% if node.id in common.get_cats and node.supplier == eshop_id %}
-                                        <tr id="cat_row_{{node.id}}">
-                                            <td>{{ node.path }}</td>
-                                            {% if node.buttonTrue %}
-                                            <td>
-                                                <form>
-                                                {% csrf_token %}
-                                                <input type="submit" className="btn btn-danger js-remove-cat-from-comm" data-remove-cat-id="{{node.id}}" data-comm-victim="{{common.id}}" value="Remove from">
-                                                </form>
-                                            </td>
-                                            {% endif %}
-                                        </tr>
-                                        {% endif %}
-                                    {% endfor %} */}
-                                </tbody>
-                            </table>
-                        </div>
+        <div className="row">
+            <div className="col-lg-12 mb-3">
+                <div className="card">
+                    <div className="card-body">
+                        <h3>Eshopové kategorie</h3>
+                        <br/>
+                        <AddToCat context={props.context} target={props.id} setData={props.setData}></AddToCat>
+                        <table className="table">
+                            <tbody>
+                                {
+                                    props.data.length === 0 ? 
+                                        <tr><td><p>No cats</p></td></tr>
+                                    :
+                                    props.data?.map((value) => {
+                                        if(value.source !== props.source){
+                                            return(
+                                                <tr key={`ecats_${value.id}`}>
+                                                    <td><Button onClick={(e) => removeCat(e, value.id)} className='btn btn-danger'>Remove</Button></td>
+                                                    <td><CategoryPath data={value}></CategoryPath></td>
+                                                </tr>
+                                            );
+                                        }
+                                        return(null);
+                                    })
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
 
-                <div className="col-lg-12">
-                    <div className="card" >
-                        <div className="card-body">
-                            <h3>Dodavatelské kategorie</h3>
-                            <br/>
-                            <table className="table">
-                            {/* {% for node in category_list %}
-                                {% if node.id in common.get_cats and node.supplier == common.supplier_id %}
-                                <tr>
-                                    <td>{{ node.path }}</td>
-                                </tr>
-                                {% endif %}
-                            {% endfor %} */}
-                            </table>
-                        </div>
+            <div className="col-lg-12">
+                <div className="card" >
+                    <div className="card-body">
+                        <h3>Dodavatelské kategorie</h3>
+                        <br/>
+                        <table className="table">
+                            <tbody>
+                            {
+                                props.data.length === 0 ? 
+                                    <tr><td><p>No cats</p></td></tr>
+                                :
+                                props.data?.map((value) => {
+                                    if(value.source === props.source){
+                                        return(<tr key={`scats_${value.id}`}><td><p><CategoryPath data={value}></CategoryPath></p></td></tr>);
+                                    }
+                                    return(null);
+                                })
+                            }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    );
+}
+
+function CategoryPath(props){
+    return(
+        <>
+            {props.data.name}
+            {
+                props.data.getParent !== null ? 
+                    <> =&gt; <CategoryPath data={props.data.getParent}></CategoryPath></>
+                :
+                    null
+            }
+        </>
+    );
+}
+
+function AddToCat(props){
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const [target, setTarget] = useState(null);
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        if(show){
+            axios.get(ipAddress + `categories/`, getJsonHeader(props.context)).then((response) => {
+                setData(response.data[0]);
+            });
+        }
+    },[props.context, show]);
+
+    let addCatTo = async(e) => {
+        e.preventDefault();
+        axios.get(ipAddress + `add-cat/${props.target}/${target}`, getJsonHeader(props.context)).then((response) => {
+            if(response.status !== 200 || response.statusText !== 'OK'){
+                alert('Something fucked up');
+            }else{
+                handleClose();
+                axios.get(ipAddress + `product-detail/${props.target}`, getJsonHeader(props.context)).then((response) => {
+                    props.setData(response.data[0]);
+                });
+            }
+        })
+    }
+
+    return(
+        <>
+            <Button onClick={handleShow} className='btn btn-success'>Přidat kategorii</Button>
+            <Modal show={show} onHide={handleClose} className='fade'>
+                <Modal.Header>
+                    <h5 className="modal-title" id="exampleModalLabel">Pridat do kategorie: </h5>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className='mb-3'>
+                        {
+                            data !== null ?
+                                <PickingTile 
+                                    data={data} 
+                                    setTarget={setTarget} 
+                                    target={target} 
+                                    context={props.context}></PickingTile>
+                            :
+                                <p>Loading categories</p>
+                        }
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button className='btn btn-secondary' onClick={handleClose}>Zrušit</Button>
+                    <Button className='btn btn-primary' onClick={(e) => addCatTo(e)}>Pridat</Button>
+                </Modal.Footer>
+            </Modal>
+        </>
     );
 }

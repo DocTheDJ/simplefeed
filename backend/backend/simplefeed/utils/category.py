@@ -120,14 +120,14 @@ class CategoryUtil():
             pass
         self.add_category_use(DB, category.parent_id, common, watch_out_for)
 
-    def remove_category_use(self, DB, category_id, common, removed:list):
+    def remove_category_use(self, DB, category_id, common, removed=[]):
         try:
             category = Category.objects.using(DB).get(id=category_id)
         except:
             return
         if common.categories.filter(parent_id=category_id).count() == 0:
             common.categories.remove(category)
-            removed.append("."+str(category.id))
+            # removed.append("."+str(category.id))
         else:
             return
         self.remove_category_use(DB, category.parent_id, common, removed)

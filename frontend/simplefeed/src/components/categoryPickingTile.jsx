@@ -18,7 +18,7 @@ function PickingTile(props){
     }
     return (
             <>
-                <li className="cat-list list-group-item d-flex justify-content-between align-items-center" data-node-id="{{node.id}}">
+                <li className="cat-list list-group-item d-flex justify-content-between align-items-center">
     
                     <div className="cat_name d-flex align-items-center" style={backGroundStyle}>
                         {
