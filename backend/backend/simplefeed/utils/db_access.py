@@ -54,7 +54,7 @@ def create_dbconnect(DB_name)->str:
     new_database['ENGINE'] = 'django.db.backends.mysql'
     new_database['NAME'] = 'simplefeed_' + (DB_name if type(DB_name) == str else DB_name.user.username)
     new_database['USER'] = 'python'
-    new_database['PASSWORD'] = 'poophead159'
+    new_database['PASSWORD'] = 'python'
     new_database['HOST'] = 'localhost'
     new_database['TIME_ZONE'] = None
     new_database['CONN_HEALTH_CHECKS'] = False
