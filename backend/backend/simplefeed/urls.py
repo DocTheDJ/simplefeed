@@ -8,9 +8,10 @@ from .views_f.default import (
     register,
     MyTokenObtainPairView,
     index,
-    run,
+    importAll,
     migrate,
     getFilters,
+    addDefault,
 )
 
 from .views_f.products import (
@@ -74,9 +75,10 @@ urlpatterns = [
     
     path("register-user/", register),
     path("overview/", index),
-    path("test/", run),
+    path("import-all/", importAll),
     path("migrate/", migrate),
     path('get-filters/', getFilters),
+    path('add-default/', addDefault),
     
     path("product-list/<str:pagenum>/<str:approvement>/<str:cat>/<str:supp>/<str:man>/<str:que>", listProducts),
     path("approve_product/<str:id>/<str:approve>", approve_product),

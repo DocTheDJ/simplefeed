@@ -17,7 +17,8 @@ from ..utils.category import CategoryUtil, ProductUtils
 @permission_classes([IsAuthenticated])
 def getTree(request):
     if DB := create_dbconnect(request):
-        data = Category.objects.using(DB).filter(original_id=None)
+        eshop = Feeds.objects.using(DB).get(usage='c')
+        data = Category.objects.using(DB).filter(original_id=None, source=eshop.id)
         ser = CategorySerializer(data, many=True)
         return Response(ser.data)
     else:
@@ -100,13 +101,7 @@ def getBySource(request, id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getPairingCategories(request):
-    if DB := create_dbconnect(request):
-        category_feed = Feeds.objects.using(DB).filter(usage='c')
-        data = Category.objects.using(DB).filter(parent=None).exclude(source=category_feed[0].id)
-        ser = CategoryPairingParentSerializer(data, many=True)
-        return Response(ser.data)
-    else:
-        return Response('noDB')
+    return TBD(request)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -118,7 +113,17 @@ def pairCategories(request, whom, to):
         ser = CategoryPathToMasterSerializer(target, many=True)
         new_cats = []
         CategoryUtil().from_view_pair(victim, ser.data[0], new_cats)
-        Common.objects.using(DB).filter(categories__id__exact=whom).categories.add(*new_cats)
+        for c in Common.objects.using(DB).filter(categories__id__exact=whom):
+            c.categories.add(*new_cats)
+        return Response(ser.data)
+    else:
+        return Response('noDB')
+
+def TBD(request):
+    if DB := create_dbconnect(request):
+        category_feed = Feeds.objects.using(DB).filter(usage='c')
+        data = Category.objects.using(DB).filter(parent=None).exclude(source=category_feed[0].id)
+        ser = CategoryPairingParentSerializer(data, many=True)
         return Response(ser.data)
     else:
         return Response('noDB')
@@ -129,7 +134,7 @@ def unpairCategories(request, whom):
     if DB := create_dbconnect(request):
         victim = Category.objects.using(DB).filter(id=whom)
         CategoryUtil().from_view_unpair(victim)
-        return getPairingCategories(request)
+        return TBD(request)
     else:
         response = 'noDB'
         return Response(response)

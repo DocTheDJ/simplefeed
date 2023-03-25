@@ -11,15 +11,40 @@ function Test(){
 
     let runGet = async(e) => {
         e.preventDefault();
-        console.log('boobs');
         axios.get(ipAddress + 'migrate/', getJsonHeader(authTokens)).then((reponse) => console.log(reponse.data))
+    }
+
+    let addDefault = async(e) => {
+        e.preventDefault();
+        axios.get(ipAddress + 'add-default/', getJsonHeader(authTokens)).then((response) => {
+            if(response.status !== 200 || response.statusText !== 'OK'){
+                alert('Something fucked up');
+            }
+        })
+    }
+
+    let importAll = async(e) => {
+        e.preventDefault();
+        axios.get(ipAddress + 'import-all/', getJsonHeader(authTokens)).then((response) => {
+            if(response.status !== 200 || response.statusText !== 'started'){
+                alert('Something fucked up');
+            }
+        })
     }
 
     return (
         <div>
-            <Login></Login>
-            <Button onClick={logoutUser}>Logout</Button>
-            <Button onClick={(e) => runGet(e)}></Button>
+            {
+                user === null || user === undefined ? 
+                    <Login></Login>
+                :
+                    <>
+                        <Button onClick={logoutUser}>Logout</Button>
+                        <Button onClick={(e) => runGet(e)}>Migrate</Button>
+                        <Button onClick={(e) => addDefault(e)}>Add defaults</Button>
+                        <Button onClick={(e) => importAll(e)}>Import data</Button>
+                    </>
+            }
         </div>
     );
 }

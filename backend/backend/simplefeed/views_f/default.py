@@ -41,7 +41,7 @@ def register(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def index(request):
-    if DB := create_dbconnect(request.user.username):
+    if DB := create_dbconnect(request):
         updated = Variant_Update.objects.using(DB).all()[:10]
         last_created = Variant.objects.using(DB).all().order_by('-id')[:10:-1]
         if updated.count() == 0:
@@ -67,12 +67,11 @@ def index(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def run(request):
-    if DB := create_dbconnect(request.user.username):
+def importAll(request):
+    if DB := create_dbconnect(request):
         t = Process(target=crossroads, args=(DB,))
         t.name = 'test'
         t.start()
-        # CreateUtil().add_category_rules(DB)
         response = 'started'
     else:
         response = 'no DB'
@@ -81,8 +80,19 @@ def run(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def migrate(request):
-    if DB := create_dbconnect(request.user.username):
+    if DB := create_dbconnect(request):
         call_command('migrate', 'simplefeed', database=DB)
+        response = 'OK'
+    else:
+        response = 'noDB'
+    return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def addDefault(request):
+    if DB := create_dbconnect(request):
+        CreateUtil().add_category_rules(DB)
+        CreateUtil().add_all_feeds(DB)
         response = 'OK'
     else:
         response = 'noDB'

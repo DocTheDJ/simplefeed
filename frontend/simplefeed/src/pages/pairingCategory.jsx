@@ -18,7 +18,6 @@ function PairingCategory(){
     const {authTokens} = useContext(AuthContext);
     const [rules, setRules] = useState(null);
 
-    console.log(data, rules);
     useEffect(() => {
         axios.get(ipAddress + 'category-pairing/', getJsonHeader(authTokens)).then((response) => {
             setData(response.data);
@@ -76,7 +75,9 @@ function PairingTile(props){
             if(response.status !== 200 || response.statusText !== 'OK'){
                 alert('Something fucked up');
             }else{
-                
+                axios.get(ipAddress + 'category-pairing/', getJsonHeader(props.context)).then((response) => {
+                    props.setData(response.data);
+                });
             }
         })
     }
@@ -149,7 +150,7 @@ function PairingTile(props){
 }
 
 function PairedList(props){
-    return(<>{props.data.name}{props.data.getParent !== null ? <> - <PairedList data={props.data.getParent}></PairedList></> : <></>}</>);
+    return(<>{props.data.name}{props.data.getParent !== null ? <> =&gt; <PairedList data={props.data.getParent}></PairedList></> : <></>}</>);
 }
 
 function PickPairingCatModal(props){
@@ -162,7 +163,7 @@ function PickPairingCatModal(props){
 
     useEffect(() => {
         if(show){
-            axios.get(ipAddress + 'categories', getJsonHeader(props.context)).then((response) => setData(response.data[0]));
+            axios.get(ipAddress + 'categories/', getJsonHeader(props.context)).then((response) => setData(response.data[0]));
         }
     }, [props.context, show]);
 
@@ -173,8 +174,10 @@ function PickPairingCatModal(props){
                 if(response.status !== 200 || response.statusText !== 'OK'){
                     alert('Somthing fucked up')
                 }else{
-                    console.log(response.data);
-                    handleClose();
+                    axios.get(ipAddress + 'category-pairing/', getJsonHeader(props.context)).then((response) => {
+                        props.setData(response.data);
+                        handleClose();
+                    });
                 }
             });
         }
@@ -193,12 +196,15 @@ function PickPairingCatModal(props){
                     <div className='mb-3'>
                         {
                             data !== null ?
-                                <PickingTile
-                                    data={data} 
-                                    setTarget={setTarget} 
-                                    target={target}
-                                    context={props.context}
-                                    setData={props.setData}></PickingTile>
+                                data !== undefined ?
+                                    <PickingTile
+                                        data={data} 
+                                        setTarget={setTarget} 
+                                        target={target}
+                                        context={props.context}
+                                        setData={props.setData}></PickingTile>
+                                :
+                                    <p>No categories</p>
                             :
                                 <p>Loading categories.</p>
                         }
