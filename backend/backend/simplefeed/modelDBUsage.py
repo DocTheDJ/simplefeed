@@ -1,5 +1,9 @@
+import django
+django.setup()
+
 from .models import Feeds, Category
 from .utils.open_urls import xml_from_url
+from .utils.db_access import create_dbconnect
 from .import_scripts.heureka import heureka_to_shoptet
 from .import_scripts.mall import update_DB_from_xml
 from .import_scripts.esportshop import esportshop_to_shoptet
@@ -10,6 +14,7 @@ from django.utils import timezone
 from django.db.models import Q
 
 def crossroads(DB):
+    # DB = create_dbconnect(req)
     for data in Feeds.objects.using(DB).filter(usage='m'):
         print("starting "+data.name)
         if data.source == 'M':

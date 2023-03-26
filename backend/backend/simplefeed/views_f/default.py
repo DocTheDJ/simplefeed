@@ -15,6 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from ..utils.create_default import CreateUtil
 from ..modelDBUsage import crossroads
 from multiprocessing import Process
+from threading import Thread
 from ..models import Variant, Variant_Update, Common, Feeds, Category, Manufacturers
 from django.core.management import call_command
 
@@ -69,9 +70,12 @@ def index(request):
 @permission_classes([IsAuthenticated])
 def importAll(request):
     if DB := create_dbconnect(request):
-        t = Process(target=crossroads, args=(DB,))
-        t.name = 'test'
-        t.start()
+        t = Thread(target=crossroads, args=(DB,))
+        t.name = 'import'
+        t.run()
+        # t = Process(target=crossroads, args=(request,))
+        # t.name = 'test'
+        # t.start()
         response = 'started'
     else:
         response = 'no DB'
