@@ -1,7 +1,7 @@
 from ..utils.open_urls import xml_from_url
 from xml.etree.ElementTree import fromstring
 from queue import LifoQueue
-from ..models import Image, Variant, Common, Feeds, Category, Manufacturers, Rules, Param, VariantParam
+from ..models import Image, Variant, Common, Feeds, Category, Manufacturers, Rules, Param, VariantParam, Variant_Image
 from ..utils.importutils import ImportUtils
 from ..utils.category import CategoryUtil
 from ..utils.availability import AvailabilityUtils
@@ -77,15 +77,13 @@ def strida_to_shoptet(DB, url_data):
             curr_comm.name = com_name
         common_price = False
         
-        CategoryUtil.add_category_use(DB, Category.objects.using(DB).get(original_id=ImportUtils().get_text(dict, parent_stack, "ADD_TO_CAT", child), source_id=supplier_id), curr_comm, category_watch_out_rule)
+        CategoryUtil().add_category_use(DB, Category.objects.using(DB).get(original_id=ImportUtils().get_text(dict, parent_stack, "ADD_TO_CAT", child), source_id=supplier_id), curr_comm, category_watch_out_rule)
         
         parent_stack.put("images")
-        var_image = Image()
+        imagesList = []
         for i, image in enumerate(child.find("images")):
             new_im, created_im = Image.objects.using(DB).get_or_create(image=image.text)
-            curr_comm.images.add(new_im)
-            if i == 0:
-                var_image = new_im
+            imagesList.append(new_im)
         parent_stack.get()
         
         parent_stack.put("variants")
@@ -137,17 +135,19 @@ def strida_to_shoptet(DB, url_data):
                                                                                 'amount': amount,
                                                                                 'currency': 'CZK',
                                                                                 'visible': visible,
-                                                                                'image_ref_id': var_image.id,
                                                                                 'rec_price': rec_price,
                                                                                 'free_billing': 0,
                                                                                 'free_shipping': 0,
                                                                                 'name': var_name,
                                                                                 'availability': availability
                                                                             })
-            
+            if len(imagesList):
+                Variant_Image.objects.using(DB).get_or_create(variant=curr_var, image=imagesList[0], defaults={'main': True})
+                for im in imagesList[1:]:
+                    Variant_Image.objects.using(DB).get_or_create(variant=curr_var, image=im, defaults={'main': False})
+
             if not created_var:
                 curr_var.name = var_name
-                curr_var.image_ref_id = var_image.id
                 curr_var.amount = amount
                 curr_var.visible = visible
                 curr_var.currency = 'CZK'
@@ -173,7 +173,6 @@ def strida_to_shoptet(DB, url_data):
                         VariantParam.objects.using(DB).get_or_create(variant=curr_var, param=param, defaults={'var_param': True})
                     else:
                         VariantParam.objects.using(DB).get_or_create(variant=curr_var, param=param, defaults={'var_param': False})
-                    # curr_var.get_params_from_name(param, com_name, DB)
                 except:
                     pass
             parent_stack.get()
@@ -190,7 +189,7 @@ def strida_to_shoptet(DB, url_data):
         if not created_comm:
             common_list.append(curr_comm)
     Common.objects.using(DB).bulk_update(common_list, ['short_description', 'description', 'manufacturer', 'supplier_id', 'price_common_id', 'name'])
-    Variant.objects.using(DB).bulk_update(var_list, ['name', 'vat', 'pur_price', 'price', 'rec_price', 'amount', 'image_ref_id', 'visible', 'currency', 'availability'])
+    Variant.objects.using(DB).bulk_update(var_list, ['name', 'vat', 'pur_price', 'price', 'rec_price', 'amount', 'visible', 'currency', 'availability'])
     
 def create_cats(DB, categories, parent_stack, dict, source, action):
     parent_stack.put("category")

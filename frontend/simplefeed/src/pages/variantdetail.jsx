@@ -54,6 +54,8 @@ function VariantBar(props){
         })
     }
 
+    console.log(props.data);
+
     return (
         <div className="row mb-3 ">
             <div className="col-lg-12 d-flex justify-content-between">
@@ -62,7 +64,7 @@ function VariantBar(props){
                         <i className="ti-arrow-left btn-icon-prepend"></i>
                         Zpět
                     </Button>
-                    <NavLink to={'/productlist'}>
+                    <NavLink to={'/productlist/1/1/3/_/_/_/_'}>
                         <button type="button" className="btn btn-outline-primary btn-icon-text">
                             Seznam produktů
                         </button>
@@ -83,7 +85,7 @@ function VariantBar(props){
                         Child={() => <><i className="ti-pencil btn-icon-prepend"></i>Upravit variantu</>}
                         buttonStyle={'btn btn-primary btn-icon-text'}>
                     </ModificationVariantModal>
-                    <NavLink to={`/productdetail/${props.data.productID}`}>
+                    <NavLink to={`/productdetail/${props.data.product[0].id}`}>
                         <button type="button" className="btn btn-info btn-icon-text">
                             <i className="ti-zoom-out btn-icon-prepend"></i>
                             Přejít na produkt

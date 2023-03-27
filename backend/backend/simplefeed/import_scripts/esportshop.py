@@ -1,7 +1,17 @@
 from ..utils.open_urls import xml_from_url
 from xml.etree.ElementTree import fromstring
 from queue import LifoQueue
-from ..models import Image, Variant, Common, Feeds, VariantParam, Manufacturers, Rules, Param
+from ..models import (
+    Image,
+    Variant, 
+    Common, 
+    Feeds, 
+    VariantParam, 
+    Manufacturers, 
+    Rules, 
+    Param, 
+    Variant_Image
+)
 from ..utils.importutils import ImportUtils
 from ..utils.availability import AvailabilityUtils
 from ..utils.category import CategoryUtil
@@ -63,24 +73,19 @@ def esportshop_to_shoptet(DB, url_data):
         
         parent_stack.put("CATEGORIES")
         
-        CategoryUtil.add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORY", tmp.find("CATEGORIES")), " > ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
+        CategoryUtil().add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORY", tmp.find("CATEGORIES")), " > ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
         
         parent_stack.get()
         
         for item in reversed(list_same):
-            for t in item.findall("IMGURL_ALTERNATIVE"):
-                new_im, created_im = Image.objects.using(DB).get_or_create(image=t.text)
-                curr_comm.images.add(new_im)
-            
+
             main_im, created_main = Image.objects.using(DB).get_or_create(image=ImportUtils().get_text(dict, parent_stack, "IMAGE", item))
-            curr_comm.images.add(main_im)
-            
+
             code = ImportUtils().get_text(dict, parent_stack, "CODE", item)
             ean = ImportUtils().get_text(dict, parent_stack, "EAN", item)
             
             if amount_tree:
                 if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ITEM_ID", code)) == None:
-                    # if (node := look_for_flaws(amount_data, "SHOPITEM", "ITEM_ID", code, "_", "/")) == None:
                     node = ImportUtils().try_find_from(amount_data, "SHOPITEM", "EAN", ean)
                 if node == None:
                     visible = 2
@@ -90,7 +95,6 @@ def esportshop_to_shoptet(DB, url_data):
                 price = ImportUtils().get_text(dict, parent_stack, "PRICE", node)
                 vat = ImportUtils().get_text(dict, parent_stack, "VAT", node)
                 availability = AvailabilityUtils.availability_setup(DB, node, supplier_id, in_stock, out_stock, amount, dict, parent_stack)
-                # rec_price = ImportUtils().get_text(dict, parent_stack, "REC_PRICE", node)
             else:
                 amount = ImportUtils().get_text(dict, parent_stack, "AMOUNT", item)
                 price = ImportUtils().get_text(dict, parent_stack, "PRICE", item)
@@ -110,15 +114,20 @@ def esportshop_to_shoptet(DB, url_data):
                                                                                         'amount': amount,
                                                                                         'currency': currency,
                                                                                         'visible': visible,
-                                                                                        'image_ref_id': main_im.id,
                                                                                         'rec_price': rec_price,
                                                                                         'free_billing': 0,
                                                                                         'free_shipping': 0,
                                                                                         'name': name,
                                                                                         'availability': availability})
+            
+            for t in item.findall("IMGURL_ALTERNATIVE"):
+                new_im, created_im = Image.objects.using(DB).get_or_create(image=t.text)
+                Variant_Image.objects.using(DB).get_or_create(variant=curr_var, image=new_im, defaults={'main': False})
+            Variant_Image.objects.using(DB).get_or_create(variant=curr_var, image=main_im, defaults={'main':True})
+
+
             if not created_var:
                 curr_var.name = name
-                curr_var.image_ref_id = main_im.id
                 curr_var.amount = amount
                 curr_var.visible = visible
                 curr_var.currency = currency
@@ -163,4 +172,4 @@ def esportshop_to_shoptet(DB, url_data):
         parent_stack.get()
 
     Common.objects.using(DB).bulk_update(common_list, ['short_description', 'description', 'manufacturer', 'supplier_id', 'price_common_id', 'name'])
-    Variant.objects.using(DB).bulk_update(var_list, ['name', 'vat', 'pur_price', 'price', 'rec_price', 'amount', 'image_ref_id', 'visible', 'currency', 'availability'])
+    Variant.objects.using(DB).bulk_update(var_list, ['name', 'vat', 'pur_price', 'price', 'rec_price', 'amount', 'visible', 'currency', 'availability'])

@@ -16,38 +16,35 @@ from django.db.models import Q
 def crossroads(DB):
     # DB = create_dbconnect(req)
     for data in Feeds.objects.using(DB).filter(usage='m'):
-        print("starting "+data.name)
-        if data.source == 'M':
-            update_DB_from_xml(DB, data)
-            print("finished "+data.name)
-            set_updated_on(data)
-            continue
-        if data.source == 'H':
-            heureka_to_shoptet(DB, data)
-            print("finished "+data.name)
-            set_updated_on(data)
-            continue
-        # if data.source == 'E':
-        #     esportshop_to_shoptet(DB, data)
-        #     print("finished "+data.name)
-        #     set_updated_on(data)
-        #     continue
-        # if data.source == 'C':
-        #     canipet_to_shoptet(DB, data)
-        #     print("finished "+data.name)
-        #     set_updated_on(data)
-        #     continue
-        # if data.source == 'S':
-        #     strida_to_shoptet(DB, data)
-        #     print("finished "+data.name)
-        #     set_updated_on(data)
-        #     continue
-        # if data.source == 'T':
-        #     bullshit_to_shoptet(DB, data)
-        #     print("finished "+data.name)
-        #     set_updated_on(data)
-        #     continue
+        runFeed(data, DB)
     print("finished crossroads for "+DB)
+
+def runFeed(data, DB):
+    print("starting "+data.name)
+    # if data.source == 'M':
+    #     update_DB_from_xml(DB, data)
+    #     print("finished "+data.name)
+    #     set_updated_on(data)
+    # if data.source == 'H':
+    #     heureka_to_shoptet(DB, data)
+    #     print("finished "+data.name)
+    #     set_updated_on(data)
+    # if data.source == 'E':
+    #     esportshop_to_shoptet(DB, data)
+    #     print("finished "+data.name)
+    #     set_updated_on(data)
+    # if data.source == 'C':
+    #     canipet_to_shoptet(DB, data)
+    #     print("finished "+data.name)
+    #     set_updated_on(data)
+    # if data.source == 'S':
+    #     strida_to_shoptet(DB, data)
+    #     print("finished "+data.name)
+    #     set_updated_on(data)
+    # if data.source == 'T':
+    #     bullshit_to_shoptet(DB, data)
+    #     print("finished "+data.name)
+    #     set_updated_on(data)
 
 def set_updated_on(feed):
     feed.updated_on = timezone.now()
