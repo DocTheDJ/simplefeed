@@ -2,7 +2,7 @@ from ..utils.open_urls import xml_from_url
 from xml.etree.ElementTree import fromstring
 from queue import LifoQueue
 from ..utils.importutils import ImportUtils
-from ..models import Image, Variant, Common, Feeds, Manufacturers, Rules, Param
+from ..models import Image, Variant, Common, Feeds, Manufacturers, Rules, Param, Variant_Image
 from ..utils.availability import AvailabilityUtils
 from ..utils.category import CategoryUtil
 
@@ -51,14 +51,7 @@ def canipet_to_shoptet(DB, url_data):
             curr_comm.name = com_name
         common_price = False
                 
-        CategoryUtil.add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORY", child), " > ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
-                
-        for t in child.findall("IMGURL_ALTERNATIVE"):
-            new_im, created_im = Image.objects.using(DB).get_or_create(image=t.text)
-            curr_comm.images.add(new_im)
-        
-        main_im, created_main = Image.objects.using(DB).get_or_create(image=ImportUtils().get_text(dict, parent_stack, "IMAGE", child))
-        curr_comm.images.add(main_im)
+        CategoryUtil().add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORY", child), " > ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
         
         ean = ImportUtils().get_text(dict, parent_stack, "EAN", child)
         
@@ -96,13 +89,21 @@ def canipet_to_shoptet(DB, url_data):
                                                                                     'amount': amount,
                                                                                     'currency': currency,
                                                                                     'visible': visible,
-                                                                                    'image_ref_id': main_im.id,
+                                                                                    # 'image_ref_id': main_im.id,
                                                                                     'rec_price': rec_price,
                                                                                     'free_billing': 0,
                                                                                     'free_shipping': 0,
                                                                                     'name': name, 
                                                                                     'availability': availability})
         
+        for t in child.findall("IMGURL_ALTERNATIVE"):
+            new_im, created_im = Image.objects.using(DB).get_or_create(image=t.text)
+            Variant_Image.objects.using(DB).get_or_create(variant=curr_var, image=new_im, defaults={'main': False})
+            # curr_comm.images.add(new_im)
+        
+        main_im, created_main = Image.objects.using(DB).get_or_create(image=ImportUtils().get_text(dict, parent_stack, "IMAGE", child))
+        Variant_Image.objects.using(DB).get_or_create(variant=curr_var, image=main_im, defaults={'main': True})
+        # curr_comm.images.add(main_im)
         
         parent_stack.put("PARAM")
         proplist = child.findall(ImportUtils().LifoPeek(parent_stack))
@@ -113,7 +114,7 @@ def canipet_to_shoptet(DB, url_data):
         
         if not created_var:
             curr_var.name = name
-            curr_var.image_ref_id = main_im.id
+            # curr_var.image_ref_id = main_im.id
             curr_var.amount = amount
             curr_var.visible = visible
             curr_var.currency = currency
@@ -144,4 +145,4 @@ def canipet_to_shoptet(DB, url_data):
         parent_stack.get()
 
     Common.objects.using(DB).bulk_update(common_list, ['short_description', 'description', 'manufacturer', 'supplier_id', 'price_common_id', 'name'])
-    Variant.objects.using(DB).bulk_update(var_list, ['name', 'vat', 'pur_price', 'price', 'rec_price', 'amount', 'image_ref_id', 'visible', 'currency', 'availability'])
+    Variant.objects.using(DB).bulk_update(var_list, ['name', 'vat', 'pur_price', 'price', 'rec_price', 'amount', 'visible', 'currency', 'availability'])

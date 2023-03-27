@@ -52,7 +52,7 @@ def bullshit_to_shoptet(DB, url_data):
         common_price = False
         
         parent_stack.put("CATEGORIES")
-        CategoryUtil.add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORY", child.find("CATEGORIES")), " > ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
+        CategoryUtil().add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORY", child.find("CATEGORIES")), " > ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
         parent_stack.get()
         
         try:
