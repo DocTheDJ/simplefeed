@@ -10,6 +10,7 @@ from ..serializers import (
 from ..utils.db_access import create_dbconnect
 from rest_framework.permissions import IsAuthenticated
 from multiprocessing import Process
+from threading import Thread
 from ..modelDBUsage import category_import
 from ..utils.category import CategoryUtil, ProductUtils
 
@@ -28,9 +29,12 @@ def getTree(request):
 @permission_classes([IsAuthenticated])
 def pullCats(request):
     if DB := create_dbconnect(request):
-        t = Process(target=category_import, args=(DB,))
+        t = Thread(target=category_import, args=(DB,))
         t.name = 'category_pull'
         t.start()
+        # t = Process(target=category_import, args=(DB,))
+        # t.name = 'category_pull'
+        # t.start()
         response = 'OK'
     else:
         response = 'noDB'
