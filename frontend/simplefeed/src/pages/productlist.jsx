@@ -278,7 +278,7 @@ function Products(props){
         e.preventDefault();
         let link = props.products === 1 ? 'approve-all' : 'update-mul-vis';
         axios.post(ipAddress + `${link}/${val}`, {'ids': checkedList}, getJsonHeader(props.context)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Something fucked up');
             }else{
                 setData(null);

@@ -251,7 +251,7 @@ function Categories(props){
     let removeCat = async(e, cat) => {
         e.preventDefault();
         axios.get(ipAddress + `remove-cat/${props.id}/${cat}`, getJsonHeader(props.context)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Something fucked up');
             }else{
                 axios.get(ipAddress + `product-detail/${props.id}`, getJsonHeader(props.context)).then((response) => {
@@ -353,7 +353,7 @@ function AddToCat(props){
     let addCatTo = async(e) => {
         e.preventDefault();
         axios.get(ipAddress + `add-cat/${props.target}/${target}`, getJsonHeader(props.context)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Something fucked up');
             }else{
                 handleClose();

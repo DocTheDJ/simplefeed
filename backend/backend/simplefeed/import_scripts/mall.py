@@ -5,14 +5,14 @@ from ..models import Image, Variant, Common, Feeds, Manufacturers, Param, Varian
 from ..utils.importutils import ImportUtils
 from ..utils.availability import AvailabilityUtils
 
-def update_DB_from_xml(DB, url_data):
+def mall_to_shoptet(DB, url_data):
     images = Image.objects.using(DB)
 
     supplier_id = url_data.id
     rootdict = fromstring(Feeds.objects.using(DB).get(usage='d', master_feed=supplier_id).feed_link)
     parent_stack = LifoQueue()
-    dict = list()
-    ImportUtils().create_dictionary(rootdict, parent_stack, dict)
+    dictionary = dict()
+    ImportUtils().create_dictionary(rootdict, parent_stack, dictionary)
     for r in rootdict.iter():
         if r.get("GROUP_BY") == "true":
             group_by = r.tag
@@ -43,19 +43,19 @@ def update_DB_from_xml(DB, url_data):
 
         parent_stack.put(child.tag)
         
-        man = ImportUtils().get_text(dict, parent_stack, "MANUFACTURER", tmp)
+        man = ImportUtils().get_text(dictionary, parent_stack, "MANUFACTURER", tmp)
         manufacturer, created = Manufacturers.objects.using(DB).get_or_create(original_name=man, defaults={'name': man})
-        name_com = ImportUtils().get_text(dict ,parent_stack, "NAME_COM", tmp)
+        name_com = ImportUtils().get_text(dictionary ,parent_stack, "NAME_COM", tmp)
         curr_comm, created_comm = Common.objects.using(DB).get_or_create(   itemgroup_id=c.text,
                                                                             supplier_id = supplier_id,
-                                                                            defaults={  'short_description': ImportUtils().get_text(dict, parent_stack, "SHORT_DESCRIPTION", tmp),
-                                                                                        'description': ImportUtils().get_text(dict, parent_stack, "DESCRIPTION", tmp),
+                                                                            defaults={  'short_description': ImportUtils().get_text(dictionary, parent_stack, "SHORT_DESCRIPTION", tmp),
+                                                                                        'description': ImportUtils().get_text(dictionary, parent_stack, "DESCRIPTION", tmp),
                                                                                         'manufacturer': manufacturer,
                                                                                         'name': name_com,
                                                                                         'approved': 0})
         if not created_comm:
-            curr_comm.short_description = ImportUtils().get_text(dict, parent_stack, "SHORT_DESCRIPTION", tmp)
-            curr_comm.description = ImportUtils().get_text(dict, parent_stack, "DESCRIPTION", tmp)
+            curr_comm.short_description = ImportUtils().get_text(dictionary, parent_stack, "SHORT_DESCRIPTION", tmp)
+            curr_comm.description = ImportUtils().get_text(dictionary, parent_stack, "DESCRIPTION", tmp)
             curr_comm.manufacturer = manufacturer
             curr_comm.name = name_com
             curr_comm.supplier_id = supplier_id
@@ -65,57 +65,65 @@ def update_DB_from_xml(DB, url_data):
             
         
         for item in reversed(list_same):
-            parent_stack.put("AVAILABILITY")
             if amount_tree:
-                amount = ImportUtils().get_text(dict, parent_stack, "AMOUNT", amount_data.find("AVAILABILITY[ID='"+item.find("ID").text+"']"))
+                later = parent_stack.get()
+                parent_stack.put("AVAILABILITIES")
+                parent_stack.put("AVAILABILITY")
+                amount = ImportUtils().get_text(dictionary, parent_stack, "AMOUNT", amount_data.find("AVAILABILITY[ID='"+item.find("ID").text+"']"))
+                parent_stack.get()
+                parent_stack.get()
             else:
-                amount = ImportUtils().get_text(dict, parent_stack, "AMOUNT", item)
-            parent_stack.get()
+                later = None
+                parent_stack.put("AVAILABILITY")
+                amount = ImportUtils().get_text(dictionary, parent_stack, "AMOUNT", item)
+                parent_stack.get()
+            if later:
+                parent_stack.put(later)
             
-            availability = AvailabilityUtils.availability_setup(DB, item, supplier_id, in_stock, out_stock, amount, dict, parent_stack)
+            availability = AvailabilityUtils.availability_setup(DB, item, supplier_id, in_stock, out_stock, amount, dictionary, parent_stack)
             
-            curr_var, created_var = Variant.objects.using(DB).get_or_create(code=ImportUtils().get_text(dict, parent_stack, "CODE", item),
-                                                                            ean=ImportUtils().get_text(dict, parent_stack, "EAN", item),
-                                                                            defaults={  'vat': ImportUtils().get_text(dict, parent_stack, "VAT", item),
-                                                                                        'pur_price': ImportUtils().get_text(dict, parent_stack, "PURCHASE_PRICE", item),
-                                                                                        'price': ImportUtils().get_text(dict, parent_stack, "PRICE", item),
+            curr_var, created_var = Variant.objects.using(DB).get_or_create(code=ImportUtils().get_text(dictionary, parent_stack, "CODE", item),
+                                                                            ean=ImportUtils().get_text(dictionary, parent_stack, "EAN", item),
+                                                                            defaults={  'vat': ImportUtils().get_text(dictionary, parent_stack, "VAT", item),
+                                                                                        'pur_price': ImportUtils().get_text(dictionary, parent_stack, "PURCHASE_PRICE", item),
+                                                                                        'price': ImportUtils().get_text(dictionary, parent_stack, "PRICE", item),
                                                                                         'amount': amount,
                                                                                         'currency': 'czk',
                                                                                         'visible': 0,
-                                                                                        'rec_price': ImportUtils().get_text(dict, parent_stack, "PRICE", item),
+                                                                                        'rec_price': ImportUtils().get_text(dictionary, parent_stack, "PRICE", item),
                                                                                         'free_billing': 0,
                                                                                         'free_shipping': 0,
-                                                                                        'name': ImportUtils().get_text(dict, parent_stack, "NAME_VAR", item),
+                                                                                        'name': ImportUtils().get_text(dictionary, parent_stack, "NAME_VAR", item),
                                                                                         'availability': availability})
             parent_stack.put("MEDIA")
             for t in item.findall(ImportUtils().LifoPeek(parent_stack)):
-                new_im, created_im = Image.objects.using(DB).get_or_create(image=ImportUtils().get_text(dict, parent_stack, "IMAGE", t))
+                new_im, created_im = Image.objects.using(DB).get_or_create(image=ImportUtils().get_text(dictionary, parent_stack, "IMAGE", t))
                 Variant_Image.objects.using(DB).get_or_create(variant=curr_var, image=new_im, defaults={'main': False})
 
             Variant_Image.objects.using(DB).filter(variant=curr_var, image=images.filter(image=item.find(ImportUtils().LifoPeek(parent_stack)+"[MAIN='true']").find("URL").text)[:1]).update(main=True)
             parent_stack.get()
             
             if not created_var:
-                curr_var.name = ImportUtils().get_text(dict, parent_stack, "NAME_VAR", item)
+                curr_var.name = ImportUtils().get_text(dictionary, parent_stack, "NAME_VAR", item)
                 curr_var.amount = amount
                 curr_var.availability = availability
                 curr_var.mass_update(DB)
                 if curr_var.mods == None:
-                    curr_var.vat = ImportUtils().get_text(dict, parent_stack, "VAT", item)
-                    curr_var.pur_price = ImportUtils().get_text(dict, parent_stack, "PURCHASE_PRICE", item)
-                    curr_var.price = curr_var.rec_price = ImportUtils().get_text(dict, parent_stack, "PRICE", item)
+                    curr_var.vat = ImportUtils().get_text(dictionary, parent_stack, "VAT", item)
+                    curr_var.pur_price = ImportUtils().get_text(dictionary, parent_stack, "PURCHASE_PRICE", item)
+                    curr_var.price = curr_var.rec_price = ImportUtils().get_text(dictionary, parent_stack, "PRICE", item)
                 else:
-                    curr_var.if_mods_set('vat', ImportUtils().get_text(dict, parent_stack, "VAT", item))
-                    price = ImportUtils().get_text(dict, parent_stack, "PRICE", item)
+                    curr_var.if_mods_set('vat', ImportUtils().get_text(dictionary, parent_stack, "VAT", item))
+                    price = ImportUtils().get_text(dictionary, parent_stack, "PRICE", item)
                     curr_var.if_mods_set('price', price)
                     curr_var.if_mods_set('rec_price', price)
-                    curr_var.if_mods_set('pur_price', ImportUtils().get_text(dict, parent_stack, "PURCHASE_PRICE", item))
+                    curr_var.if_mods_set('pur_price', ImportUtils().get_text(dictionary, parent_stack, "PURCHASE_PRICE", item))
                 var_list.append(curr_var)
                         
             parent_stack.put("PARAM")
             proplist = item.findall(ImportUtils().LifoPeek(parent_stack))
             for p in proplist:
-                param, created = Param.custom_get_or_create(DB, ImportUtils().get_text(dict, parent_stack, "NAME", p), ImportUtils().get_text(dict, parent_stack, "VALUE", p), supplier_id)
+                param, created = Param.custom_get_or_create(DB, ImportUtils().get_text(dictionary, parent_stack, "NAME", p), ImportUtils().get_text(dictionary, parent_stack, "VALUE", p), supplier_id)
                 curr_var.get_params_from_name(param, name_com, DB)
                             
             parent_stack.get()

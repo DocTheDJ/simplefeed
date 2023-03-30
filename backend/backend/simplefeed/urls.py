@@ -12,6 +12,7 @@ from .views_f.default import (
     migrate,
     getFilters,
     addDefault,
+    test
 )
 
 from .views_f.products import (
@@ -79,6 +80,7 @@ urlpatterns = [
     path("migrate/", migrate),
     path('get-filters/', getFilters),
     path('add-default/', addDefault),
+    path('test/', test),
     
     path("product-list/<str:pagenum>/<str:approvement>/<str:cat>/<str:supp>/<str:man>/<str:que>", listProducts),
     path("approve_product/<str:id>/<str:approve>", approve_product),

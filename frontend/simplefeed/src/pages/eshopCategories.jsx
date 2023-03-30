@@ -16,7 +16,7 @@ function EshopCategories(){
     let pullCats = async(e) => {
         e.preventDefault();
         axios.get(ipAddress + 'pull-cats/', getJsonHeader(authTokens)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Something fucked up');
             }
         })

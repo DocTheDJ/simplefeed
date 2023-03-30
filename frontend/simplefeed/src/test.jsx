@@ -17,7 +17,7 @@ function Test(){
     let addDefault = async(e) => {
         e.preventDefault();
         axios.get(ipAddress + 'add-default/', getJsonHeader(authTokens)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Something fucked up');
             }
         })
@@ -26,7 +26,16 @@ function Test(){
     let importAll = async(e) => {
         e.preventDefault();
         axios.get(ipAddress + 'import-all/', getJsonHeader(authTokens)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'started'){
+            if(response.status !== 200 || response.data !== 'started'){
+                alert('Something fucked up');
+            }
+        })
+    }
+
+    let test = async(e) => {
+        e.preventDefault()
+        axios.get(ipAddress + 'test/', getJsonHeader(authTokens)).then((response) => {
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Something fucked up');
             }
         })
@@ -43,6 +52,7 @@ function Test(){
                         <Button onClick={(e) => runGet(e)}>Migrate</Button>
                         <Button onClick={(e) => addDefault(e)}>Add defaults</Button>
                         <Button onClick={(e) => importAll(e)}>Import data</Button>
+                        <Button onClick={(e) => test(e)}>Test</Button>
                     </>
             }
         </div>

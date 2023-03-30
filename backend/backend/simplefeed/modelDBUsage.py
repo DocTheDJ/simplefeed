@@ -5,7 +5,7 @@ from .models import Feeds, Category
 from .utils.open_urls import xml_from_url
 from .utils.db_access import create_dbconnect
 from .import_scripts.heureka import heureka_to_shoptet
-from .import_scripts.mall import update_DB_from_xml
+from .import_scripts.mall import mall_to_shoptet
 from .import_scripts.esportshop import esportshop_to_shoptet
 from .import_scripts.canipet import canipet_to_shoptet
 from .import_scripts.strida import strida_to_shoptet
@@ -22,13 +22,13 @@ def crossroads(DB):
 def runFeed(data, DB):
     print("starting "+data.name)
     # if data.source == 'M':
-    #     update_DB_from_xml(DB, data)
+    #     mall_to_shoptet(DB, data)
     #     print("finished "+data.name)
     #     set_updated_on(data)
-    if data.source == 'H':
-        heureka_to_shoptet(DB, data)
-        print("finished "+data.name)
-        set_updated_on(data)
+    # if data.source == 'H':
+    #     heureka_to_shoptet(DB, data)
+    #     print("finished "+data.name)
+    #     set_updated_on(data)
     # if data.source == 'E':
     #     esportshop_to_shoptet(DB, data)
     #     print("finished "+data.name)
@@ -37,10 +37,10 @@ def runFeed(data, DB):
     #     canipet_to_shoptet(DB, data)
     #     print("finished "+data.name)
     #     set_updated_on(data)
-    # if data.source == 'S':
-    #     strida_to_shoptet(DB, data)
-    #     print("finished "+data.name)
-    #     set_updated_on(data)
+    if data.source == 'S':
+        strida_to_shoptet(DB, data)
+        print("finished "+data.name)
+        set_updated_on(data)
     # if data.source == 'T':
     #     bullshit_to_shoptet(DB, data)
     #     print("finished "+data.name)

@@ -68,7 +68,7 @@ function Register(props){
             password: password,
         }
         axios.post(ipAddress + 'register-user/', t).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'User is registered'){
+            if(response.status !== 200 || response.data !== 'User is registered'){
                 alert('Something fucked up');
             }else{
                 props.loginUser(e, username, password);

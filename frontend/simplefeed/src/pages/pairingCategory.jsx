@@ -72,7 +72,7 @@ function PairingTile(props){
     let unpair = async(e, val) => {
         e.preventDefault();
         axios.get(ipAddress + `unpair-categories/${props.data.id}/${val}`, getJsonHeader(props.context)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Something fucked up');
             }else{
                 axios.get(ipAddress + 'category-pairing/', getJsonHeader(props.context)).then((response) => {
@@ -171,7 +171,7 @@ function PickPairingCatModal(props){
         e.preventDefault();
         if(target !== null && target !== undefined){
             axios.get(ipAddress + `pair-categories/${props.id}/${target}`, getJsonHeader(props.context)).then((response) => {
-                if(response.status !== 200 || response.statusText !== 'OK'){
+                if(response.status !== 200 || response.data !== 'OK'){
                     alert('Somthing fucked up')
                 }else{
                     axios.get(ipAddress + 'category-pairing/', getJsonHeader(props.context)).then((response) => {
@@ -231,7 +231,7 @@ function ActionButton(props){
         e.preventDefault();
         setState(val);
         axios.get(ipAddress + `update-action/${props.id}/${val.id}`, getJsonHeader(props.context)).then((response) =>{
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Something fucked up');
             }
         })

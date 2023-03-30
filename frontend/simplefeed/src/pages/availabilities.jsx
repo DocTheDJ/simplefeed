@@ -101,7 +101,7 @@ function TableRow(props){
         e.preventDefault();
         setBuyable(!buyable);
         axios.get(ipAddress + `availability-buyable/${props.data.id}/${+(!buyable)}`, getJsonHeader(props.context)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Somthing fucked up');
             }
         });
@@ -114,7 +114,7 @@ function TableRow(props){
             arrives_in: days,
         }
         axios.post(ipAddress + `availability-names/${props.data.id}`, t, getJsonHeader(props.context)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Somthing fucked up');
             }
         });
@@ -124,7 +124,7 @@ function TableRow(props){
         e.preventDefault();
         setActive(!active);
         axios.get(ipAddress + `availability-active/${props.data.id}/${+(!active)}`, getJsonHeader(props.context)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Somthing fucked up');
             }
         });
