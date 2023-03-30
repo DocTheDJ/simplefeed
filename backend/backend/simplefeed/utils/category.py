@@ -192,9 +192,10 @@ class CategoryUtil():
     def from_view_pair(self, victim, this, pairings:list):
         pairings.append(this['id'])
         if this['getParent'] == None:
-            victim.get().pair_onto.add(*pairings)
+            # victim.get().pair_onto.add(*pairings)
+            return
         else:
             self.from_view_pair(victim, this['getParent'], pairings)
     
-    def from_view_unpair(self, victim):
-        victim.get().pair_onto.clear()
+    # def from_view_unpair(self, victim):
+    #     victim.get().pair_onto.clear()

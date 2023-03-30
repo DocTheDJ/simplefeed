@@ -99,7 +99,7 @@ urlpatterns = [
     path('cats-from-source/<int:id>', getBySource),
     path('category-pairing/', getPairingCategories),
     path('pair-categories/<int:whom>/<int:to>', pairCategories),
-    path('unpair-categories/<int:whom>', unpairCategories),
+    path('unpair-categories/<int:whom>/<int:what>', unpairCategories),
     path('update-action/<int:whom>/<int:to>', updateAction),
     path('rules/', getRules),
     path('parameters/', getParamNames),

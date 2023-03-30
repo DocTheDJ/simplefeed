@@ -69,9 +69,9 @@ function PairingTabs(props){
 function PairingTile(props){
     const [openSubs, setOpenSubs] = useState(false);
 
-    let unpair = async(e) => {
+    let unpair = async(e, val) => {
         e.preventDefault();
-        axios.get(ipAddress + `unpair-categories/${props.data.id}`, getJsonHeader(props.context)).then((response) => {
+        axios.get(ipAddress + `unpair-categories/${props.data.id}/${val}`, getJsonHeader(props.context)).then((response) => {
             if(response.status !== 200 || response.statusText !== 'OK'){
                 alert('Something fucked up');
             }else{
@@ -112,7 +112,7 @@ function PairingTile(props){
                                     return (
                                         <tr key={value.id}>
                                             <td>
-                                                <a href onClick={(e) => unpair(e)}>
+                                                <a href onClick={(e) => unpair(e, value.id)}>
                                                     <PairedList data={value}></PairedList>
                                                 </a>
                                             </td>

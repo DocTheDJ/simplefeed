@@ -102,7 +102,7 @@ function SideFilters(props){
         e.preventDefault();
         let t = val === 0 ? '_' : val;
         props.setCat(t);
-        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.approvement}/${t}/${props.sup}/${props.man}/${props.query}`);
+        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/${t}/${props.sup}/${props.man}/${props.query}`);
     }
 
 
