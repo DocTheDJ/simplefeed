@@ -12,7 +12,6 @@ class ImportUtils:
         ending = target.new if target.new else target.original
         parent_stack.put(ending)
         key = '=>'.join(parent_stack.queue)
-        print(key)
         list[key] = target
         parent_stack.get()
 
