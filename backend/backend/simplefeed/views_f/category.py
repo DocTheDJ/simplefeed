@@ -111,9 +111,10 @@ def getPairingCategories(request):
 @permission_classes([IsAuthenticated])
 def pairCategories(request, whom, to):
     if DB := create_dbconnect(request):
-        victim = Category.objects.using(DB).filter(id=whom)
+        victim = Category.objects.using(DB).get(id=whom)
         target = Category.objects.using(DB).filter(id=to)
-        CategoryUtil().from_view_unpair(victim)
+        victim.pair_onto.add(to)
+        # CategoryUtil().from_view_unpair(victim)
         ser = CategoryPathToMasterSerializer(target, many=True)
         new_cats = []
         CategoryUtil().from_view_pair(victim, ser.data[0], new_cats)
@@ -134,10 +135,11 @@ def TBD(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def unpairCategories(request, whom):
+def unpairCategories(request, whom, what):
     if DB := create_dbconnect(request):
-        victim = Category.objects.using(DB).filter(id=whom)
-        CategoryUtil().from_view_unpair(victim)
+        CategoryUtil().from_view_unpair(DB, whom, what)
+        # Category.objects.using(DB).get(id=whom).pair_onto.remove(what)
+        # CategoryUtil().from_view_unpair(victim)
         return TBD(request)
     else:
         response = 'noDB'

@@ -25,10 +25,10 @@ def runFeed(data, DB):
     #     update_DB_from_xml(DB, data)
     #     print("finished "+data.name)
     #     set_updated_on(data)
-    # if data.source == 'H':
-    #     heureka_to_shoptet(DB, data)
-    #     print("finished "+data.name)
-    #     set_updated_on(data)
+    if data.source == 'H':
+        heureka_to_shoptet(DB, data)
+        print("finished "+data.name)
+        set_updated_on(data)
     # if data.source == 'E':
     #     esportshop_to_shoptet(DB, data)
     #     print("finished "+data.name)
