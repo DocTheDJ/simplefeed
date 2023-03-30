@@ -21,8 +21,8 @@ def esportshop_to_shoptet(DB, url_data):
     root_data = xml_from_url(url_data.feed_link).getroot()
     rootdict = fromstring(Feeds.objects.using(DB).get(usage='d', master_feed=supplier_id).feed_link)
     parent_stack = LifoQueue()
-    dict = list()
-    ImportUtils().create_dictionary(rootdict, parent_stack, dict)
+    dictionary = dict()
+    ImportUtils().create_dictionary(rootdict, parent_stack, dictionary)
     for r in rootdict.iter():
         if r.get("GROUP_BY") == "true":
             group_by = r.tag
@@ -51,11 +51,11 @@ def esportshop_to_shoptet(DB, url_data):
         
         parent_stack.put(child.tag)
         
-        short_desc = ImportUtils().get_text(dict, parent_stack, "SHORT_DESCRIPTION", tmp)
-        desc = ImportUtils().get_text(dict, parent_stack, "DESCRIPTION", tmp)
-        man = ImportUtils().get_text(dict, parent_stack, "MANUFACTURER", tmp)
+        short_desc = ImportUtils().get_text(dictionary, parent_stack, "SHORT_DESCRIPTION", tmp)
+        desc = ImportUtils().get_text(dictionary, parent_stack, "DESCRIPTION", tmp)
+        man = ImportUtils().get_text(dictionary, parent_stack, "MANUFACTURER", tmp)
         manufacturer, created = Manufacturers.objects.using(DB).get_or_create(original_name=man, defaults={'name': man})
-        com_name = ImportUtils().get_text(dict ,parent_stack, "NAME_COM", tmp)
+        com_name = ImportUtils().get_text(dictionary ,parent_stack, "NAME_COM", tmp)
         curr_comm, created_comm = Common.objects.using(DB).get_or_create(itemgroup_id=c.text,
                                                                          supplier_id = supplier_id,
                                                                         defaults={ 'short_description': short_desc,
@@ -73,16 +73,16 @@ def esportshop_to_shoptet(DB, url_data):
         
         parent_stack.put("CATEGORIES")
         
-        CategoryUtil().add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORY", tmp.find("CATEGORIES")), " > ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
+        CategoryUtil().add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dictionary, parent_stack, "CATEGORY", tmp.find("CATEGORIES")), " > ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
         
         parent_stack.get()
         
         for item in reversed(list_same):
 
-            main_im, created_main = Image.objects.using(DB).get_or_create(image=ImportUtils().get_text(dict, parent_stack, "IMAGE", item))
+            main_im, created_main = Image.objects.using(DB).get_or_create(image=ImportUtils().get_text(dictionary, parent_stack, "IMAGE", item))
 
-            code = ImportUtils().get_text(dict, parent_stack, "CODE", item)
-            ean = ImportUtils().get_text(dict, parent_stack, "EAN", item)
+            code = ImportUtils().get_text(dictionary, parent_stack, "CODE", item)
+            ean = ImportUtils().get_text(dictionary, parent_stack, "EAN", item)
             
             if amount_tree:
                 if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ITEM_ID", code)) == None:
@@ -91,20 +91,20 @@ def esportshop_to_shoptet(DB, url_data):
                     visible = 2
                 else:
                     visible = 0
-                amount = ImportUtils().get_text(dict, parent_stack, "AMOUNT", node)
-                price = ImportUtils().get_text(dict, parent_stack, "PRICE", node)
-                vat = ImportUtils().get_text(dict, parent_stack, "VAT", node)
-                availability = AvailabilityUtils.availability_setup(DB, node, supplier_id, in_stock, out_stock, amount, dict, parent_stack)
+                amount = ImportUtils().get_text(dictionary, parent_stack, "AMOUNT", node)
+                price = ImportUtils().get_text(dictionary, parent_stack, "PRICE", node)
+                vat = ImportUtils().get_text(dictionary, parent_stack, "VAT", node)
+                availability = AvailabilityUtils.availability_setup(DB, node, supplier_id, in_stock, out_stock, amount, dictionary, parent_stack)
             else:
-                amount = ImportUtils().get_text(dict, parent_stack, "AMOUNT", item)
-                price = ImportUtils().get_text(dict, parent_stack, "PRICE", item)
-                vat = ImportUtils().get_text(dict, parent_stack, "VAT", item)
-                availability = AvailabilityUtils.availability_setup(DB, item, supplier_id, in_stock, out_stock, amount, dict, parent_stack)
+                amount = ImportUtils().get_text(dictionary, parent_stack, "AMOUNT", item)
+                price = ImportUtils().get_text(dictionary, parent_stack, "PRICE", item)
+                vat = ImportUtils().get_text(dictionary, parent_stack, "VAT", item)
+                availability = AvailabilityUtils.availability_setup(DB, item, supplier_id, in_stock, out_stock, amount, dictionary, parent_stack)
                 visible = 0
 
-            rec_price = ImportUtils().get_text(dict, parent_stack, "REC_PRICE", item)
-            currency = ImportUtils().get_text(dict, parent_stack, "CURRENCY", item)
-            name = ImportUtils().get_text(dict, parent_stack, "NAME_VAR", item)
+            rec_price = ImportUtils().get_text(dictionary, parent_stack, "REC_PRICE", item)
+            currency = ImportUtils().get_text(dictionary, parent_stack, "CURRENCY", item)
+            name = ImportUtils().get_text(dictionary, parent_stack, "NAME_VAR", item)
             
             curr_var, created_var = Variant.objects.using(DB).get_or_create(code=code,
                                                                             ean=ean,
@@ -147,14 +147,14 @@ def esportshop_to_shoptet(DB, url_data):
             parent_stack.put("VARIATION_PARAM")
             proplist = item.findall(ImportUtils().LifoPeek(parent_stack))
             for p in proplist:
-                param, created = Param.custom_get_or_create(DB, ImportUtils().get_text(dict, parent_stack, "NAME", p), ImportUtils().get_text(dict, parent_stack, "VALUE", p), supplier_id)
+                param, created = Param.custom_get_or_create(DB, ImportUtils().get_text(dictionary, parent_stack, "NAME", p), ImportUtils().get_text(dictionary, parent_stack, "VALUE", p), supplier_id)
                 VariantParam.objects.using(DB).get_or_create(variant=curr_var, param=param, defaults={'var_param': True})
             parent_stack.get()
             
             parent_stack.put("PARAM")
             proplist = item.findall(ImportUtils().LifoPeek(parent_stack))
             for p in proplist:
-                param, created = Param.custom_get_or_create(DB, ImportUtils().get_text(dict, parent_stack, "NAME", p), ImportUtils().get_text(dict, parent_stack, "VALUE", p), supplier_id)
+                param, created = Param.custom_get_or_create(DB, ImportUtils().get_text(dictionary, parent_stack, "NAME", p), ImportUtils().get_text(dictionary, parent_stack, "VALUE", p), supplier_id)
                 VariantParam.objects.using(DB).get_or_create(variant=curr_var, param=param, defaults={'var_param': False})
             parent_stack.get()
             

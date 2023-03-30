@@ -8,30 +8,31 @@ class ImportUtils:
             self.new = new
             self.parent = parent
 
-    def find_in_list(self, list:list, target:Tag):
-        for elem in list:
-            if elem.original == target.original and elem.new == target.new:
-                if elem.parent == target.parent:
-                    return
-        list.append(target)
+    def find_in_list(self, list:dict, target:Tag, parent_stack:LifoQueue):
+        ending = target.new if target.new else target.original
+        parent_stack.put(ending)
+        key = '=>'.join(parent_stack.queue)
+        print(key)
+        list[key] = target
+        parent_stack.get()
 
-    def create_dictionary(self, node:Element, parent_stack:LifoQueue, dictionary:list):
+    def create_dictionary(self, node:Element, parent_stack:LifoQueue, dictionary:dict):
         immediate_parent = self.LifoPeek(parent_stack)
-        self.find_in_list(dictionary, self.Tag(node.tag, node.get("NEW"), immediate_parent))
+        self.find_in_list(dictionary, self.Tag(node.tag, node.get("NEW"), immediate_parent), parent_stack)
         parent_stack.put(node.tag)
         for a in list(node):
             self.create_dictionary(a, parent_stack, dictionary)
         parent_stack.get()
 
-    def find_new_name(self, list:list, target:Tag)->Tag:
-        for elem in list:
-            if elem.original == target.original or elem.new == target.new:
-                if elem.parent == target.parent:
-                    return elem
-        return None
+    def find_new_name(self, dictionary:dict, target:Tag, parent_stack:LifoQueue)->Tag:
+        parent_stack.put(target.new)
+        keyend = '=>'.join(parent_stack.queue)
+        parent_stack.get()
+        keys = list(filter(lambda key: str(key).endswith(keyend), dictionary.keys()))
+        return dictionary[keys[0]] if len(keys) else None
 
-    def out_find_new_name(self, dict:list, parent_stack:LifoQueue, new_name):
-        return self.find_new_name(dict, self.Tag(None, new_name, self.LifoPeek(parent_stack))).original
+    def out_find_new_name(self, dictionary:dict, parent_stack:LifoQueue, new_name):
+        return self.find_new_name(dictionary, self.Tag(None, new_name, self.LifoPeek(parent_stack)), parent_stack).original
 
     def LifoPeek(self, stack:LifoQueue):
         if not stack.empty():
@@ -39,9 +40,9 @@ class ImportUtils:
             stack.put(tmp)
             return tmp
 
-    def get_text(self, dict:list, parent_stack:LifoQueue, tag:str, node:Element):
+    def get_text(self, dictionary:dict, parent_stack:LifoQueue, tag:str, node:Element):
         if node != None:
-            new_name = self.find_new_name(dict, self.Tag(None, tag, self.LifoPeek(parent_stack)))
+            new_name = self.find_new_name(dictionary, self.Tag(None, tag, self.LifoPeek(parent_stack)), parent_stack)
             if(new_name != None):
                 try:
                     return node.find(new_name.original).text

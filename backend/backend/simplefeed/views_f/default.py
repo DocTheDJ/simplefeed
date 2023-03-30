@@ -19,6 +19,9 @@ from threading import Thread
 from ..models import Variant, Variant_Update, Common, Feeds, Category, Manufacturers
 from django.core.management import call_command
 
+from queue import LifoQueue
+from ..utils.importutils import ImportUtils
+from xml.etree.ElementTree import fromstring
 # Create your views here.
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -111,6 +114,26 @@ def getFilters(request):
             'suppliers': FeedSerializer(Feeds.objects.using(DB).filter(usage='m'), many=True).data,
             'manufacturers': ManufacturerSerializer(Manufacturers.objects.using(DB).all(), many=True).data
         }
+    else:
+        response = 'noDB'
+    return Response(response)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def test(request):
+    if DB := create_dbconnect(request):
+        f = Feeds.objects.using(DB).filter(usage='d')[0].feed_link
+        xml = fromstring(f)
+        parent_stack = LifoQueue()
+        dictionary = dict()
+        ImportUtils().create_dictionary(xml, parent_stack, dictionary)
+        print(f)
+        print('-------------------------')
+        print(parent_stack.queue)
+        print('-------------------------')
+        print(dictionary)
+        print('-------------------------')
+        response = 'OK'
     else:
         response = 'noDB'
     return Response(response)

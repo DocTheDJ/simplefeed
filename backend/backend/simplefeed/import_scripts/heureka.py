@@ -12,8 +12,8 @@ def heureka_to_shoptet(DB, url_data):
     root_data = xml_from_url(url_data.feed_link).getroot()
     rootdict = fromstring(Feeds.objects.using(DB).get(usage='d', master_feed=supplier_id).feed_link)
     parent_stack = LifoQueue()
-    dict = list()
-    ImportUtils().create_dictionary(rootdict, parent_stack, dict)
+    dictionary = dict()
+    ImportUtils().create_dictionary(rootdict, parent_stack, dictionary)
     for r in rootdict.iter():
         if r.get("GROUP_BY") == "true":
             group_by = r.tag
@@ -43,46 +43,46 @@ def heureka_to_shoptet(DB, url_data):
         
         parent_stack.put(child.tag)
         
-        com_name = ImportUtils().get_text(dict ,parent_stack, "NAME_COM", tmp)
+        com_name = ImportUtils().get_text(dictionary ,parent_stack, "NAME_COM", tmp)
         
-        man = ImportUtils().get_text(dict, parent_stack, "MANUFACTURER", tmp)
+        man = ImportUtils().get_text(dictionary, parent_stack, "MANUFACTURER", tmp)
         manufacturer, created = Manufacturers.objects.using(DB).get_or_create(original_name=man, defaults={'name': man})
         
         curr_comm, created_comm = Common.objects.using(DB).get_or_create(itemgroup_id=c.text,
                                                                          supplier_id = supplier_id,
-                                                                        defaults={ 'short_description': ImportUtils().get_text(dict, parent_stack, "SHORT_DESCRIPTION", tmp),
-                                                                                    'description': ImportUtils().get_text(dict, parent_stack, "DESCRIPTION", tmp),
+                                                                        defaults={ 'short_description': ImportUtils().get_text(dictionary, parent_stack, "SHORT_DESCRIPTION", tmp),
+                                                                                    'description': ImportUtils().get_text(dictionary, parent_stack, "DESCRIPTION", tmp),
                                                                                     'manufacturer': manufacturer,
                                                                                     'name': com_name,
                                                                                     'approved': 0})
         if not created_comm:
-            curr_comm.short_description = ImportUtils().get_text(dict, parent_stack, "SHORT_DESCRIPTION", tmp)
-            curr_comm.description = ImportUtils().get_text(dict, parent_stack, "DESCRIPTION", tmp)
+            curr_comm.short_description = ImportUtils().get_text(dictionary, parent_stack, "SHORT_DESCRIPTION", tmp)
+            curr_comm.description = ImportUtils().get_text(dictionary, parent_stack, "DESCRIPTION", tmp)
             curr_comm.manufacturer = manufacturer
             curr_comm.name = com_name
             curr_comm.supplier_id = supplier_id
         common_price = False
         
-        CategoryUtil().add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dict, parent_stack, "CATEGORIES", tmp), " | ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
+        CategoryUtil().add_category_use(DB, CategoryUtil.created_supplier_category(DB, ImportUtils().get_text(dictionary, parent_stack, "CATEGORIES", tmp), " | ", supplier_id, category_watch_out_rule).id, curr_comm, category_watch_out_rule)
         
         for item in reversed(list_same):
             
-            main_im, created_main = Image.objects.using(DB).get_or_create(image=ImportUtils().get_text(dict, parent_stack, "IMAGE", item))
+            main_im, created_main = Image.objects.using(DB).get_or_create(image=ImportUtils().get_text(dictionary, parent_stack, "IMAGE", item))
             
             param_list = []
             parent_stack.put("PARAM")
             proplist = item.findall(ImportUtils().LifoPeek(parent_stack))
             for p in proplist:
-                param, created = Param.custom_get_or_create(DB, ImportUtils().get_text(dict, parent_stack, "NAME", p), ImportUtils().get_text(dict, parent_stack, "VALUE", p), supplier_id)
+                param, created = Param.custom_get_or_create(DB, ImportUtils().get_text(dictionary, parent_stack, "NAME", p), ImportUtils().get_text(dictionary, parent_stack, "VALUE", p), supplier_id)
                 param_list.append(param)
             parent_stack.get()
             
-            code = ImportUtils().get_text(dict, parent_stack, "CODE", item)
+            code = ImportUtils().get_text(dictionary, parent_stack, "CODE", item)
             
             if amount_tree:
                 if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ID", code)) == None:
-                    if (node := ImportUtils().look_for_flaws(amount_data, "SHOPITEM", "ID", ImportUtils().get_text(dict, parent_stack, "CODE", item), "_", "/")) == None:
-                        if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "EAN", ImportUtils().get_text(dict, parent_stack, "EAN", item))) == None:
+                    if (node := ImportUtils().look_for_flaws(amount_data, "SHOPITEM", "ID", ImportUtils().get_text(dictionary, parent_stack, "CODE", item), "_", "/")) == None:
+                        if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "EAN", ImportUtils().get_text(dictionary, parent_stack, "EAN", item))) == None:
                             for p in param_list:
                                 if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ID", get_new_search(code, "_", p.value.value))) == None:
                                     if (node := ImportUtils().try_find_from(amount_data, "SHOPITEM", "ID", get_new_search(code, " ", p.value.value))) == None:
@@ -96,19 +96,19 @@ def heureka_to_shoptet(DB, url_data):
                     visible = 2
                 else:
                     visible = (1 if curr_comm.approved else 0)
-                amount = ImportUtils().get_text(dict, parent_stack, "AMOUNT", node)
-                price = ImportUtils().get_text(dict, parent_stack, "PRICE", node)
-                vat = ImportUtils().get_text(dict, parent_stack, "VAT", node)
-                rec_price = ImportUtils().get_text(dict, parent_stack, "REC_PRICE", node)
+                amount = ImportUtils().get_text(dictionary, parent_stack, "AMOUNT", node)
+                price = ImportUtils().get_text(dictionary, parent_stack, "PRICE", node)
+                vat = ImportUtils().get_text(dictionary, parent_stack, "VAT", node)
+                rec_price = ImportUtils().get_text(dictionary, parent_stack, "REC_PRICE", node)
             else:
-                amount = ImportUtils().get_text(dict, parent_stack, "AMOUNT", item)
-                price = ImportUtils().get_text(dict, parent_stack, "PRICE", item)
-                vat = ImportUtils().get_text(dict, parent_stack, "VAT", item)
-                rec_price = ImportUtils().get_text(dict, parent_stack, "REC_PRICE", item)
+                amount = ImportUtils().get_text(dictionary, parent_stack, "AMOUNT", item)
+                price = ImportUtils().get_text(dictionary, parent_stack, "PRICE", item)
+                vat = ImportUtils().get_text(dictionary, parent_stack, "VAT", item)
+                rec_price = ImportUtils().get_text(dictionary, parent_stack, "REC_PRICE", item)
                 visible = 0
             
-            availability = in_stock if ImportUtils().get_text(dict, parent_stack, "AVAILABLE_ON", item) == "1" else out_stock
-            ean = ImportUtils().get_text(dict, parent_stack, "EAN", item)
+            availability = in_stock if ImportUtils().get_text(dictionary, parent_stack, "AVAILABLE_ON", item) == "1" else out_stock
+            ean = ImportUtils().get_text(dictionary, parent_stack, "EAN", item)
             if(len(ean) > 16):
                 continue
             curr_var, created_var = Variant.objects.using(DB).get_or_create(code=code,
@@ -123,7 +123,7 @@ def heureka_to_shoptet(DB, url_data):
                                                                                         'rec_price': rec_price,
                                                                                         'free_billing': 0,
                                                                                         'free_shipping': 0,
-                                                                                        'name': ImportUtils().get_text(dict, parent_stack, "NAME_VAR", item),
+                                                                                        'name': ImportUtils().get_text(dictionary, parent_stack, "NAME_VAR", item),
                                                                                         'availability': availability})
             for t in item.findall("IMGURL_ALTERNATIVE"):
                 new_im, created_im = Image.objects.using(DB).get_or_create(image=t.text)
@@ -134,7 +134,7 @@ def heureka_to_shoptet(DB, url_data):
 
             
             if not created_var:
-                curr_var.name = ImportUtils().get_text(dict, parent_stack, "NAME_VAR", item)
+                curr_var.name = ImportUtils().get_text(dictionary, parent_stack, "NAME_VAR", item)
                 # curr_var.image_ref_id = main_im.id
                 curr_var.amount = amount
                 curr_var.visible = visible

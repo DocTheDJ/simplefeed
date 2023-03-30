@@ -3,6 +3,7 @@ import { ipAddress, getJsonHeader } from '../constants';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import ModificationVariantModal from './modificationVariantModal';
+import { NavLink } from 'react-router-dom';
 
 
 function VariantModal(props){
@@ -84,9 +85,11 @@ function VariantModalItem(props){
                     Child={() => <i className="ti-pencil"></i>}
                     buttonStyle={'btn-warning btn-rounded btn-icon'}>
                 </ModificationVariantModal>
-                <a href="/var_detail/{{v.id}}"><button type="button" className="btn btn-info btn-rounded btn-icon">
-                <i className="ti-eye"></i></button>
-                </a>
+                <NavLink to={`/variantdetail/${props.data.id}`}>
+                    <button type="button" className="btn btn-info btn-rounded btn-icon">
+                        <i className="ti-eye"></i>
+                    </button>
+                </NavLink>
                 
                 {
                     props.data.visible === '1' ? 

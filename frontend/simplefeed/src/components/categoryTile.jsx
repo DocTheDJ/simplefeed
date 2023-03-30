@@ -84,7 +84,7 @@ function EditModal(props){
         if(send){
             try{
                 axios.post(ipAddress + `update-category/${props.data.id}`, formData, getJsonHeader(props.context)).then((response) => {
-                    if(response.status !== 200 || response.statusText !== 'OK'){
+                    if(response.status !== 200 || response.data !== 'OK'){
                         alert('Something fucked up');
                     }else{
                         handleClose();
@@ -133,7 +133,7 @@ function DeleteModal(props){
     let run = async(e) => {
         e.preventDefault();
         axios.get(ipAddress + `delete-category/${props.data.id}`, getJsonHeader(props.context)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Something fucked up');
             }else{
                 handleClose();
@@ -185,7 +185,7 @@ function MoveModal(props){
         e.preventDefault();
         if(target !== null || target !== undefined){
             axios.get(ipAddress + `move-category/${props.data.id}/${target}`, getJsonHeader(props.context)).then((response) => {
-                if(response.status !== 200 || response.statusText !== 'OK'){
+                if(response.status !== 200 || response.data !== 'OK'){
                     alert('Somthing fucked up')
                 }else{
                     handleClose();

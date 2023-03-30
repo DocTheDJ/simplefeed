@@ -44,7 +44,7 @@ function VariantListItem(props){
     let setMain = async(e) => {
         e.preventDefault();
         axios.get(ipAddress + `set-main/${props.id}/${props.data.id}`, getJsonHeader(props.context)).then((response) => {
-            if(response.status !== 200 || response.statusText !== 'OK'){
+            if(response.status !== 200 || response.data !== 'OK'){
                 alert('Something fucked up');
             }else{
                 if(props.product){
