@@ -6,7 +6,7 @@ from ..utils.db_access import create_dbconnect
 from ..utils.variant import VariantUtils
 from rest_framework.permissions import IsAuthenticated
 import math
-
+from urllib import parse
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -47,7 +47,7 @@ def variantList(request, pagenum, approvement, cat, supp, man, que):
             'cat': None if cat == '_' else int(cat),
             'sup': None if supp == '_' else int(supp),
             'man': None if man == '_' else int(man),
-            'que': None if que == '_' else que,
+            'que': None if que == '_' else parse.unquote(que),
         }
         data = data.filter(VariantUtils.createQuery(t))
         count = data.count()
