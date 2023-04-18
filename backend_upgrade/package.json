@@ -2,7 +2,7 @@
   "name": "simplefeed",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "mysql2": "^3.2.3",
-    "sequelize": "^6.31.0"
-  }
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^6.31.0",
+    "sequelize-typescript": "^2.1.5"
+  },
+  "type": "module"
 }
