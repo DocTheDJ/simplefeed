@@ -1,6 +1,6 @@
 const {Sequelize} = require("sequelize");
 const mysql = require("mysql2");
-const {Feed} = require("./models");
+const {Feed} = require("./migrate");
 
 async function getConnection(name, level=1) {
     const sequelize = new Sequelize(
