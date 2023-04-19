@@ -1,6 +1,8 @@
 import { getConnection } from "./src/dbacces.js";
 import { migrate } from "./src/migrate.js";
 import Feed from "./src/models/feed.js";
+import Variant from "./src/models/variant.js";
+import Image from "./src/models/image.js";
 // const {getConnection} = require('./src/dbacces')
 // const {migrate} = require('./src/migrate')
 // const Feed = require('./src/models/feed')
@@ -8,7 +10,17 @@ import Feed from "./src/models/feed.js";
 async function main(){
    const sequelize = await getConnection('patrik');
    migrate(sequelize);
+   // await sequelize?.sync({alter: true});
    await sequelize?.sync();
+   // const [t, c] = await Variant.findOrCreate({
+   //    sequelize,
+   //    where: {code: '160050092'}, 
+   //    defaults: {ean: '8595688313143', price: 3499.00, pur_price: 2199.00, rec_price: 3499.00, currency: 'czk', name: 'Taburet Marocké taburety hnědo-žlutá'},
+   // });
+   // var i = await Image.create({image: 'https://cdn.myshoptet.com/usr/www.mcompanies.cz/user/shop/orig/17784-1_111-black-1.jpg?619bb8b0'}, {sequelize});
+   // await t.addImage({ImageId: i?.dataValues.id, main: true}, { sequelize, through: { selfGranted: true } })
+   // i = await Image.create({image: 'https://cdn.myshoptet.com/usr/www.mcompanies.cz/user/shop/orig/17784-1_111-black-1.jpg?619bb8b0'}, {sequelize});
+   // await t.addImage({ImageId: i?.dataValues.id, main: true}, { sequelize, through: { selfGranted: true } })
    // await createDefault(sequelize);
    sequelize?.close();
 }

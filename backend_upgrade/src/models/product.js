@@ -2,6 +2,7 @@ import { DataTypes, Model } from "sequelize";
 import Category from "./category.js";
 import Variant from "./variant.js";
 import Modification from "./modification.js";
+import ProductCategory from "./productcategory.js";
 
 class Product extends Model{
     static migrate(sequelize){
@@ -17,19 +18,14 @@ class Product extends Model{
             description: DataTypes.TEXT,
             approved: DataTypes.BOOLEAN,
         }, {sequelize})
-        Product.belongsToMany(Category, {
-            foreignKey: 'categories',
-            through: 'ProductCategory'
-        });
-        Product.belongsToMany(Variant, {
-            foreignKey: 'variants',
-            through: 'ProductVariant',
-            onDelete: 'cascade'
-        });
-        Product.belongsToMany(Modification, {
-            foreignKey: 'mods',
-            through: 'ProductMod'
-        })
+        // Product.belongsToMany(Modification, {
+        //     foreignKey: 'mod',
+        //     through: 'ProductMod',
+        // })
+        // Modification.belongsToMany(Product, {
+        //     foreignKey: 'product',
+        //     through: 'ProductMod'
+        // })
     }
 }
 

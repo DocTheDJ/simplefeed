@@ -1,26 +1,25 @@
 import { DataTypes, Model } from "sequelize";
-import Variant from "./variant.js";
-import Param from "./param.js";
+import Variant from "./product.js";
+import Modification from "./modification.js";
 
-class VariantParam extends Model{
+class VariantMod extends Model{
     static migrate(sequelize){
-        VariantParam.init({
+        VariantMod.init({
             id: {
                 type: DataTypes.BIGINT,
                 autoIncrement: true,
                 primaryKey: true,
             },
-            var_param: DataTypes.BOOLEAN
-        }, {sequelize})
-        Param.hasMany(VariantParam, {
-            foreignKey: 'param',
+        }, {sequelize});
+        Modification.hasMany(VariantMod, {
+            foreignKey: 'modification',
             onDelete: 'cascade'
         })
-        Variant.hasMany(VariantParam,{
+        Variant.hasMany(VariantMod,{
             foreignKey: 'variant',
             onDelete: 'cascade'
         })
     }
-}
+};
 
-export default VariantParam;
+export default VariantMod;

@@ -1,9 +1,4 @@
 import { DataTypes, Model } from "sequelize";
-import Param from "./param.js";
-import Modification from "./modification.js";
-import Image from "./image.js";
-import VariantParam from "./variantparam.js";
-import VariantImage from "./variantimage.js";
 import Product from "./product.js";
 
 class Variant extends Model{
@@ -33,22 +28,34 @@ class Variant extends Model{
             free_shipping: DataTypes.BOOLEAN,
             name: DataTypes.STRING(128),
         }, {sequelize});
-        Variant.belongsToMany(Param, {
-            foreignKey: 'params',
-            through: VariantParam,
-            onDelete: 'cascade'
-        });
-        Variant.belongsToMany(Modification, {
-            foreignKey: 'mods',
-            through: 'VariantMods'
-        });
-        Variant.belongsToMany(Image, {
-            foreignKey: 'images',
-            through: VariantImage,
-            onDelete: 'cascade'
-        }),
-        Variant.belongsTo(Product, {
+        // Variant.belongsToMany(Param, {
+        //     foreignKey: 'params',
+        //     through: VariantParam,
+        //     onDelete: 'cascade'
+        // });
+        // Param.belongsToMany(Variant, {
+        //     through: VariantParam,
+        //     onDelete: 'cascade'
+        // })
+        // Variant.belongsToMany(Modification, {
+        //     foreignKey: 'mods',
+        //     through: 'VariantMods'
+        // });
+        // Modification.belongsToMany(Variant, {
+        //     through: 'VariantMods'
+        // })
+        // Variant.belongsToMany(Image, {
+        //     foreignKey: 'variant',
+        //     through: VariantImage,
+        //     onDelete: 'cascade'
+        // }),
+        Product.belongsTo(Variant, {
             foreignKey: 'price_common'
+        });
+        Product.belongsToMany(Variant, {
+            foreignKey: 'variants',
+            through: 'ProductVariant',
+            onDelete: 'cascade'
         });
     }
 };

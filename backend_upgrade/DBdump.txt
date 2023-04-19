@@ -1,0 +1,194 @@
+Executing (default): SELECT 1+1 AS result
+Connection has been established successfully.
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Images' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `Images`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Images' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Images` CHANGE `image` `image` VARCHAR(512);
+Executing (default): ALTER TABLE `Images` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Images` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `Images`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Modifications' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `Modifications`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Modifications' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Modifications` CHANGE `name` `name` VARCHAR(128);
+Executing (default): ALTER TABLE `Modifications` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Modifications` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `Modifications`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Feeds' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `Feeds`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Feeds' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Feeds` CHANGE `feed_link` `feed_link` TEXT;
+Executing (default): ALTER TABLE `Feeds` CHANGE `usage` `usage` VARCHAR(1);
+Executing (default): ALTER TABLE `Feeds` CHANGE `name` `name` VARCHAR(128);
+Executing (default): ALTER TABLE `Feeds` CHANGE `source` `source` VARCHAR(1);
+Executing (default): ALTER TABLE `Feeds` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Feeds` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Feeds` ADD FOREIGN KEY (`master_feed`) REFERENCES `Feeds` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `Feeds`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'ParamNames' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `ParamNames`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'ParamNames' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `ParamNames` CHANGE `name` `name` VARCHAR(128);
+Executing (default): ALTER TABLE `ParamNames` CHANGE `original_name` `original_name` VARCHAR(128);
+Executing (default): ALTER TABLE `ParamNames` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `ParamNames` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `ParamNames` ADD FOREIGN KEY (`source`) REFERENCES `Feeds` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `ParamNames`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'ParamValues' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `ParamValues`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'ParamValues' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `ParamValues` CHANGE `value` `value` VARCHAR(128);
+Executing (default): ALTER TABLE `ParamValues` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `ParamValues` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `ParamValues`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Params' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `Params`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Params' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Params` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Params` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Params` ADD FOREIGN KEY (`name`) REFERENCES `ParamNames` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `Params` ADD FOREIGN KEY (`value`) REFERENCES `ParamValues` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `Params`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Rules' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `Rules`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Rules' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Rules` CHANGE `name` `name` VARCHAR(128);
+Executing (default): ALTER TABLE `Rules` CHANGE `action` `action` VARCHAR(64);
+Executing (default): ALTER TABLE `Rules` CHANGE `css_class` `css_class` VARCHAR(32);
+Executing (default): ALTER TABLE `Rules` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Rules` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `Rules`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Categories' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `Categories`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Categories' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Categories` CHANGE `original_id` `original_id` BIGINT;
+Executing (default): ALTER TABLE `Categories` CHANGE `name` `name` VARCHAR(128);
+Executing (default): ALTER TABLE `Categories` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Categories` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Categories` ADD FOREIGN KEY (`parent`) REFERENCES `Categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `Categories` ADD FOREIGN KEY (`original_parent`) REFERENCES `Categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `Categories` ADD FOREIGN KEY (`source`) REFERENCES `Feeds` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `Categories` ADD FOREIGN KEY (`action`) REFERENCES `Rules` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `Categories`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'CategoryCategory' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `CategoryCategory`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'CategoryCategory' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;       
+Executing (default): ALTER TABLE `CategoryCategory` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `CategoryCategory` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `CategoryCategory`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Availabilities' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `Availabilities`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Availabilities' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Availabilities` CHANGE `name` `name` VARCHAR(64);
+Executing (default): ALTER TABLE `Availabilities` CHANGE `original_name` `original_name` VARCHAR(64);
+Executing (default): ALTER TABLE `Availabilities` CHANGE `buyable` `buyable` TINYINT(1);
+Executing (default): ALTER TABLE `Availabilities` CHANGE `arrives_in` `arrives_in` VARCHAR(16);
+Executing (default): ALTER TABLE `Availabilities` CHANGE `active` `active` TINYINT(1);
+Executing (default): ALTER TABLE `Availabilities` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Availabilities` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Availabilities` ADD FOREIGN KEY (`supplier`) REFERENCES `Feeds` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `Availabilities`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Variants' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `Variants`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Variants' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Variants` CHANGE `code` `code` VARCHAR(32) UNIQUE;
+Executing (default): ALTER TABLE `Variants` CHANGE `ean` `ean` VARCHAR(16);
+Executing (default): ALTER TABLE `Variants` CHANGE `vat` `vat` DECIMAL(2) DEFAULT 21;
+Executing (default): ALTER TABLE `Variants` CHANGE `price` `price` DECIMAL(8,2);
+Executing (default): ALTER TABLE `Variants` CHANGE `pur_price` `pur_price` DECIMAL(8,2);
+Executing (default): ALTER TABLE `Variants` CHANGE `rec_price` `rec_price` DECIMAL(8,2);
+Executing (default): ALTER TABLE `Variants` CHANGE `currency` `currency` VARCHAR(3);
+Executing (default): ALTER TABLE `Variants` CHANGE `visible` `visible` VARCHAR(1);
+Executing (default): ALTER TABLE `Variants` CHANGE `amount` `amount` INTEGER;
+Executing (default): ALTER TABLE `Variants` CHANGE `free_billing` `free_billing` TINYINT(1);
+Executing (default): ALTER TABLE `Variants` CHANGE `free_shipping` `free_shipping` TINYINT(1);
+Executing (default): ALTER TABLE `Variants` CHANGE `name` `name` VARCHAR(128);
+Executing (default): ALTER TABLE `Variants` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Variants` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Variants` ADD FOREIGN KEY (`availability`) REFERENCES `Availabilities` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `Variants`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Manufacturers' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `Manufacturers`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Manufacturers' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Manufacturers` CHANGE `name` `name` VARCHAR(128);
+Executing (default): ALTER TABLE `Manufacturers` CHANGE `original_name` `original_name` VARCHAR(128);
+Executing (default): ALTER TABLE `Manufacturers` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Manufacturers` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `Manufacturers`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Products' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `Products`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Products' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Products` CHANGE `itemgroup_id` `itemgroup_id` VARCHAR(32);
+Executing (default): ALTER TABLE `Products` CHANGE `name` `name` VARCHAR(128);
+Executing (default): ALTER TABLE `Products` CHANGE `short_description` `short_description` TEXT;
+Executing (default): ALTER TABLE `Products` CHANGE `description` `description` TEXT;
+Executing (default): ALTER TABLE `Products` CHANGE `approved` `approved` TINYINT(1);
+Executing (default): ALTER TABLE `Products` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Products` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Products` ADD FOREIGN KEY (`supplier`) REFERENCES `Feeds` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `Products` ADD FOREIGN KEY (`manufacturer`) REFERENCES `Manufacturers` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `Products` ADD FOREIGN KEY (`price_common`) REFERENCES `Variants` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `Products`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'ProductCategories' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `ProductCategories`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'ProductCategories' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;      
+Executing (default): ALTER TABLE `ProductCategories` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `ProductCategories` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `ProductCategories` ADD FOREIGN KEY (`category`) REFERENCES `Categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `ProductCategories` ADD FOREIGN KEY (`product`) REFERENCES `Products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `ProductCategories`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'ProductMods' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `ProductMods`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'ProductMods' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `ProductMods` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `ProductMods` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `ProductMods` ADD FOREIGN KEY (`modification`) REFERENCES `Modifications` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `ProductMods` ADD FOREIGN KEY (`product`) REFERENCES `Products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `ProductMods`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'ProductVariants' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `ProductVariants`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'ProductVariants' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;        
+Executing (default): ALTER TABLE `ProductVariants` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `ProductVariants` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `ProductVariants` ADD FOREIGN KEY (`variant`) REFERENCES `Modifications` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `ProductVariants` ADD FOREIGN KEY (`product`) REFERENCES `Products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `ProductVariants`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'VariantImages' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `VariantImages`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'VariantImages' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `VariantImages` CHANGE `main` `main` TINYINT(1);
+Executing (default): ALTER TABLE `VariantImages` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `VariantImages` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `VariantImages` ADD FOREIGN KEY (`variant`) REFERENCES `Variants` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `VariantImages` ADD FOREIGN KEY (`image`) REFERENCES `Images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): SHOW INDEX FROM `VariantImages`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'VariantMods' AND TABLE_SCHEMA = 'simplefeed_patrik'
+Executing (default): SHOW FULL COLUMNS FROM `VariantMods`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'VariantMods' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='simplefeed_patrik' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `VariantMods` ADD `id` BIGINT auto_increment PRIMARY KEY;
+node:internal/process/promises:288
+            triggerUncaughtException(err, true /* fromPromise */);
+            ^
+
+Error
+    at Query.run (C:\Users\tomas\Documents\simplefeed\backend_upgrade\node_modules\sequelize\lib\dialects\mysql\query.js:52:25)
+    at C:\Users\tomas\Documents\simplefeed\backend_upgrade\node_modules\sequelize\lib\sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async MySQLQueryInterface.addColumn (C:\Users\tomas\Documents\simplefeed\backend_upgrade\node_modules\sequelize\lib\dialects\abstract\query-interface.js:184:12)
+    at async VariantMod.sync (C:\Users\tomas\Documents\simplefeed\backend_upgrade\node_modules\sequelize\lib\model.js:958:11)
+    at async Sequelize.sync (C:\Users\tomas\Documents\simplefeed\backend_upgrade\node_modules\sequelize\lib\sequelize.js:377:9)
+    at async main (file:///C:/Users/tomas/Documents/simplefeed/backend_upgrade/server.js:13:4) {
+      at Socket.emit (node:events:513:28)
+      at addChunk (node:internal/streams/readable:324:12)
+      at readableAddChunk (node:internal/streams/readable:297:9)
+      at Readable.push (node:internal/streams/readable:234:10) {
+    code: 'ER_MULTIPLE_PRI_KEY',
+    errno: 1068,
+    sqlState: '42000',
+    sqlMessage: 'Multiple primary key defined',
+    sql: 'ALTER TABLE `VariantMods` ADD `id` BIGINT auto_increment PRIMARY KEY;',
+    parameters: undefined
+  },
+  sql: 'ALTER TABLE `VariantMods` ADD `id` BIGINT auto_increment PRIMARY KEY;',
+  parameters: {}
+}

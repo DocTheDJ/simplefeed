@@ -9,7 +9,7 @@ class ParamValue extends Model{
                 autoIncrement: true,
                 primaryKey: true,
             },
-            name: DataTypes.STRING(128)
+            value: DataTypes.STRING(128)
         },{sequelize});
         ParamValue.hasMany(Param, {
             foreignKey: 'value',

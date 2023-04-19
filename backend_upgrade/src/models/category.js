@@ -1,5 +1,6 @@
 // const { DataTypes, Model } = require('sequelize');
 import { DataTypes, Model } from "sequelize";
+import ProductCategory from "./productcategory.js";
 
 class Category extends Model{
     static migrate(sequelize){
@@ -10,6 +11,7 @@ class Category extends Model{
                 primaryKey: true,
             },
             original_id: DataTypes.BIGINT,
+            name: DataTypes.STRING(128)
         }, {sequelize});
         Category.hasMany(Category, {
             foreignKey: 'parent',
@@ -19,9 +21,10 @@ class Category extends Model{
             foreignKey: 'original_parent'
         });
         Category.belongsToMany(Category, {
+            foreignKey: 'pair_onto',
             through: 'CategoryCategory',
-            foreignKey: 'pair_onto'
-        })
+            as: 'pairing'
+        });
     }
 };
 

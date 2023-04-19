@@ -14,7 +14,7 @@ class ParamName extends Model{
             original_name: DataTypes.STRING(128)
         }, {sequelize});
         ParamName.hasMany(Param, {
-            foreignKey: 'value',
+            foreignKey: 'name',
             onDelete: 'cascade'
         })
     }
