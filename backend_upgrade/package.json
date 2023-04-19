@@ -9,7 +9,9 @@
   "author": "DocTheDJ",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2",
     "mysql2": "^3.2.3",
+    "openurl": "^1.1.1",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.31.0",
     "sequelize-typescript": "^2.1.5"
