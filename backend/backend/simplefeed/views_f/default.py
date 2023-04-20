@@ -22,6 +22,7 @@ from django.core.management import call_command
 from queue import LifoQueue
 from ..utils.importutils import ImportUtils
 from xml.etree.ElementTree import fromstring
+from django.db.models import F
 # Create your views here.
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -122,17 +123,7 @@ def getFilters(request):
 @permission_classes([IsAuthenticated])
 def test(request):
     if DB := create_dbconnect(request):
-        f = Feeds.objects.using(DB).filter(usage='d')[0].feed_link
-        xml = fromstring(f)
-        parent_stack = LifoQueue()
-        dictionary = dict()
-        ImportUtils().create_dictionary(xml, parent_stack, dictionary)
-        print(f)
-        print('-------------------------')
-        print(parent_stack.queue)
-        print('-------------------------')
-        print(dictionary)
-        print('-------------------------')
+        Variant.objects.using(DB).all().update(price=0.5*F('rec_price'))
         response = 'OK'
     else:
         response = 'noDB'
