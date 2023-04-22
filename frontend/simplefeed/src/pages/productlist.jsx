@@ -3,8 +3,8 @@ import { ipAddress, getJsonHeader } from '../constants';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import Button from 'react-bootstrap/esm/Button';
-import Product from '../components/product';
-import Variant from '../components/variant';
+import {Product, ProductRow} from '../components/product';
+import {Variant, VariantRow} from '../components/variant';
 import { useParams } from 'react-router-dom';
 
 import {Collapse} from 'react-collapse';
@@ -237,6 +237,7 @@ function Products(props){
     const [idsList, setIdsList] = useState(null);
     const [checkedList, setCheckedList] = useState([]);
     const [checkedAll, setCheckedAll] = useState(false);
+    const [view, setView] = useState(true);
 
     useEffect(() => {
         getData(props.products, props.pagenumber, props.appr, setData, setPages, props.context, props.category, props.supplier, props.manufact, props.query, setIdsList);
@@ -294,6 +295,7 @@ function Products(props){
             <div className="row d-flex justify-content-between">
                 <div className="col-lg-8 ">
                     <div className="btn-group md-auto mb-3" role="group" aria-label="Basic example">
+                        <Button onClick={(e) => setView(!view)}>{view ? <>List</> : <>Table</>}</Button>
                         <Button onClick={(e) => goToDiffApprovement(e, 3)} className={props.appr === 3 ? activeButton : secondaryButton}><i className="ti-layout-grid4-alt btn-icon-prepend"></i> Všechny produkty</Button>
                         <Button onClick={(e) => goToDiffApprovement(e, 1)} className={props.appr === 1 ? activeButton : secondaryButton}><i className="ti-arrow-circle-down btn-icon-prepend"></i> Schválené produkty</Button>
                         <Button onClick={(e) => goToDiffApprovement(e, 0)} className={props.appr === 0 ? activeButton : secondaryButton}><i className="ti-na btn-icon-prepend"></i> Nepovolené produkty</Button>
@@ -306,6 +308,7 @@ function Products(props){
                             :
                                 null
                         }
+
                     </div>
                 </div>
                 <div className="col-lg-4 d-flex justify-content-end">
@@ -314,7 +317,8 @@ function Products(props){
                         <Button className={props.products ? secondaryButton : activeButton} onClick={(e) => {swap(e, 0);}}><i className="ti-layout-grid2-thumb btn-icon-prepend"></i>Varianty</Button>
                     </div>
                 </div>
-                    {
+                {
+                    view ? 
                         props.products ? 
                             data?.map((value) => {
                                 return(
@@ -335,7 +339,47 @@ function Products(props){
                                         checkedList={checkedList}
                                         setCheckedList={setCheckedList}></Variant>);
                             })
-                    }
+                    :
+                        <table>
+                            {
+                                props.products ? 
+                                    <>
+                                        <thead>
+                                            <th>Id</th>
+                                            <th>Group id</th>
+                                            <th>Name</th>
+                                            <th>Variants</th>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                data?.map((value) => {
+                                                    return(<ProductRow data={value}></ProductRow>);
+                                                })
+                                            }
+                                        </tbody>
+                                    </>
+                                :
+                                    <>
+                                        <thead>
+                                            <th>Id</th>
+                                            <th>Code</th>
+                                            <th>Name</th>
+                                            <th>EAN</th>
+                                            <th>Price</th>
+                                            <th>Purchase price</th>
+                                            <th>Manufacturer</th>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                data?.map((value) => {
+                                                    return(<VariantRow data={value}></VariantRow>)
+                                                })
+                                            }
+                                        </tbody>
+                                    </>
+                            }
+                        </table>
+                }
             </div>
             <div className="btn-group" role="group" aria-label="Basic example">
                 {

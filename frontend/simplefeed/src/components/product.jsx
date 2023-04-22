@@ -86,4 +86,15 @@ function Product(props){
     );
 }
 
-export default Product;
+function ProductRow(props){
+    return(
+        <tr>
+            <td>{props.data.id}</td>
+            <td>{props.data.itemgroup_id}</td>
+            <td>{props.data.name}</td>
+            <td>{props.data.variants.length}</td>
+        </tr>
+    );
+}
+
+export {Product, ProductRow};

@@ -51,6 +51,7 @@ from .views_f.category import (
 
 from .views_f.rules import (
     getRules,
+    createRule
 )
 
 from .views_f.parameters import (
@@ -119,4 +120,5 @@ urlpatterns = [
     path('availability-active/<int:id>/<int:a>', setActive),
     path('add-cat/<int:target>/<int:cat>', addCategory),
     path('remove-cat/<int:target>/<int:cat>', removeCategory),
+    path('create_rule/', createRule),
 ]

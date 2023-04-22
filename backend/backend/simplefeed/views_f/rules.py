@@ -14,3 +14,12 @@ def getRules(request):
         return Response(ser.data)
     else:
         return Response('noDB')
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createRule(request):
+    if DB := create_dbconnect(request):
+        print(request.data)
+        return Response('OK')
+    else:
+        return Response('noDB')
