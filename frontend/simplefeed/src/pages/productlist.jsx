@@ -5,11 +5,12 @@ import AuthContext from '../context/AuthContext';
 import Button from 'react-bootstrap/esm/Button';
 import {Product, ProductRow} from '../components/product';
 import {Variant, VariantRow} from '../components/variant';
-import { useParams } from 'react-router-dom';
 
 import {Collapse} from 'react-collapse';
 import Icon from '@mdi/react';
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js';
+
+import { useLocalStorage } from "../components/localstorage";
 
 
 const activeButton = 'mr-1 btn-primary btn-icon-text';
@@ -25,14 +26,13 @@ function getData(products, pagenumber, appr, setData, setPages, authTokens, cat,
 }
 
 function ProductList(){
-    const {type, page, approvement, category, supplier, manufact, query} = useParams();
-    const [pagenumber, setPage] = useState(parseInt(page, 10));
-    const [products, setProducts] = useState(parseInt(type));
-    const [appr, setAppr] = useState(parseInt(approvement));
-    const [cat, setCat] = useState(category === undefined ? '_' : category);
-    const [sup, setSup] = useState(supplier === undefined ? '_' : supplier);
-    const [man, setMan] = useState(manufact === undefined ? '_' : manufact);
-    const [que, setQue] = useState(query === undefined ? '_' : query);
+    const [pagenumber, setPage] = useLocalStorage('page', 1);
+    const [products, setProducts] = useLocalStorage('type', true);
+    const [appr, setAppr] = useLocalStorage('approvement', 3);
+    const [cat, setCat] = useLocalStorage('category', '_');
+    const [sup, setSup] = useLocalStorage('supplier', '_');
+    const [man, setMan] = useLocalStorage('manufacturer', '_');
+    const [que, setQue] = useLocalStorage('query', '_');
 
     const {authTokens} = useContext(AuthContext);
 
@@ -69,6 +69,10 @@ function ProductList(){
     );
 }
 
+function Reload(){
+    window.history.replaceState(null, null, '/productlist');
+}
+
 function SideFilters(props){
     const [categories, setCategories] = useState(null);
     const [suppliers, setSuppliers] = useState(null);
@@ -89,20 +93,20 @@ function SideFilters(props){
     let settingSup = async(e, val) => {
         e.preventDefault();
         props.setSup(val);
-        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/${props.cat}/${val}/${props.man}/${props.query}`);
+        Reload();
     }
 
     let settingMan = async(e, val) => {
         e.preventDefault();
         props.setMan(val);
-        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/${props.cat}/${props.sup}/${val}/${props.query}`);
+        Reload();
     }
 
     let settingCat = async(e, val) => {
         e.preventDefault();
         let t = val === 0 ? '_' : val;
         props.setCat(t);
-        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/${t}/${props.sup}/${props.man}/${props.query}`);
+        Reload();
     }
 
 
@@ -112,7 +116,7 @@ function SideFilters(props){
         props.setMan('_')
         props.setCat('_')
         props.setQue('_')
-        window.history.replaceState(null, null, `/productlist/${props.type}/${props.page}/${props.appr}/_/_/_/_`);
+        Reload();
     }
 
     return(
@@ -249,21 +253,22 @@ function Products(props){
         setData(null);
         props.setProducts(val);
         props.setPage(1);
-        window.history.replaceState(null, null, `/productlist/${+val}/1/${props.appr}/${props.category}/${props.supplier}/${props.manufact}/${props.query}`);
+        Reload();
     }
 
     let goToPage = async(e, val) =>{
         e.preventDefault();
         setData(null);
         props.setPage(val);
-        window.history.replaceState(null, null, `/productlist/${props.products}/${val}/${props.appr}/${props.category}/${props.supplier}/${props.manufact}/${props.query}`)
+        props.setTmp(val)
+        Reload();
     }
 
     let goToDiffApprovement = async(e, val) =>{
         e.preventDefault();
         setData(null);
         props.setAppr(val);
-        window.history.replaceState(null, null, `/productlist/${props.products}/${props.pagenumber}/${val}/${props.category}/${props.supplier}/${props.manufact}/${props.query}`)
+        Reload();
     }
 
     let handleCheckAll = async(e) => {
@@ -390,7 +395,7 @@ function Products(props){
                         if((value >= props.pagenumber - 3 && value <= props.pagenumber + 3) || (value <= 3) || (value >= pages.length - 3)){
                             return(<Button onClick={(e) => goToPage(e, value)} key={key} className='input-formated' style={{color:'black'}}>{value}</Button>);
                         }
-                        return(<div key={key}></div>);
+                        return(<></>);
                     })
                 }
             </div>

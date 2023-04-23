@@ -33,7 +33,8 @@ function NavBar(){
                     <div className="content-wrapper">
                         <Routes>
                             <Route path='/' element={<Overview></Overview>}></Route>
-                            <Route path='/productlist/:type/:page/:approvement/:category/:supplier/:manufact/:query' element={<ProductList></ProductList>}></Route>
+                            {/* <Route path='/productlist/:type/:page/:approvement/:category/:supplier/:manufact/:query' element={<ProductList></ProductList>}></Route> */}
+                            <Route path='/productlist' element={<ProductList></ProductList>}></Route>
                             <Route path='/test' element={<Test></Test>}></Route>
                             <Route path='/productdetail/:id' element={<ProductDetail></ProductDetail>}></Route>
                             <Route path='/variantdetail/:id' element={<VariantDetail></VariantDetail>}></Route>
