@@ -177,7 +177,7 @@ class Variant(models.Model):
             self.get_useable_params(self.name, param, DB)
     
     def create_last_update(self, DB):
-        Variant_Update.objects.using(DB).get_or_create(variant=self, defaults={'time': datetime.now()})
+        Variant_Update.objects.using(DB).update_or_create(variant=self, defaults={'time': datetime.now()})
     
     def get_last_update(self):
         try:
