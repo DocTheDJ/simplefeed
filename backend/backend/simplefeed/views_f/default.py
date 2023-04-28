@@ -123,7 +123,11 @@ def getFilters(request):
 @permission_classes([IsAuthenticated])
 def test(request):
     if DB := create_dbconnect(request):
-        Variant.objects.using(DB).all().update(price=0.5*F('rec_price'))
+        c = Common.objects.using(DB).all()[:2]
+        vars = []
+        for i in c:
+            vars.extend(i.get_variants_id())
+        Variant.objects.using(DB).filter(id__in=vars).update(original_price=F('price'), price=F('price'))
         response = 'OK'
     else:
         response = 'noDB'
