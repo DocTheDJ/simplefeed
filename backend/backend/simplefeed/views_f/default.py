@@ -19,8 +19,6 @@ from threading import Thread
 from ..models import Variant, Variant_Update, Common, Feeds, Category, Manufacturers
 from django.core.management import call_command
 
-from ..import_scripts.mastersport import mastersport_to_shoptet
-
 from queue import LifoQueue
 from ..utils.importutils import ImportUtils
 from xml.etree.ElementTree import fromstring
@@ -101,8 +99,9 @@ def migrate(request):
 @permission_classes([IsAuthenticated])
 def addDefault(request):
     if DB := create_dbconnect(request):
-        CreateUtil().add_category_rules(DB)
-        CreateUtil().add_all_feeds(DB)
+        # CreateUtil().add_category_rules(DB)
+        # CreateUtil().add_all_feeds(DB)
+        CreateUtil().addNewFeeds(DB)
         response = 'OK'
     else:
         response = 'noDB'

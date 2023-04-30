@@ -10,6 +10,7 @@ from .import_scripts.esportshop import esportshop_to_shoptet
 from .import_scripts.canipet import canipet_to_shoptet
 from .import_scripts.strida import strida_to_shoptet
 from .import_scripts.bullshit import bullshit_to_shoptet
+from .import_scripts.mastersport import MasterSport
 from django.utils import timezone
 from django.db.models import Q
 
@@ -37,14 +38,18 @@ def runFeed(data, DB):
     #     canipet_to_shoptet(DB, data)
     #     print("finished "+data.name)
     #     set_updated_on(data)
-    if data.source == 'S':
-        strida_to_shoptet(DB, data)
-        print("finished "+data.name)
-        set_updated_on(data)
+    # if data.source == 'S':
+    #     strida_to_shoptet(DB, data)
+    #     print("finished "+data.name)
+    #     set_updated_on(data)
     # if data.source == 'T':
     #     bullshit_to_shoptet(DB, data)
     #     print("finished "+data.name)
     #     set_updated_on(data)
+    if data.source == 'A':
+        MasterSport(DB, data)
+        print("finished "+data.name)
+        set_updated_on(data)
 
 def set_updated_on(feed):
     feed.updated_on = timezone.now()

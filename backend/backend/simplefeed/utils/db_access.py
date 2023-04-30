@@ -6,6 +6,9 @@ from django.core.management import call_command
 root_name = 'root'
 secret_pass = 'root'
 
+# SELECT CONCAT( 'DROP TABLE ', GROUP_CONCAT(table_name) , ';' ) AS statement FROM information_schema.tables WHERE table_schema = 'simplefeed_test' AND table_name LIKE 'simplefeed_%';
+
+
 def create_root_acc():
     return mysql.connector.connect(host='localhost', user=root_name, password=secret_pass, auth_plugin='mysql_native_password')
 

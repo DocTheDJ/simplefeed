@@ -1,45 +1,43 @@
 <?xml version="1.0" ?>
-<DICTIONARY>
-    <SHOP>
-        <CATEGORY>
-            Category
-            <ORIGINAL_ID>ID</ORIGINAL_ID>
-            <ORIGINAL_PARENT>ParentID</ORIGINAL_PARENT>
-            <NAME>Name</NAME>
-        </CATEGORY>
-        <PRODUCT>
-            Product
-            <CODE>Code</CODE>
-            <EAN>EAN</EAN>
-            <APPROVED>Visibility</APPROVED>
-            <NAME_COM>Name</NAME_COM>
-            <DESCRIPTION>Description</DESCRIPTION>
-            <MANUFACTURER>ProducerName</MANUFACTURER>
-            <PHOTOS>
-                Photos
-                <IMAGE>Photo</IMAGE>
-            </PHOTOS>
-            <REC_PRICE>RecommendedRetailPrice</REC_PRICE>
-            <PUR_PRICE>Price</PUR_PRICE>
-            <AMOUNT>QuantityInStock</AMOUNT>
-            <CATEGORIES>
-                Categories
-                <CATEGORY>CategoryID</CATEGORY>
-            </CATEGORIES>
-            <VARIANTS>
-                Variants
-                <VARIANT>
-                    Variant
-                    <CODE>Code</CODE>
-                    <EAN>EAN</EAN>
-                    <NAME_VAR>Name</NAME_VAR>
-                    <AMOUNT>QuantityInStock</AMOUNT>
-                    <REC_PRICE>RecommendedRetailPrice</REC_PRICE>
-                    <PUR_PRICE>Price</PUR_PRICE>
-                </VARIANT>
-            </VARIANTS>
-        </PRODUCT>
-    </SHOP>
-</DICTIONARY>
+<SHOP>
+    <CATEGORY>
+        Category
+        <ORIGINAL_ID>ID</ORIGINAL_ID>
+        <ORIGINAL_PARENT>ParentID</ORIGINAL_PARENT>
+        <NAME>Name</NAME>
+    </CATEGORY>
+    <PRODUCT>
+        Product
+        <CODE>Code</CODE>
+        <EAN>EAN</EAN>
+        <APPROVED>Visibility</APPROVED>
+        <NAME_COM>Name</NAME_COM>
+        <DESCRIPTION>Description</DESCRIPTION>
+        <MANUFACTURER>ProducerName</MANUFACTURER>
+        <PHOTOS>
+            Photos
+            <IMAGE>Photo</IMAGE>
+        </PHOTOS>
+        <REC_PRICE>RecommendedRetailPrice</REC_PRICE>
+        <PUR_PRICE>Price</PUR_PRICE>
+        <AMOUNT>QuantityInStock</AMOUNT>
+        <CATEGORIES>
+            Categories
+            <CATEGORY>CategoryID</CATEGORY>
+        </CATEGORIES>
+        <VARIANTS>
+            Variants
+            <VARIANT>
+                Variant
+                <CODE>Code</CODE>
+                <EAN>EAN</EAN>
+                <NAME_VAR>Name</NAME_VAR>
+                <AMOUNT>QuantityInStock</AMOUNT>
+                <REC_PRICE>RecommendedRetailPrice</REC_PRICE>
+                <PUR_PRICE>Price</PUR_PRICE>
+            </VARIANT>
+        </VARIANTS>
+    </PRODUCT>
+</SHOP>
 
 <!-- <?xml version="1.0" ?><DICTIONARY><SHOP><CATEGORY>Category<ORIGINAL_ID>ID</ORIGINAL_ID><ORIGINAL_PARENT>ParentID</ORIGINAL_PARENT><NAME>Name</NAME></CATEGORY><PRODUCT>Product<CODE>Code</CODE><EAN>EAN</EAN><APPROVED>Visibility</APPROVED><NAME_COM>Name</NAME_COM><DESCRIPTION>Description</DESCRIPTION><MANUFACTURER>ProducerName</MANUFACTURER><PHOTOS>Photos<IMAGE>Photo</IMAGE></PHOTOS><REC_PRICE>RecommendedRetailPrice</REC_PRICE><PUR_PRICE>Price</PUR_PRICE><AMOUNT>QuantityInStock</AMOUNT><CATEGORIES>Categories<CATEGORY>CategoryID</CATEGORY></CATEGORIES><VARIANTS>Variants<VARIANT>Variant<CODE>Code</CODE><EAN>EAN</EAN><NAME_VAR>Name</NAME_VAR><AMOUNT>QuantityInStock</AMOUNT><REC_PRICE>RecommendedRetailPrice</REC_PRICE><PUR_PRICE>Price</PUR_PRICE></VARIANT></VARIANTS></PRODUCT></SHOP></DICTIONARY> -->

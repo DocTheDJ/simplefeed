@@ -64,7 +64,7 @@ function VariantBar(props){
                         <i className="ti-arrow-left btn-icon-prepend"></i>
                         Zpět
                     </Button>
-                    <NavLink to={'/productlist/1/1/3/_/_/_/_'}>
+                    <NavLink to={'/productlist'}>
                         <button type="button" className="btn btn-outline-primary btn-icon-text">
                             Seznam produktů
                         </button>
