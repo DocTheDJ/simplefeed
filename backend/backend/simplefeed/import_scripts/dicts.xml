@@ -1,39 +1,45 @@
-<!-- <DICTIONARY><SHOP NEW="SHOP"><SHOPITEM NEW="SHOPITEM"><ITEM_ID NEW="CODE"/><ITEMGROUP_ID GROUP_BY="true"/><EAN NEW="EAN"/><PRODUCTNAME NEW="NAME_VAR"/><PRODUCT NEW="NAME_COM"/><SHORT_DESCRIPTION NEW="SHORT_DESCRIPTION"/><DESCRIPTION NEW="DESCRIPTION"/><IMGURL NEW="IMAGE"/><VAT NEW="VAT"/><VARIATION_PARAM><PARAM_NAME NEW="NAME"/><VAL NEW="VALUE"/></VARIATION_PARAM><PARAM><PARAM_NAME NEW="NAME"/><VAL NEW="VALUE"/></PARAM><CATEGORIES><DEFAULT_CATEGORY NEW="CATEGORY"/></CATEGORIES><PRICE_VAT NEW="PRICE"/><BASE_PRICE_VAT NEW="REC_PRICE"/><IN_STORE NEW="AMOUNT"/><AVAILABLE_DATE NEW="AVAILABLE_ON"/><MANUFACTURER NEW="MANUFACTURER"/><CURRENCY NEW="CURRENCY"/></SHOPITEM></SHOP></DICTIONARY> -->
-
+<?xml version="1.0" ?>
 <DICTIONARY>
     <SHOP>
-        <Category NEW="CATEGORY">
-            <ID NEW="ORIGINAL_ID">
-            <ParentID NEW="ORIGINAL_PARENT"/>
-            <Name NEW="NAME"/>
-        </Category>
-
-        <Product>
-            <Code NEW="CODE"/>
-            <EAN NEW="EAN"/>
-            <Visibility NEW="APPROVED"/>
-            <Name NEW="NAME_COM"/>
-            <Description NEW="DESCRIPTION"/>
-            <ProducerName NEW="MANUFACTURER"/>
-            <Photos>
-                <Photo NEW="IMAGE"/>
-            </Photos>
-            <RecommendedRetailPrice NEW="REC_PRICE"/>
-            <Price NEW="PUR_PRICE"/>
-            <QuantityInStock NEW="AMOUNT"/>
-            <Categories>
-                <CategoryID NEW="CATEGORY"/>
-            </Categories>
-            <Variants>
-                <Variant>
-                    <Code NEW="CODE"/>
-                    <EAN NEW="EAN"/>
-                    <Name NEW="NAME_VAR"/>
-                    <QuantityInStock NEW="AMOUNT"/>
-                    <RecommendedRetailPrice NEW="REC_PRICE"/>
-                    <Price NEW="PUR_PRICE"/>
-                </Variant>
-            </Variants>
-        </Product>
+        <CATEGORY>
+            Category
+            <ORIGINAL_ID>ID</ORIGINAL_ID>
+            <ORIGINAL_PARENT>ParentID</ORIGINAL_PARENT>
+            <NAME>Name</NAME>
+        </CATEGORY>
+        <PRODUCT>
+            Product
+            <CODE>Code</CODE>
+            <EAN>EAN</EAN>
+            <APPROVED>Visibility</APPROVED>
+            <NAME_COM>Name</NAME_COM>
+            <DESCRIPTION>Description</DESCRIPTION>
+            <MANUFACTURER>ProducerName</MANUFACTURER>
+            <PHOTOS>
+                Photos
+                <IMAGE>Photo</IMAGE>
+            </PHOTOS>
+            <REC_PRICE>RecommendedRetailPrice</REC_PRICE>
+            <PUR_PRICE>Price</PUR_PRICE>
+            <AMOUNT>QuantityInStock</AMOUNT>
+            <CATEGORIES>
+                Categories
+                <CATEGORY>CategoryID</CATEGORY>
+            </CATEGORIES>
+            <VARIANTS>
+                Variants
+                <VARIANT>
+                    Variant
+                    <CODE>Code</CODE>
+                    <EAN>EAN</EAN>
+                    <NAME_VAR>Name</NAME_VAR>
+                    <AMOUNT>QuantityInStock</AMOUNT>
+                    <REC_PRICE>RecommendedRetailPrice</REC_PRICE>
+                    <PUR_PRICE>Price</PUR_PRICE>
+                </VARIANT>
+            </VARIANTS>
+        </PRODUCT>
     </SHOP>
 </DICTIONARY>
+
+<!-- <?xml version="1.0" ?><DICTIONARY><SHOP><CATEGORY>Category<ORIGINAL_ID>ID</ORIGINAL_ID><ORIGINAL_PARENT>ParentID</ORIGINAL_PARENT><NAME>Name</NAME></CATEGORY><PRODUCT>Product<CODE>Code</CODE><EAN>EAN</EAN><APPROVED>Visibility</APPROVED><NAME_COM>Name</NAME_COM><DESCRIPTION>Description</DESCRIPTION><MANUFACTURER>ProducerName</MANUFACTURER><PHOTOS>Photos<IMAGE>Photo</IMAGE></PHOTOS><REC_PRICE>RecommendedRetailPrice</REC_PRICE><PUR_PRICE>Price</PUR_PRICE><AMOUNT>QuantityInStock</AMOUNT><CATEGORIES>Categories<CATEGORY>CategoryID</CATEGORY></CATEGORIES><VARIANTS>Variants<VARIANT>Variant<CODE>Code</CODE><EAN>EAN</EAN><NAME_VAR>Name</NAME_VAR><AMOUNT>QuantityInStock</AMOUNT><REC_PRICE>RecommendedRetailPrice</REC_PRICE><PUR_PRICE>Price</PUR_PRICE></VARIANT></VARIANTS></PRODUCT></SHOP></DICTIONARY> -->

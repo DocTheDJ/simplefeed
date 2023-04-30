@@ -19,6 +19,8 @@ from threading import Thread
 from ..models import Variant, Variant_Update, Common, Feeds, Category, Manufacturers
 from django.core.management import call_command
 
+from ..import_scripts.mastersport import mastersport_to_shoptet
+
 from queue import LifoQueue
 from ..utils.importutils import ImportUtils
 from xml.etree.ElementTree import fromstring
@@ -74,12 +76,12 @@ def index(request):
 @permission_classes([IsAuthenticated])
 def importAll(request):
     if DB := create_dbconnect(request):
-        t = Thread(target=crossroads, args=(DB,))
-        t.name = 'import'
-        t.run()
-        # t = Process(target=crossroads, args=(request,))
-        # t.name = 'test'
-        # t.start()
+        # t = Thread(target=mastersport_to_shoptet, args=(DB,))
+        # t.name = 'import'
+        # t.run()
+        t = Process(target=crossroads, args=(DB,))
+        t.name = 'test'
+        t.start()
         response = 'started'
     else:
         response = 'no DB'
