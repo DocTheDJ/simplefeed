@@ -41,37 +41,3 @@
 </SHOP>
 
 <!-- <?xml version="1.0" ?><DICTIONARY><SHOP><CATEGORY>Category<ORIGINAL_ID>ID</ORIGINAL_ID><ORIGINAL_PARENT>ParentID</ORIGINAL_PARENT><NAME>Name</NAME></CATEGORY><PRODUCT>Product<CODE>Code</CODE><EAN>EAN</EAN><APPROVED>Visibility</APPROVED><NAME_COM>Name</NAME_COM><DESCRIPTION>Description</DESCRIPTION><MANUFACTURER>ProducerName</MANUFACTURER><PHOTOS>Photos<IMAGE>Photo</IMAGE></PHOTOS><REC_PRICE>RecommendedRetailPrice</REC_PRICE><PUR_PRICE>Price</PUR_PRICE><AMOUNT>QuantityInStock</AMOUNT><CATEGORIES>Categories<CATEGORY>CategoryID</CATEGORY></CATEGORIES><VARIANTS>Variants<VARIANT>Variant<CODE>Code</CODE><EAN>EAN</EAN><NAME_VAR>Name</NAME_VAR><AMOUNT>QuantityInStock</AMOUNT><REC_PRICE>RecommendedRetailPrice</REC_PRICE><PUR_PRICE>Price</PUR_PRICE></VARIANT></VARIANTS></PRODUCT></SHOP></DICTIONARY> -->
-
-<?xml version="1.0" ?>
-<SHOP>
-    <ITEMS>
-        <PRODUCT>
-            ITEM
-            <CODE>ID</CODE>
-            <ITEMGROUP_ID>ITEMGROUP_ID</ITEMGROUP_ID>
-            <NAME_COM>ITEMGROUP_TITLE</NAME_COM>
-            <MANUFACTURER>BRAND_ID</MANUFACTURER>
-            <NAME_VAR>TITLE</NAME_VAR>
-            <SHORT_DESCRIPTION>SHORTDESC</SHORT_DESCRIPTION>
-            <DESCRIPTION>LONGDESC</DESCRIPTION>
-            <EAN>BARCODE</EAN>
-            <PUR_PRICE>PRICE</PUR_PRICE>
-            <VAT>VAT</VAT>
-            <REC_PRICE>RRP</REC_PRICE>
-            <PARAMS>
-                PARAM
-                <NAME>NAME</NAME>
-                <VALUE>VALUE</VALUE>
-            </PARAMS>
-            <VAR_PARAMS>
-                VARIABLE_PARAMS
-                <NAME>PARAM</NAME>
-            </VAR_PARAMS>
-            <IMAGES>
-                MEDIA
-                <IMAGE>URL</IMAGE>
-                <MAIN>MAIN</MAIN>
-            </IMAGES>
-        </PRODUCT>
-    </ITEMS>
-</SHOP>
