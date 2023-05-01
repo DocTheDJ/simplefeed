@@ -41,3 +41,18 @@ class OpenURLS(object):
     
     def getName(self):
         return '#text'
+
+class Mall(OpenURLS):
+    def __init__(self) -> None:
+        super().__init__()
+        self.mall_to_shoptet()
+    
+    def mall_to_shoptet(self):
+        data = self.xmlGetDict('https://www.sedaci-pytle.cz/mall_feed.xml')
+        self.products(data['ITEMS'])
+    
+    def products(self, dic:dict):
+        for p in dic['ITEM']:
+            print(p)
+
+Mall()

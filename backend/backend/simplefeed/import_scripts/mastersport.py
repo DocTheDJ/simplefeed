@@ -1,7 +1,4 @@
-from urllib.request import urlopen
-import ssl
-import xmltodict
-import sys
+from ..utils.open_urls import OpenURLS
 from ..models import (
     Image,
     Variant,
@@ -12,7 +9,7 @@ from ..models import (
     Category)
 from ..utils.availability import AvailabilityUtils
 
-class MasterSport:
+class MasterSport(OpenURLS):
     
     def __init__(self, DB, data) -> None:
         self.DB = DB
@@ -21,13 +18,10 @@ class MasterSport:
         self.in_stock, self.out_stock = AvailabilityUtils.create_default_availabilities(DB, data.id)
         self.mastersport_to_shoptet()
 
-    def getName(self):
-        return '#text'
-
     def mastersport_to_shoptet(self):
         mastertag = 'SHOP'
                 
-        dictionary = xmltodict.parse(Feeds.objects.using(self.DB).get(master_feed=self.source, usage='d').feed_link)
+        dictionary = self.parseDictionary(Feeds.objects.using(self.DB).get(master_feed=self.source, usage='d').feed_link)
 
         cate_dict = self.xmlGetDict(Feeds.objects.using(self.DB).get(master_feed=self.source, usage='c').feed_link)
         
@@ -240,12 +234,3 @@ class MasterSport:
             'parent': parent,
             'name': name
         })
-
-    def xmlGetDict(self, url:str):
-        ssl._create_default_https_context = ssl._create_unverified_context
-        try:
-            return xmltodict.parse(urlopen(url))
-        except Exception as e:
-            print(e)
-            print("error while opening url: "+url)
-            sys.exit(1)
