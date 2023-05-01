@@ -22,6 +22,7 @@ from django.core.management import call_command
 from queue import LifoQueue
 from ..utils.importutils import ImportUtils
 from xml.etree.ElementTree import fromstring
+from django.db.models import F
 # Create your views here.
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -73,12 +74,12 @@ def index(request):
 @permission_classes([IsAuthenticated])
 def importAll(request):
     if DB := create_dbconnect(request):
-        t = Thread(target=crossroads, args=(DB,))
-        t.name = 'import'
-        t.run()
-        # t = Process(target=crossroads, args=(request,))
-        # t.name = 'test'
-        # t.start()
+        # t = Thread(target=mastersport_to_shoptet, args=(DB,))
+        # t.name = 'import'
+        # t.run()
+        t = Process(target=crossroads, args=(DB,))
+        t.name = 'test'
+        t.start()
         response = 'started'
     else:
         response = 'no DB'
@@ -98,8 +99,9 @@ def migrate(request):
 @permission_classes([IsAuthenticated])
 def addDefault(request):
     if DB := create_dbconnect(request):
-        CreateUtil().add_category_rules(DB)
+        # CreateUtil().add_category_rules(DB)
         CreateUtil().add_all_feeds(DB)
+        CreateUtil().addNewFeeds(DB)
         response = 'OK'
     else:
         response = 'noDB'
@@ -122,17 +124,11 @@ def getFilters(request):
 @permission_classes([IsAuthenticated])
 def test(request):
     if DB := create_dbconnect(request):
-        f = Feeds.objects.using(DB).filter(usage='d')[0].feed_link
-        xml = fromstring(f)
-        parent_stack = LifoQueue()
-        dictionary = dict()
-        ImportUtils().create_dictionary(xml, parent_stack, dictionary)
-        print(f)
-        print('-------------------------')
-        print(parent_stack.queue)
-        print('-------------------------')
-        print(dictionary)
-        print('-------------------------')
+        c = Common.objects.using(DB).all()[:2]
+        vars = []
+        for i in c:
+            vars.extend(i.get_variants_id())
+        Variant.objects.using(DB).filter(id__in=vars).update(original_price=F('price'), price=F('price'))
         response = 'OK'
     else:
         response = 'noDB'

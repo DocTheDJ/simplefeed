@@ -118,4 +118,18 @@ function Variant(props){
     );
 }
 
-export default Variant;
+function VariantRow(props){
+    return(
+        <tr>
+            <td>{props.data.id}</td>
+            <td>{props.data.code}</td>
+            <td>{props.data.name}</td>
+            <td>{props.data.ean}</td>
+            <td>{props.data.price}</td>
+            <td>{props.data.pur_price}</td>
+            <td>{props.data.get_supplier}</td>
+        </tr>
+    );
+}
+
+export {Variant, VariantRow};

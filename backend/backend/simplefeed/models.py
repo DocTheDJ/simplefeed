@@ -1,5 +1,7 @@
 from datetime import datetime
+from typing import Any, Dict, Tuple
 from django.db import models
+from django.db.models import F
 
 class Feeds(models.Model):
     feed_link = models.TextField()
@@ -45,7 +47,7 @@ class Param(models.Model):
         return Param.objects.using(DB).get_or_create(name=name_obj, value=value_obj)
 
 class Modifications(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=64)
 
 class Manufacturers(models.Model):
     name = models.CharField(max_length=128, null=True)
@@ -55,6 +57,10 @@ class Rules(models.Model):
     name = models.CharField(max_length=128)
     action = models.CharField(max_length=64, null=True)
     css_class = models.CharField(max_length=32, null=True)
+    
+    def delete(self, using: Any = ..., keep_parents: bool = ...) -> Tuple[int, Dict[str, int]]:
+        Variant.objects.using(using).filter(rule=self.id).update(price=F('original_price'), original_price=None)
+        return super().delete(using, keep_parents)
 
 class Availabilities(models.Model):
     name = models.CharField(max_length=64)
@@ -106,6 +112,9 @@ class Variant(models.Model):
     availability = models.ForeignKey(Availabilities, on_delete=models.DO_NOTHING)
     mods = models.ManyToManyField(Modifications)
     images = models.ManyToManyField(Image, through="Variant_Image")
+    rulelock = models.BooleanField(null=True)
+    rule = models.ForeignKey(Rules, null=True, on_delete=models.SET_NULL)
+    original_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     
     def get_params(self):
         return self.params.all()
@@ -177,7 +186,7 @@ class Variant(models.Model):
             self.get_useable_params(self.name, param, DB)
     
     def create_last_update(self, DB):
-        Variant_Update.objects.using(DB).get_or_create(variant=self, defaults={'time': datetime.now()})
+        Variant_Update.objects.using(DB).update_or_create(variant=self, defaults={'time': datetime.now()})
     
     def get_last_update(self):
         try:
@@ -234,6 +243,9 @@ class Common(models.Model):
     
     def get_variants(self):
         return self.variants.all()
+    
+    def get_variants_id(self):
+        return list(self.variants.values_list('id', flat=True))
     
     def __enter__(self):
         return self.variants.all()

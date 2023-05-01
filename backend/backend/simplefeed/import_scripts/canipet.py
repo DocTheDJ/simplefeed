@@ -1,4 +1,4 @@
-from ..utils.open_urls import xml_from_url
+from ..utils.open_urls import OpenURLS
 from xml.etree.ElementTree import fromstring
 from queue import LifoQueue
 from ..utils.importutils import ImportUtils
@@ -8,7 +8,7 @@ from ..utils.category import CategoryUtil
 
 def canipet_to_shoptet(DB, url_data):
     supplier_id = url_data.id
-    root_data = xml_from_url(url_data.feed_link).getroot()
+    root_data = OpenURLS().xml_from_url(url_data.feed_link).getroot()
     rootdict = fromstring(Feeds.objects.using(DB).get(usage='d', master_feed=supplier_id).feed_link)
     parent_stack = LifoQueue()
     dict = list()
@@ -16,7 +16,7 @@ def canipet_to_shoptet(DB, url_data):
 
     amount_tree = False
     try:
-        amount_data = xml_from_url((Feeds.objects.using(DB).filter(usage='a', master_feed=supplier_id))[0].feed_link).getroot()
+        amount_data = OpenURLS().xml_from_url((Feeds.objects.using(DB).filter(usage='a', master_feed=supplier_id))[0].feed_link).getroot()
     except Exception as e:
         print(e)
     else:

@@ -1,4 +1,4 @@
-from ..utils.open_urls import xml_from_url
+from ..utils.open_urls import OpenURLS
 from xml.etree.ElementTree import fromstring
 from queue import LifoQueue
 from ..models import Image, Variant, Common, Feeds, Category, Manufacturers, Rules, Param, VariantParam, Variant_Image
@@ -23,7 +23,7 @@ class MyLifo(LifoQueue):
 
 def strida_to_shoptet(DB, url_data):
     supplier_id = url_data.id
-    root_data = xml_from_url(url_data.feed_link).getroot()
+    root_data = OpenURLS().xml_from_url(url_data.feed_link).getroot()
     rootdict = fromstring(Feeds.objects.using(DB).get(usage='d', master_feed=supplier_id).feed_link)
     parent_stack = MyLifo()
     dictionary = dict()
@@ -31,7 +31,7 @@ def strida_to_shoptet(DB, url_data):
     
     amount_tree = False
     try:
-        amount_data = xml_from_url(Feeds.objects.using(DB).get(usage='a', master_feed=supplier_id).feed_link).getroot()
+        amount_data = OpenURLS().xml_from_url(Feeds.objects.using(DB).get(usage='a', master_feed=supplier_id).feed_link).getroot()
     except Exception as e:
         print(e)
     else:
@@ -39,7 +39,7 @@ def strida_to_shoptet(DB, url_data):
     
     pur_price_tree = False
     try:
-        pur_price_data = xml_from_url(Feeds.objects.using(DB).get(usage='p', master_feed=supplier_id).feed_link).getroot()
+        pur_price_data = OpenURLS().xml_from_url(Feeds.objects.using(DB).get(usage='p', master_feed=supplier_id).feed_link).getroot()
     except Exception as e:
         print(e)
     else:
@@ -47,7 +47,7 @@ def strida_to_shoptet(DB, url_data):
     
     rec_price_tree = False
     try:
-        rec_price_data = xml_from_url(Feeds.objects.using(DB).get(usage='r', master_feed=supplier_id).feed_link).getroot()
+        rec_price_data = OpenURLS().xml_from_url(Feeds.objects.using(DB).get(usage='r', master_feed=supplier_id).feed_link).getroot()
     except Exception as e:
         print(e)
     else:

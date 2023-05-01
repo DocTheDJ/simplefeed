@@ -6,6 +6,9 @@ from django.core.management import call_command
 root_name = 'root'
 secret_pass = 'root'
 
+# SELECT CONCAT( 'DROP TABLE ', GROUP_CONCAT(table_name) , ';' ) AS statement FROM information_schema.tables WHERE table_schema = 'simplefeed_test' AND table_name LIKE 'simplefeed_%';
+
+
 def create_root_acc():
     return mysql.connector.connect(host='localhost', user=root_name, password=secret_pass, auth_plugin='mysql_native_password')
 
@@ -53,8 +56,8 @@ def create_dbconnect(DB_name)->str:
     new_database = {}
     new_database['ENGINE'] = 'django.db.backends.mysql'
     new_database['NAME'] = 'simplefeed_' + (DB_name if type(DB_name) == str else DB_name.user.username)
-    new_database['USER'] = 'python'
-    new_database['PASSWORD'] = 'python'
+    new_database['USER'] = 'root'
+    new_database['PASSWORD'] = 'root'
     new_database['HOST'] = 'localhost'
     new_database['TIME_ZONE'] = None
     new_database['CONN_HEALTH_CHECKS'] = False
