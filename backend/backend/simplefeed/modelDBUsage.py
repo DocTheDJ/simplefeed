@@ -2,15 +2,16 @@ import django
 django.setup()
 
 from .models import Feeds, Category
-from .utils.open_urls import xml_from_url
+from .utils.open_urls import OpenURLS
 from .utils.db_access import create_dbconnect
 from .import_scripts.heureka import heureka_to_shoptet
-from .import_scripts.mall import mall_to_shoptet
+# from .import_scripts.mall import mall_to_shoptet
 from .import_scripts.esportshop import esportshop_to_shoptet
 from .import_scripts.canipet import canipet_to_shoptet
 from .import_scripts.strida import strida_to_shoptet
 from .import_scripts.bullshit import bullshit_to_shoptet
 from .import_scripts.mastersport import MasterSport
+from .import_scripts.dictstripts.mall.mall import Mall
 from django.utils import timezone
 from django.db.models import Q
 
@@ -22,10 +23,11 @@ def crossroads(DB):
 
 def runFeed(data, DB):
     print("starting "+data.name)
-    # if data.source == 'M':
-    #     mall_to_shoptet(DB, data)
-    #     print("finished "+data.name)
-    #     set_updated_on(data)
+    if data.source == 'M':
+        Mall(DB, data)
+        # mall_to_shoptet(DB, data)
+        print("finished "+data.name)
+        set_updated_on(data)
     # if data.source == 'H':
     #     heureka_to_shoptet(DB, data)
     #     print("finished "+data.name)
@@ -46,10 +48,10 @@ def runFeed(data, DB):
     #     bullshit_to_shoptet(DB, data)
     #     print("finished "+data.name)
     #     set_updated_on(data)
-    if data.source == 'A':
-        MasterSport(DB, data)
-        print("finished "+data.name)
-        set_updated_on(data)
+    # if data.source == 'A':
+    #     MasterSport(DB, data)
+    #     print("finished "+data.name)
+    #     set_updated_on(data)
 
 def set_updated_on(feed):
     feed.updated_on = timezone.now()
@@ -76,7 +78,7 @@ def category_import(DB):
     print("Starting category import for "+DB)
     data = Feeds.objects.using(DB).filter(usage='c')
     for f in data:
-        root_data = xml_from_url(f.feed_link).getroot()
+        root_data = OpenURLS().xml_from_url(f.feed_link).getroot()
         lists = category_lists()
         parent, created = Category.objects.using(DB).get_or_create(parent_id=None, source_id=f.id, defaults={'name': f.name, 'original_id':None})
         if not created:

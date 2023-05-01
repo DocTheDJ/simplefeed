@@ -100,7 +100,7 @@ def migrate(request):
 def addDefault(request):
     if DB := create_dbconnect(request):
         # CreateUtil().add_category_rules(DB)
-        # CreateUtil().add_all_feeds(DB)
+        CreateUtil().add_all_feeds(DB)
         CreateUtil().addNewFeeds(DB)
         response = 'OK'
     else:
