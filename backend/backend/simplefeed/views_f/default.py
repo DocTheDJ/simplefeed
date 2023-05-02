@@ -13,7 +13,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from ..utils.db_access import create_user_access, create_dbconnect
 from rest_framework.permissions import IsAuthenticated
 from ..utils.create_default import CreateUtil
-from ..modelDBUsage import crossroads
+from ..modelDBUsage import crossroads, getDB
 from multiprocessing import Process
 from threading import Thread
 from ..models import Variant, Variant_Update, Common, Feeds, Category, Manufacturers
@@ -77,7 +77,7 @@ def importAll(request):
         # t = Thread(target=mastersport_to_shoptet, args=(DB,))
         # t.name = 'import'
         # t.run()
-        t = Process(target=crossroads, args=(DB,))
+        t = Process(target=getDB, args=(request.user.username,))
         t.name = 'test'
         t.start()
         response = 'started'

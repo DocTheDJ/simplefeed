@@ -14,6 +14,11 @@ from .import_scripts.mastersport import MasterSport
 from .import_scripts.dictstripts.mall.mall import Mall
 from django.utils import timezone
 from django.db.models import Q
+from .utils.db_access import create_dbconnect
+
+def getDB(name):
+    DB = create_dbconnect(name)
+    crossroads(DB)
 
 def crossroads(DB):
     # DB = create_dbconnect(req)
