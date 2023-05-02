@@ -1,10 +1,10 @@
-from ..utils.open_urls import OpenURLS
+from ...utils.open_urls import OpenURLS
 from xml.etree.ElementTree import fromstring
 from queue import LifoQueue
-from ..models import Image, Variant, Common, Feeds, Category, Manufacturers, Rules, Param, VariantParam, Variant_Image
-from ..utils.importutils import ImportUtils
-from ..utils.category import CategoryUtil
-from ..utils.availability import AvailabilityUtils
+from ...models import Image, Variant, Common, Feeds, Category, Manufacturers, Rules, Param, VariantParam, Variant_Image
+from ...utils.importutils import ImportUtils
+from ...utils.category import CategoryUtil
+from ...utils.availability import AvailabilityUtils
 
 class MyLifo(LifoQueue):
     def getUntil(self, target):

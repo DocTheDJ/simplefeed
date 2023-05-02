@@ -1,11 +1,11 @@
-from ..utils.open_urls import OpenURLS
+from ...utils.open_urls import OpenURLS
 from xml.etree.ElementTree import fromstring
 from queue import LifoQueue
-from ..models import Image, Variant, Common, Feeds, Rules, Manufacturers, Param, Variant_Image
-from ..utils.importutils import ImportUtils
-from ..utils.category import CategoryUtil
-from ..utils.availability import AvailabilityUtils
-from ..utils.default import get_new_search
+from ...models import Image, Variant, Common, Feeds, Rules, Manufacturers, Param, Variant_Image
+from ...utils.importutils import ImportUtils
+from ...utils.category import CategoryUtil
+from ...utils.availability import AvailabilityUtils
+from ...utils.default import get_new_search
 
 def heureka_to_shoptet(DB, url_data):
     supplier_id = url_data.id

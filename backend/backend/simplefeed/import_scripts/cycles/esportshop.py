@@ -1,7 +1,7 @@
-from ..utils.open_urls import OpenURLS
+from ...utils.open_urls import OpenURLS
 from xml.etree.ElementTree import fromstring
 from queue import LifoQueue
-from ..models import (
+from ...models import (
     Image,
     Variant, 
     Common, 
@@ -12,9 +12,9 @@ from ..models import (
     Param, 
     Variant_Image
 )
-from ..utils.importutils import ImportUtils
-from ..utils.availability import AvailabilityUtils
-from ..utils.category import CategoryUtil
+from ...utils.importutils import ImportUtils
+from ...utils.availability import AvailabilityUtils
+from ...utils.category import CategoryUtil
 
 def esportshop_to_shoptet(DB, url_data):
     supplier_id = url_data.id

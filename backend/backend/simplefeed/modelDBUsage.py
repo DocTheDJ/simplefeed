@@ -4,14 +4,13 @@ django.setup()
 from .models import Feeds, Category
 from .utils.open_urls import OpenURLS
 from .utils.db_access import create_dbconnect
-from .import_scripts.heureka import heureka_to_shoptet
+from .import_scripts.cycles.heureka import heureka_to_shoptet
 # from .import_scripts.mall import mall_to_shoptet
-from .import_scripts.esportshop import esportshop_to_shoptet
-from .import_scripts.canipet import canipet_to_shoptet
-from .import_scripts.strida import strida_to_shoptet
-from .import_scripts.bullshit import bullshit_to_shoptet
-from .import_scripts.mastersport import MasterSport
-from .import_scripts.dictstripts.mall.mall import Mall
+from .import_scripts.cycles.esportshop import esportshop_to_shoptet
+from .import_scripts.cycles.canipet import canipet_to_shoptet
+from .import_scripts.cycles.strida import strida_to_shoptet
+from .import_scripts.cycles.bullshit import bullshit_to_shoptet
+from .import_scripts.dictstripts import (Mall, MasterSport)
 from django.utils import timezone
 from django.db.models import Q
 from .utils.db_access import create_dbconnect
@@ -28,11 +27,11 @@ def crossroads(DB):
 
 def runFeed(data, DB):
     print("starting "+data.name)
-    if data.source == 'M':
-        Mall(DB, data)
-        # mall_to_shoptet(DB, data)
-        print("finished "+data.name)
-        set_updated_on(data)
+    # if data.source == 'M':
+    #     Mall(DB, data)
+    #     # mall_to_shoptet(DB, data)
+    #     print("finished "+data.name)
+    #     set_updated_on(data)
     # if data.source == 'H':
     #     heureka_to_shoptet(DB, data)
     #     print("finished "+data.name)

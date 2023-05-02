@@ -1,10 +1,10 @@
-from ..utils.open_urls import OpenURLS
+from ...utils.open_urls import OpenURLS
 from xml.etree.ElementTree import fromstring
 from queue import LifoQueue
-from ..utils.importutils import ImportUtils
-from ..models import Image, Variant, Common, Feeds, Manufacturers, Rules, Param, Variant_Image
-from ..utils.availability import AvailabilityUtils
-from ..utils.category import CategoryUtil
+from ...utils.importutils import ImportUtils
+from ...models import Image, Variant, Common, Feeds, Manufacturers, Rules, Param, Variant_Image
+from ...utils.availability import AvailabilityUtils
+from ...utils.category import CategoryUtil
 
 def canipet_to_shoptet(DB, url_data):
     supplier_id = url_data.id
